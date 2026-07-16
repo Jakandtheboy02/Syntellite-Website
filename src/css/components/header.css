@@ -1,0 +1,217 @@
+/* ==========================================
+   BOTTOM ISLAND NAVIGATION BAR
+   ========================================== */
+.bottom-nav-bar {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translate3d(-50%, 0, 0);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: var(--nav-gap, 16px);
+  width: max-content;
+  pointer-events: auto;
+
+  /* Sizing Configs for Responsive Scaling */
+  --nav-size: 64px;
+  --nav-gap: 16px;
+  --nav-item-gap: 28px;
+  --nav-font-size: 0.95rem;
+  
+  /* CSS Variables for Dynamic Contrast Switching */
+  /* Default: Dark/Image background layout (white capsule tint) */
+  --nav-bg: rgba(255, 255, 255, 0.12);
+  --nav-text: #ffffff;
+  --nav-border: rgba(255, 255, 255, 0.08);
+  --nav-active-bg: rgba(255, 255, 255, 0.1);
+}
+
+/* Light page section overlay - Black Capsule with 25% opacity */
+.bottom-nav-bar.nav-light-bg {
+  --nav-bg: rgba(0, 0, 0, 0.25);
+  --nav-text: #ffffff;
+  --nav-border: rgba(0, 0, 0, 0.15);
+  --nav-active-bg: rgba(255, 255, 255, 0.15);
+}
+
+/* Navigation Cards Base */
+.nav-logo-card, 
+.nav-links-card, 
+.nav-menu-card {
+  background: var(--nav-bg);
+  color: var(--nav-text);
+  border: 1px solid var(--nav-border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  transition: background-color 0.4s var(--ease-out-expo), 
+              border-color 0.4s var(--ease-out-expo), 
+              transform 0.4s var(--ease-out-expo), 
+              box-shadow 0.4s var(--ease-out-expo);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Hover States */
+.nav-logo-card:hover, 
+.nav-links-card:hover, 
+.nav-menu-card:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translate3d(0, -3px, 0);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+}
+
+/* Left Logo Card */
+.nav-logo-card {
+  width: var(--nav-size);
+  height: var(--nav-size);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.logo-svg {
+  width: calc(var(--nav-size) * 0.4375); /* matches 28px for 64px size */
+  height: calc(var(--nav-size) * 0.4375);
+  transition: transform 0.4s var(--ease-out-expo);
+}
+
+.nav-logo-card:hover .logo-svg {
+  transform: rotate(-10deg) scale(1.05);
+}
+
+/* Center Links Card */
+.nav-links-card {
+  height: var(--nav-size);
+  border-radius: var(--border-radius-full);
+  padding: 0 calc(var(--nav-size) * 0.5);
+  gap: var(--nav-item-gap);
+  display: flex;
+}
+
+.nav-item {
+  position: relative;
+  font-family: var(--font-title);
+  font-weight: 500;
+  font-size: var(--nav-font-size);
+  padding: 8px 0;
+  color: var(--nav-text);
+  opacity: 0.7;
+  transition: opacity 0.3s var(--ease-out-expo);
+}
+
+.nav-item:hover, 
+.nav-item.active {
+  opacity: 1;
+}
+
+/* Nav Item active underline bar */
+.nav-item::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--nav-text);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s var(--ease-out-expo);
+}
+
+.nav-item.active::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Right Menu Toggle Card */
+.nav-menu-card {
+  width: var(--nav-size);
+  height: var(--nav-size);
+  border-radius: 50%;
+  cursor: pointer;
+  flex-direction: column;
+  gap: calc(var(--nav-size) * 0.078);
+  flex-shrink: 0;
+}
+
+.menu-line {
+  width: calc(var(--nav-size) * 0.3125);
+  height: 2px;
+  background-color: var(--nav-text);
+  transition: transform 0.4s var(--ease-out-expo), background-color 0.4s var(--ease-out-expo);
+}
+
+/* Active hamburger transitions */
+.nav-menu-card.active .menu-line {
+  background-color: #ffffff;
+}
+
+.nav-menu-card.active .line-1 {
+  transform: translate3d(0, 3.5px, 0) rotate(45deg);
+}
+
+.nav-menu-card.active .line-2 {
+  transform: translate3d(0, -3.5px, 0) rotate(-45deg);
+}
+
+/* Mobile Responsive Structure */
+@media (max-width: 1200px) {
+  .bottom-nav-bar {
+    --nav-size: 56px;
+    --nav-gap: 12px;
+    --nav-item-gap: 20px;
+    --nav-font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .bottom-nav-bar {
+    --nav-size: 50px;
+    --nav-gap: 10px;
+    --nav-font-size: 0.85rem;
+  }
+
+  /* Hide static links pill */
+  .nav-links-card {
+    display: none;
+  }
+  
+  /* Render active links drawer popup perfectly aligned above the smaller nav bar */
+  .nav-links-card.nav-open {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    bottom: 95px;
+    left: 50%;
+    transform: translate3d(-50%, 0, 0);
+    width: calc(100vw - 48px);
+    max-width: 320px;
+    height: auto;
+    padding: 32px 24px;
+    border-radius: var(--border-radius-md);
+    gap: 24px;
+    align-items: center;
+    background: rgba(8, 10, 15, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    animation: navDrawerFadeIn 0.4s var(--ease-out-expo) forwards;
+  }
+  
+  .nav-item {
+    font-size: 1.1rem;
+    padding: 4px 0;
+  }
+}
+
+@keyframes navDrawerFadeIn {
+  from {
+    opacity: 0;
+    transform: translate3d(-50%, 15px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(-50%, 0, 0);
+  }
+}

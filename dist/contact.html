@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us | Syntellite Agency</title>
+  <meta name="description" content="Get in touch with Syntellite to discuss custom designs, performant frontend engineering, or branding projects.">
+  
+  <!-- Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheets -->
+  <script type="module" crossorigin src="/assets/main-Y5y7tB-P.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/main-BzUe5jKa.css">
+</head>
+<body>
+  <!-- Scroll Progress Indicator -->
+  <div id="scroll-progress" aria-hidden="true"></div>
+
+
+
+  <!-- Bottom Navigation Bar -->
+  <nav id="bottom-nav" class="bottom-nav-bar">
+    <!-- Left Logo Card -->
+    <a href="/" class="nav-logo-card" data-hover-expand aria-label="Syntellite Home">
+      <svg class="logo-svg" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="4" fill="currentColor"/>
+        <rect x="8" y="20" width="8" height="12" rx="4" fill="currentColor"/>
+        <path d="M20 12C20 7.58172 23.5817 4 28 4C32.4183 4 36 7.58172 36 12C36 16.4183 32.4183 20 28 20H20V12Z" fill="currentColor"/>
+        <rect x="20" y="26" width="16" height="8" rx="4" fill="currentColor"/>
+      </svg>
+    </a>
+
+    <!-- Center Links Card -->
+    <div class="nav-links-card" id="header-nav">
+      <a href="/" class="nav-item" data-hover-expand>Home</a>
+      <a href="/projects.html" class="nav-item" data-hover-expand>Projects</a>
+      <a href="/about.html" class="nav-item" data-hover-expand>About</a>
+      <a href="/contact.html" class="nav-item active" data-hover-expand>Contact</a>
+    </div>
+
+    <!-- Right Menu Toggle Card -->
+    <button id="menu-toggle" class="nav-menu-card" aria-label="Toggle Menu" aria-expanded="false" data-hover-expand>
+      <span class="menu-line line-1"></span>
+      <span class="menu-line line-2"></span>
+    </button>
+  </nav>
+
+  <!-- Main Content -->
+  <main id="main-content">
+    <!-- Contact Hero -->
+    <section id="contact-hero" class="contact-hero-section">
+      <div class="glow-bg" id="contact-glow"></div>
+      <div class="container hero-container">
+        <span class="section-tag reveal-text">Connection</span>
+        <h1 class="hero-title reveal-text-delayed">
+          Let's build something <br>
+          <span class="text-gradient">remarkable together</span>
+        </h1>
+        <p class="hero-subtitle reveal-fade">
+          Tell us about your brand, your product goals, and your timeline. We'll follow up with ideas.
+        </p>
+      </div>
+    </section>
+
+    <!-- Contact Form & Info -->
+    <section id="contact-section" class="contact-content-section">
+      <div class="container">
+        <div class="contact-grid">
+          <!-- Info Details -->
+          <div class="contact-info scroll-reveal">
+            <div class="info-block">
+              <h3>Start a Conversation</h3>
+              <p><a href="mailto:hello@syntellite.com" class="interactive-link" data-hover-expand>hello@syntellite.com</a></p>
+            </div>
+            <div class="info-block">
+              <h3>Our Location</h3>
+              <p>Silicon Valley, California & Zurich, Switzerland</p>
+            </div>
+            <div class="info-block">
+              <h3>Join Our Team</h3>
+              <p><a href="mailto:careers@syntellite.com" class="interactive-link" data-hover-expand>careers@syntellite.com</a></p>
+            </div>
+          </div>
+
+          <!-- Form Panel -->
+          <div class="contact-form-panel scroll-reveal">
+            <form id="agency-contact-form" action="#" method="POST" novalidate>
+              <div class="form-group">
+                <label for="user-name">What's your name? *</label>
+                <input type="text" id="user-name" name="name" required placeholder="John Doe" autocomplete="name" data-hover-expand>
+                <span class="error-msg" aria-live="polite"></span>
+              </div>
+              
+              <div class="form-group">
+                <label for="user-email">Your email address? *</label>
+                <input type="email" id="user-email" name="email" required placeholder="john@example.com" autocomplete="email" data-hover-expand>
+                <span class="error-msg" aria-live="polite"></span>
+              </div>
+              
+              <div class="form-group">
+                <label for="user-project">Project type *</label>
+                <select id="user-project" name="project_type" required data-hover-expand>
+                  <option value="" disabled selected>Select an option</option>
+                  <option value="ui_ux">UI/UX Design</option>
+                  <option value="frontend">Creative Frontend</option>
+                  <option value="branding">Complete Branding</option>
+                  <option value="other">Something Else</option>
+                </select>
+                <span class="error-msg" aria-live="polite"></span>
+              </div>
+              
+              <div class="form-group">
+                <label for="user-message">Tell us about your project *</label>
+                <textarea id="user-message" name="message" required placeholder="Hello Syntellite team, we want to build..." rows="5" data-hover-expand></textarea>
+                <span class="error-msg" aria-live="polite"></span>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-submit" id="submit-button" data-hover-expand>
+                Send Request
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer id="main-footer" class="site-footer">
+    <div class="container footer-container">
+      <div class="footer-brand">
+        <a href="/" class="logo footer-logo" data-hover-expand><span>Syn</span>tellite</a>
+        <p class="footer-tagline">Redefining web aesthetics through interactive craftsmanship.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Explore</h4>
+          <a href="/" data-hover-expand>Home</a>
+          <a href="/about.html" data-hover-expand>About</a>
+          <a href="/projects.html" data-hover-expand>Projects</a>
+          <a href="/contact.html" data-hover-expand>Contact</a>
+        </div>
+        <div class="footer-col">
+          <h4>Socials</h4>
+          <a href="#" target="_blank" rel="noopener" data-hover-expand>Dribbble</a>
+          <a href="#" target="_blank" rel="noopener" data-hover-expand>Awwwards</a>
+          <a href="#" target="_blank" rel="noopener" data-hover-expand>LinkedIn</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container footer-bottom-container">
+        <p>&copy; 2026 Syntellite. All rights reserved.</p>
+        <p>Built with Passion and Antigravity.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+</body>
+</html>

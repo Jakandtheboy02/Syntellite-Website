@@ -1,0 +1,88 @@
+/* ==========================================
+   SITE FOOTER STYLES
+   ========================================== */
+.site-footer {
+  background: var(--bg-primary);
+  border-top: 1px solid var(--border-color);
+  padding: 80px 0 40px 0;
+  position: relative;
+  z-index: 10;
+}
+
+.footer-container {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 60px;
+  margin-bottom: 60px;
+}
+
+.footer-brand {
+  max-width: 360px;
+}
+
+.footer-logo {
+  font-size: 1.75rem;
+  margin-bottom: 20px;
+}
+
+.footer-tagline {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.footer-links {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 40px;
+}
+
+.footer-col h4 {
+  font-family: var(--font-title);
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-primary);
+  margin-bottom: 24px;
+}
+
+.footer-col a {
+  display: block;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin-bottom: 14px;
+  transition: var(--transition-fast);
+}
+
+.footer-col a:hover {
+  color: var(--accent-color);
+  transform: translateX(4px);
+}
+
+/* Footer Bottom Credit Bar */
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.03);
+  padding-top: 40px;
+}
+
+.footer-bottom-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+@media (max-width: 768px) {
+  .footer-container {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  
+  .footer-bottom-container {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+}

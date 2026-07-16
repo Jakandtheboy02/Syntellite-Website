@@ -1,0 +1,59 @@
+/* ==========================================
+   INTERACTIVE CUSTOM CURSOR
+   ========================================== */
+.custom-cursor {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  /* Hide standard cursor on desktop devices with pointer controls */
+  body, a, button, input, select, textarea, [data-hover-expand] {
+    cursor: none !important;
+  }
+
+  .custom-cursor {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--c-size, 20px);
+    height: var(--c-size, 20px);
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: var(--border-radius-full);
+    pointer-events: none;
+    z-index: 99999;
+    transform: translate3d(-50%, -50%, 0);
+    transition: width 0.3s var(--ease-out-expo), 
+                height 0.3s var(--ease-out-expo), 
+                background-color 0.3s var(--ease-out-expo), 
+                border-color 0.3s var(--ease-out-expo);
+    mix-blend-mode: difference;
+  }
+
+  /* Inner dot */
+  .custom-cursor::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 4px;
+    height: 4px;
+    background-color: #ffffff;
+    border-radius: var(--border-radius-full);
+    transform: translate(-50%, -50%);
+    transition: width 0.3s var(--ease-out-expo), height 0.3s var(--ease-out-expo);
+  }
+
+  /* Hover states (applied via JS class updates) */
+  .custom-cursor.cursor-hover {
+    --c-size: 54px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 1);
+  }
+
+  .custom-cursor.cursor-hover::before {
+    width: 8px;
+    height: 8px;
+  }
+}
