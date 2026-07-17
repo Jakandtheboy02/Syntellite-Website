@@ -69,15 +69,30 @@
   height: var(--nav-size);
   border-radius: 50%;
   flex-shrink: 0;
+  position: relative; /* Setup absolute overlap containment */
+  overflow: hidden;
 }
 
-.logo-svg {
+.nav-logo-img {
   width: calc(var(--nav-size) * 0.4375); /* matches 28px for 64px size */
   height: calc(var(--nav-size) * 0.4375);
-  transition: transform 0.4s var(--ease-out-expo);
+  transition: opacity 0.4s var(--ease-out-expo), transform 0.4s var(--ease-out-expo);
+  pointer-events: none;
+  user-select: none;
 }
 
-.nav-logo-card:hover .logo-svg {
+.nav-logo-img.logo-colored {
+  position: absolute;
+  opacity: 0;
+}
+
+.nav-logo-card:hover .nav-logo-img.logo-white {
+  opacity: 0;
+  transform: rotate(-10deg) scale(1.05);
+}
+
+.nav-logo-card:hover .nav-logo-img.logo-colored {
+  opacity: 1;
   transform: rotate(-10deg) scale(1.05);
 }
 

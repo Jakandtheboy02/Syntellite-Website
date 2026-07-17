@@ -279,6 +279,8 @@ export function initPortfolioMorph() {
   const wrapper = document.getElementById('portfolio-wrapper');
   const cards = document.querySelectorAll('.morphing-cards-overlay .showcase-card');
   const showcaseTitleBlock = document.querySelector('.showcase-title-block');
+  const showcaseTitle = showcaseTitleBlock ? showcaseTitleBlock.querySelector('.showcase-title') : null;
+  const showcaseSubtitle = showcaseTitleBlock ? showcaseTitleBlock.querySelector('.showcase-subtitle') : null;
   const projectsTitleBlock = document.querySelector('.projects-title-block');
   const ctaOverlay = document.querySelector('.projects-cta-overlay');
 
@@ -291,11 +293,17 @@ export function initPortfolioMorph() {
     const overlayHeight = windowHeight;
 
     // 1. Calculate scroll progress through the portfolio-wrapper container
+    //    PRE_PHASE_DISTANCE shifts p so that Phase 1 (fan-out) begins while the
+    //    section is still entering the viewport from below — before it locks sticky.
     const scrolled = -wrapperRect.top;
     const totalScrollableDistance = wrapperRect.height - windowHeight;
 
     if (totalScrollableDistance <= 0) return;
-    const p = Math.min(1, Math.max(0, scrolled / totalScrollableDistance));
+
+    const PRE_PHASE_DISTANCE = windowHeight; // entry travel = 1 viewport height
+    const combinedScrolled = scrolled + PRE_PHASE_DISTANCE;
+    const combinedTotal = totalScrollableDistance + PRE_PHASE_DISTANCE;
+    const p = Math.min(1, Math.max(0, combinedScrolled / combinedTotal));
 
     // Determine the grid start Y position based on screen width to sit below Projects title (adjusted down for top padding)
     let gridStartY = 320;
@@ -322,12 +330,28 @@ export function initPortfolioMorph() {
       gridH = parseFloat(firstCardStyle.getPropertyValue('--grid-h') || 760);
     }
 
+    // Calculate dynamic scaling factor so margins and gaps are equal
+    let scale = 1;
+    if (window.innerWidth > 992) {
+      // Desktop base grid: 1200px wide, column sum: 1170px, gap: 30px. Math: (1170 + 3 * 30) = 1260px.
+      scale = Math.min(1.4, overlayWidth / 1260);
+    } else if (window.innerWidth > 768) {
+      // Tablet base grid: 600px wide, column sum: 585px, gap: 15px. Math: (585 + 3 * 15) = 630px.
+      scale = Math.min(1.25, overlayWidth / 630);
+    } else {
+      // Mobile: margin 20px, so grid width fills screen minus 40px
+      scale = Math.min(1.15, (overlayWidth - 40) / 300);
+    }
+
+    const scaledGridW = gridW * scale;
+    const scaledGridH = gridH * scale;
+
     // Dynamic vertical scroll translation for overflow grid layouts (safeguard bottom crops on short viewports)
     const ctaHeight = ctaOverlay ? (ctaOverlay.offsetHeight || 80) : 80;
-    const gridTotalHeight = gridStartY + gridH;
+    const gridTotalHeight = gridStartY + scaledGridH;
     let scrollOffset = 0;
     if (gridTotalHeight > overlayHeight) {
-      const overflowY = gridTotalHeight - overlayHeight + 40 + ctaHeight + 60; // include CTA + 60px padding clearance
+      const overflowY = gridTotalHeight - overlayHeight + 40 * scale + ctaHeight + 60; // scale row gap
       if (p > 0.9) {
         const p_scroll = Math.min(1, Math.max(0, (p - 0.9) / 0.1));
         scrollOffset = overflowY * p_scroll;
@@ -337,7 +361,7 @@ export function initPortfolioMorph() {
     // Position the "more Projects" CTA below the grid during Phase 4
     if (ctaOverlay) {
       if (p >= 0.9) {
-        const ctaTop = gridStartY + gridH + 40 - scrollOffset; // 40px gap below grid
+        const ctaTop = gridStartY + scaledGridH + 40 * scale - scrollOffset; // gap scales too
         ctaOverlay.style.top = `${ctaTop}px`;
         const ctaOpacity = Math.min(1, (p - 0.9) / 0.08);
         ctaOverlay.style.opacity = ctaOpacity;
@@ -350,25 +374,38 @@ export function initPortfolioMorph() {
 
     // 2. Animate and Crossfade Title Blocks based on timeline
     if (showcaseTitleBlock && projectsTitleBlock) {
+      // Progressive scroll-linked mask color sweeps for Showcase title & subtitle (bidirectional)
+      const showcase_title_p = Math.min(1, Math.max(0, (p - 0.05) / 0.20));
+      const showcase_subtitle_p = Math.min(1, Math.max(0, (p - 0.12) / 0.20));
+      if (showcaseTitle) showcaseTitle.style.setProperty('--reveal-progress', showcase_title_p);
+      if (showcaseSubtitle) showcaseSubtitle.style.setProperty('--reveal-progress', showcase_subtitle_p);
+
+      const projectsTitle = projectsTitleBlock.querySelector('.projects-title');
       if (p < 0.65) {
         // Phase 1 & 2: Showcase Title centered, Projects Title hidden below the viewport
         showcaseTitleBlock.style.opacity = 1;
         showcaseTitleBlock.style.transform = 'translateY(0)';
         projectsTitleBlock.style.opacity = 1;
         projectsTitleBlock.style.transform = `translateY(${windowHeight}px)`;
+        if (projectsTitle) projectsTitle.style.clipPath = 'inset(0 100% 0 0)';
       } else if (p < 0.9) {
-        // Phase 3: Smooth rise-up transition synchronized with Morph progress (Showcase pushed up by -500px to fully clear screen)
+        // Phase 3: Smooth rise-up transition synchronized with Morph progress
         const p_morph_title = (p - 0.65) / 0.25;
         showcaseTitleBlock.style.opacity = 1;
         showcaseTitleBlock.style.transform = `translateY(${-500 * p_morph_title}px)`;
         projectsTitleBlock.style.opacity = 1;
         projectsTitleBlock.style.transform = `translateY(${windowHeight * (1 - p_morph_title) - scrollOffset}px)`;
+        if (projectsTitle) {
+          const maskVal = (1 - Math.min(1, p_morph_title * 1.5)) * 100;
+          projectsTitle.style.clipPath = `inset(0 ${maskVal}% 0 0)`;
+        }
       } else {
-        // Phase 4: Showcase Title completely pushed off-screen, Projects Title settled at header and scroll offset applied
+        // Phase 4: Showcase Title completely pushed off-screen, Projects Title settled at header
         showcaseTitleBlock.style.opacity = 1;
         showcaseTitleBlock.style.transform = 'translateY(-500px)';
         projectsTitleBlock.style.opacity = 1;
         projectsTitleBlock.style.transform = `translateY(${-scrollOffset}px)`;
+        if (projectsTitle) projectsTitle.style.clipPath = 'inset(0 0% 0 0)';
       }
     }
 
@@ -384,23 +421,17 @@ export function initPortfolioMorph() {
       const gridHeight = parseFloat(style.getPropertyValue('--grid-height') || 230);
       const cardSize = parseFloat(style.getPropertyValue('--card-size') || 230);
 
-      // Coordinate calculations for fanned Showcase positions (positioned below showcase title)
       const showcaseLeft = overlayWidth / 2 + tx - cardSize / 2;
       const showcaseTop = showcaseStartY + ty;
 
-      // Coordinate calculations for stacked pile (positioned below showcase title and offset down)
       const centerLeft = overlayWidth / 2 - cardSize / 2;
       const centerTop = showcaseStartY + 80;
 
-      // Coordinate calculations for Projects grid cells (positioned below the Projects title with dynamic scroll translation)
-      const projectsLeft = overlayWidth / 2 - gridW / 2 + gridX;
-      const projectsTop = gridStartY + gridY - scrollOffset;
+      const projectsLeft = overlayWidth / 2 - scaledGridW / 2 + (gridX * scale);
+      const projectsTop = gridStartY + (gridY * scale) - scrollOffset;
 
-      // Multi-phase Scroll Timeline Morph
       if (p < 0.3) {
-        // Phase 1: Fan-Out (0 to 0.3 progress)
         const p1 = Math.min(1, Math.max(0, p / 0.3));
-
         const currentLeft = centerLeft + (showcaseLeft - centerLeft) * p1;
         const currentTop = centerTop + (showcaseTop - centerTop) * p1;
         const currentRot = rot * p1;
@@ -413,13 +444,10 @@ export function initPortfolioMorph() {
         card.style.top = `${currentTop}px`;
         card.style.transform = `rotate(${currentRot}deg) scale(${currentScale})`;
 
-        // Text labels overlay remains hidden
         const info = card.querySelector('.project-info');
         if (info) info.style.opacity = 0;
         card.style.setProperty('--overlay-op', 0);
-
       } else if (p < 0.65) {
-        // Phase 2: Sticky Pinned Hold (0.3 to 0.65 progress) - cards stay fanned out in viewport center
         card.style.opacity = 1;
         card.style.width = `${cardSize}px`;
         card.style.height = `${cardSize}px`;
@@ -430,14 +458,10 @@ export function initPortfolioMorph() {
         const info = card.querySelector('.project-info');
         if (info) info.style.opacity = 0;
         card.style.setProperty('--overlay-op', 0);
-
       } else {
-        // Phase 3 & 4: Morph to Grid and release (0.65 to 0.9 progress morphing, 0.9 to 1.0 settled)
         const p_morph = Math.min(1, Math.max(0, (p - 0.65) / 0.25));
-
-        const w = cardSize + (gridWidth - cardSize) * p_morph;
-        const h = cardSize + (gridHeight - cardSize) * p_morph;
-
+        const w = cardSize + ((gridWidth * scale) - cardSize) * p_morph;
+        const h = cardSize + ((gridHeight * scale) - cardSize) * p_morph;
         const currentLeft = showcaseLeft + (projectsLeft - showcaseLeft) * p_morph;
         const currentTop = showcaseTop + (projectsTop - showcaseTop) * p_morph;
         const currentRot = rot * (1 - p_morph);
@@ -449,19 +473,15 @@ export function initPortfolioMorph() {
         card.style.top = `${currentTop}px`;
         card.style.transform = `rotate(${currentRot}deg) scale(1)`;
 
-        // Fade in project labels & category info
         const info = card.querySelector('.project-info');
         if (info) {
           const textOp = Math.min(1, Math.max(0, (p_morph - 0.45) / 0.35));
           info.style.opacity = textOp;
           info.style.transform = `translateY(${(1 - textOp) * 15}px)`;
         }
-
-        // Gradient overlay opacity on card
         card.style.setProperty('--overlay-op', p_morph);
       }
 
-      // Dynamic vertical scroll background parallax to image
       const hoverWrapper = card.querySelector('.card-hover-wrapper');
       if (hoverWrapper) {
         hoverWrapper.style.backgroundPositionY = `${15 + 70 * p}%`;
@@ -487,13 +507,10 @@ export function initTrustAnimation() {
     const rect = section.getBoundingClientRect();
     const windowHeight = window.innerHeight;
 
-    // 0 when section top enters viewport bottom, 1 when section bottom reaches viewport top
     const entryProgress = (windowHeight - rect.top) / (windowHeight + rect.height);
     const p = Math.min(1, Math.max(0, entryProgress));
 
-    // 1. Staggered reveal & continuous horizontal parallax slide for text lines
     lines.forEach((line, index) => {
-      // Entry reveal phase (staggered fade-in + slide-up)
       const startReveal = 0.1 + index * 0.08;
       const endReveal = 0.4 + index * 0.08;
       const reveal_p = Math.min(1, Math.max(0, (p - startReveal) / (endReveal - startReveal)));
@@ -502,16 +519,14 @@ export function initTrustAnimation() {
       const opacity = easedReveal;
       const translateY = (1 - easedReveal) * 40;
 
-      // Continuous horizontal parallax slide across the full viewport pass
-      // Line 1 and 3 slide right, Line 2 slides left
       const direction = (index % 2 === 0) ? 1 : -1;
-      const shiftX = direction * (-80 + 160 * p); // Slides from -80px to +80px (or opposite)
+      const shiftX = direction * (-80 + 160 * p);
 
       line.style.opacity = opacity;
       line.style.transform = `translateY(${translateY}px) translateX(${shiftX}px)`;
+      line.style.setProperty('--reveal-progress', easedReveal);
     });
 
-    // 2. Parallax and scale animation for the image card
     if (image) {
       const imgReveal = Math.min(1, Math.max(0, p / 0.3));
       const imgEased = imgReveal * imgReveal * (3 - 2 * imgReveal);
@@ -528,5 +543,333 @@ export function initTrustAnimation() {
   // Subscribe to Lenis smooth-scroll tick for buttery parallax in sync with smooth position
   subscribeScroll(onScroll);
   window.addEventListener('resize', onScroll, { passive: true });
+  onScroll();
+}
+
+/**
+ * Initializes the Services horizontal carousel with dynamic scroll-linked offset,
+ * auto-playing ticker, and manual grab-drag horizontal controls.
+ */
+export function initServicesSection() {
+  const section = document.getElementById('services');
+  const title = section ? section.querySelector('.services-title') : null;
+  const subtitle = section ? section.querySelector('.services-subtitle') : null;
+  const carousel = section ? section.querySelector('.services-carousel') : null;
+
+  if (!section || !carousel) return;
+
+  // Clone cards to double the scroll width for seamless infinite loop wrapping
+  const originalCards = Array.from(carousel.children);
+  originalCards.forEach(card => {
+    const clone = card.cloneNode(true);
+    carousel.appendChild(clone);
+  });
+
+  let autoScrollX = 0;
+  let isDragging = false;
+  let startX = 0;
+  let startScrollLeft = 0;
+  let dragPauseTimer = null;
+
+  const getSingleSetWidth = () => {
+    return carousel.scrollWidth / 2;
+  };
+
+  // Mouse drag horizontal scroll
+  carousel.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    carousel.classList.add('dragging');
+    startX = e.pageX - carousel.offsetLeft;
+    startScrollLeft = carousel.scrollLeft;
+    if (dragPauseTimer) clearTimeout(dragPauseTimer);
+  });
+
+  window.addEventListener('mouseup', () => {
+    if (isDragging) {
+      isDragging = false;
+      carousel.classList.remove('dragging');
+      autoScrollX = carousel.scrollLeft; // Sync auto-scroll pos with manual offset
+      carousel.dataset.paused = "true";
+      dragPauseTimer = setTimeout(() => {
+        carousel.dataset.paused = "false";
+      }, 2000);
+    }
+  });
+
+  carousel.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.pageX - carousel.offsetLeft;
+    const walk = (x - startX) * 1.5;
+    
+    let targetScroll = startScrollLeft - walk;
+    const singleWidth = getSingleSetWidth();
+
+    // Wrap scroll position infinitely during active drag
+    if (singleWidth > 0) {
+      if (targetScroll >= singleWidth) {
+        targetScroll -= singleWidth;
+        startScrollLeft -= singleWidth;
+      } else if (targetScroll < 0) {
+        targetScroll += singleWidth;
+        startScrollLeft += singleWidth;
+      }
+    }
+    carousel.scrollLeft = targetScroll;
+  });
+
+  // Touch swipe horizontal scroll (mobile support)
+  carousel.addEventListener('touchstart', (e) => {
+    isDragging = true;
+    startX = e.touches[0].pageX - carousel.offsetLeft;
+    startScrollLeft = carousel.scrollLeft;
+    if (dragPauseTimer) clearTimeout(dragPauseTimer);
+  });
+
+  carousel.addEventListener('touchend', () => {
+    isDragging = false;
+    autoScrollX = carousel.scrollLeft; // Sync auto-scroll pos with manual offset
+    carousel.dataset.paused = "true";
+    dragPauseTimer = setTimeout(() => {
+      carousel.dataset.paused = "false";
+    }, 2000);
+  });
+
+  carousel.addEventListener('touchmove', (e) => {
+    if (!isDragging) return;
+    const x = e.touches[0].pageX - carousel.offsetLeft;
+    const walk = (x - startX) * 1.5;
+    
+    let targetScroll = startScrollLeft - walk;
+    const singleWidth = getSingleSetWidth();
+
+    // Wrap scroll position infinitely during touch swipe
+    if (singleWidth > 0) {
+      if (targetScroll >= singleWidth) {
+        targetScroll -= singleWidth;
+        startScrollLeft -= singleWidth;
+      } else if (targetScroll < 0) {
+        targetScroll += singleWidth;
+        startScrollLeft += singleWidth;
+      }
+    }
+    carousel.scrollLeft = targetScroll;
+  });
+
+  // Continuous frame updates for autoplay
+  function tick() {
+    const singleWidth = getSingleSetWidth();
+    if (singleWidth > 0) {
+      // Loop wrapping check during auto-scroll
+      if (carousel.scrollLeft >= singleWidth) {
+        carousel.scrollLeft -= singleWidth;
+        autoScrollX = carousel.scrollLeft;
+      } else if (carousel.scrollLeft < 0) {
+        carousel.scrollLeft += singleWidth;
+        autoScrollX = carousel.scrollLeft;
+      }
+
+      if (!isDragging && carousel.dataset.paused !== "true") {
+        autoScrollX += 0.45; // Auto-move step size per frame
+        if (autoScrollX >= singleWidth) {
+          autoScrollX -= singleWidth;
+        }
+        
+        // Add scroll-linked page scroll parallax offset
+        const pageScrollOffset = parseFloat(carousel.dataset.scrollOffset || 0);
+        carousel.scrollLeft = autoScrollX + pageScrollOffset;
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  // Scroll timeline triggers (staggered titles progressive reveal + horizontal offset calculations)
+  const onScroll = () => {
+    const rect = section.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+
+    // 0 when section top enters viewport bottom, 1 when section bottom reaches viewport top
+    const entryProgress = (windowHeight - rect.top) / (windowHeight + rect.height);
+    const p = Math.min(1, Math.max(0, entryProgress));
+
+    // Showcase-matching progressive feathered mask reveals
+    const title_p = Math.min(1, Math.max(0, (p - 0.15) / 0.22));
+    const subtitle_p = Math.min(1, Math.max(0, (p - 0.22) / 0.22));
+
+    if (title) title.style.setProperty('--reveal-progress', title_p);
+    if (subtitle) subtitle.style.setProperty('--reveal-progress', subtitle_p);
+
+    // Calculate vertical scroll influence on horizontal carousel shift
+    if (!isDragging) {
+      const singleWidth = getSingleSetWidth();
+      const scrollInfluence = p * singleWidth * 0.35; // Shifts up to 35% of total width as you scroll past
+      carousel.dataset.scrollOffset = scrollInfluence;
+    }
+  };
+
+  subscribeScroll(onScroll);
+  onScroll();
+}
+
+/**
+ * Initializes the Our Process section with dynamic 3D scroll elevation parallax
+ * and random shuffled active cards each time the user returns to the section.
+ */
+export function initProcessSection() {
+  const section = document.getElementById('process');
+  const title = section ? section.querySelector('.process-title') : null;
+  const subtitle = section ? section.querySelector('.process-subtitle') : null;
+  const grid = section ? section.querySelector('.process-grid') : null;
+
+  if (!section || !grid) return;
+
+  const steps = [
+    { num: '01', title: 'Discovery & Feasibility', desc: 'Aligning vision, technology audits, scoping, and roadmap scoping.', time: '1-2 WEEK' },
+    { num: '02', title: 'Proposal & Kickoff', desc: 'High-fidelity UI systems, premium motion design, and user flows.', time: '3-5 WEEK' },
+    { num: '03', title: 'Research & Planning', desc: 'Clean engineering, custom animation integration, and performance audits.', time: '1-2 WEEK' },
+    { num: '04', title: 'Execution & Updates', desc: 'Rigorous quality checks, continuous delivery, and product launching.', time: '4-12 WEEK' }
+  ];
+
+  function getLayoutConfig() {
+    let cols = 6;
+    let slots = 24;
+    if (window.innerWidth <= 768) {
+      cols = 2;
+      slots = 8;
+    } else if (window.innerWidth <= 992) {
+      cols = 4;
+      slots = 16;
+    }
+    return { cols, slots };
+  }
+
+  // Distribute active content cards across segments of the grid to prevent clustering
+  function getRandomIndices(slots) {
+    const segmentSize = Math.floor(slots / 4);
+    const indices = [];
+    for (let i = 0; i < 4; i++) {
+      const start = i * segmentSize;
+      const offset = Math.floor(Math.random() * Math.max(1, segmentSize));
+      indices.push(start + offset);
+    }
+    return indices;
+  }
+
+  let cards = [];
+  let elevatedCards = [];
+  let currentCols = 6;
+
+  function shuffleProcessGrid() {
+    const config = getLayoutConfig();
+    currentCols = config.cols;
+    const randomIndices = getRandomIndices(config.slots);
+
+    grid.innerHTML = '';
+    cards = [];
+    elevatedCards = [];
+
+    for (let i = 0; i < config.slots; i++) {
+      const card = document.createElement('div');
+      const stepIndex = randomIndices.indexOf(i);
+
+      if (stepIndex !== -1) {
+        const step = steps[stepIndex];
+        card.className = 'process-card elevated';
+        card.setAttribute('data-index', stepIndex + 1);
+        card.innerHTML = `
+          <div class="process-card-inner">
+            <div class="process-card-front">
+              <div class="process-num">${step.num}</div>
+              <div class="process-content">
+                <h3>${step.title}</h3>
+                <p>${step.desc}</p>
+              </div>
+            </div>
+            <div class="process-card-back">
+              <div class="process-back-content">
+                <span class="time-label">Estimated Duration</span>
+                <div class="time-value">${step.time}</div>
+              </div>
+            </div>
+          </div>
+        `;
+        elevatedCards.push(card);
+      } else {
+        card.className = 'process-card placeholder';
+      }
+      grid.appendChild(card);
+      cards.push(card);
+    }
+  }
+
+  // Initial shuffle
+  shuffleProcessGrid();
+
+  // Reset tracker so grid shuffles when scrolled completely off-screen and back in
+  let hasReset = true;
+
+  const onScroll = () => {
+    const rect = section.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+
+    // 0 when section enters, 1 when it leaves
+    const entryProgress = (windowHeight - rect.top) / (windowHeight + rect.height);
+    const p = Math.min(1, Math.max(0, entryProgress));
+
+    // Handle shuffling boundary resets
+    if (p <= 0.005 || p >= 0.995) {
+      if (!hasReset) {
+        shuffleProcessGrid();
+        hasReset = true;
+      }
+    } else if (p > 0.05 && p < 0.95) {
+      hasReset = false;
+    }
+
+    // Showcase-matching progressive feathered mask reveals for titles
+    const title_p = Math.min(1, Math.max(0, (p - 0.15) / 0.22));
+    const subtitle_p = Math.min(1, Math.max(0, (p - 0.22) / 0.22));
+
+    if (title) title.style.setProperty('--reveal-progress', title_p);
+    if (subtitle) subtitle.style.setProperty('--reveal-progress', subtitle_p);
+
+    // Staggered horizontal horizontal scroll parallax shift for each row of the grid
+    // Even rows slide left, odd rows slide right, linking movements directly to scrolling direction
+    cards.forEach((card, index) => {
+      const row = Math.floor(index / currentCols);
+      const direction = (row % 2 === 0) ? -1 : 1;
+      const shiftX = (p - 0.5) * 150 * direction; // Shifts up to 150px horizontally
+
+      const stagger = (index % currentCols) * 0.015 + Math.floor(index / currentCols) * 0.02;
+      const cardProgress = Math.min(1, Math.max(0, (p - stagger) / 0.45));
+      const easedProgress = cardProgress * cardProgress * (3 - 2 * cardProgress);
+
+      if (!card.classList.contains('elevated')) {
+        card.style.opacity = easedProgress * 0.85; // Solid visibility for light grey cubes
+        card.style.transform = `translate3d(${shiftX}px, ${(1 - easedProgress) * 20}px, 0)`;
+      } else {
+        const elevationProgress = Math.sin(p * Math.PI);
+        const lift = elevationProgress * -35; // Lifts up to -35px
+        const scale = 1 + elevationProgress * 0.05; // Scales up to 1.05x
+
+        // Extremely soft shadow casting dynamics on the light background
+        const shadowBlur = 20 + elevationProgress * 25;
+        const shadowSpread = 2 + elevationProgress * 8;
+        const shadowOpacity = 0.015 + elevationProgress * 0.025; // Fainter, softer shadow overlay
+
+        card.style.transform = `translate3d(${shiftX}px, ${lift}px, 0) scale(${scale})`;
+        card.style.opacity = Math.min(1, Math.max(0, p / 0.25));
+
+        const faces = card.querySelectorAll('.process-card-front, .process-card-back');
+        const shadowValue = `0 ${shadowBlur}px ${shadowSpread}px rgba(0, 0, 0, ${shadowOpacity}), 0 8px 24px rgba(0, 0, 0, 0.01)`;
+        faces.forEach(face => {
+          face.style.boxShadow = shadowValue;
+        });
+      }
+    });
+  };
+
+  subscribeScroll(onScroll);
   onScroll();
 }

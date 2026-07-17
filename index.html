@@ -33,13 +33,8 @@
   <nav id="bottom-nav" class="bottom-nav-bar">
     <!-- Left Logo Card -->
     <a href="/" class="nav-logo-card" data-hover-expand aria-label="Syntellite Home">
-      <svg class="logo-svg" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="12" cy="12" r="4" fill="currentColor" />
-        <rect x="8" y="20" width="8" height="12" rx="4" fill="currentColor" />
-        <path d="M20 12C20 7.58172 23.5817 4 28 4C32.4183 4 36 7.58172 36 12C36 16.4183 32.4183 20 28 20H20V12Z"
-          fill="currentColor" />
-        <rect x="20" y="26" width="16" height="8" rx="4" fill="currentColor" />
-      </svg>
+      <img src="/src/assets/icons/Logo White.svg" alt="Syntellite Logo" class="nav-logo-img logo-white">
+      <img src="/src/assets/icons/Logo Colored.svg" alt="Syntellite Logo Colored" class="nav-logo-img logo-colored">
     </a>
 
     <!-- Center Links Card -->
@@ -64,6 +59,7 @@
       <!-- Background Video -->
       <div class="hero-video-container">
         <video autoplay muted loop playsinline class="hero-video-bg">
+          <source src="/video/hero-bg.webm" type="video/webm">
           <source src="/video/hero-bg.mp4" type="video/mp4">
         </video>
       </div>
@@ -72,11 +68,12 @@
     <!-- Portfolio Wrapper (combines Showcase and Projects into a sticky timeline) -->
     <div id="portfolio-wrapper" class="portfolio-wrapper" data-bg="light">
       <div class="portfolio-sticky-container">
-        
+
         <!-- Showcase Title Block -->
         <div class="portfolio-title-block showcase-title-block">
-          <h2 class="showcase-title">Bold Ideas Engineered</h2>
-          <p class="showcase-subtitle">We design, build, and scale flagship digital products</p>
+          <h2 class="showcase-title" data-text="Bold Ideas Engineered">Bold Ideas Engineered</h2>
+          <p class="showcase-subtitle" data-text="We design, build, and scale flagship digital products">We design,
+            build, and scale flagship digital products</p>
         </div>
 
         <!-- Projects Title Block -->
@@ -88,61 +85,74 @@
         <div class="morphing-cards-overlay">
           <!-- Card 1 -->
           <div class="showcase-card card-1" data-hover-expand>
-            <div class="card-hover-wrapper" style="background-image: url('/src/assets/images/Project Card 1.png');">
-              <div class="project-info">
-                <h3>Project One</h3>
-                <p>Digital Crafting</p>
+            <img src="/src/assets/images/Project Card 1.png" alt="Project One" class="project-card-image">
+            <div class="project-info">
+              <h3>Project One</h3>
+              <div class="project-chips">
+                <span class="project-chip">Digital Crafting</span>
+                <span class="project-chip">Design</span>
               </div>
             </div>
           </div>
           <!-- Card 2 -->
           <div class="showcase-card card-2" data-hover-expand>
-            <div class="card-hover-wrapper" style="background-image: url('/src/assets/images/Project Card 2.png');">
-              <div class="project-info">
-                <h3>Project Two</h3>
-                <p>Interactive System</p>
+            <img src="/src/assets/images/Project Card 2.png" alt="Project Two" class="project-card-image">
+            <div class="project-info">
+              <h3>Project Two</h3>
+              <div class="project-chips">
+                <span class="project-chip">Interactive System</span>
+                <span class="project-chip">Platform</span>
               </div>
             </div>
           </div>
           <!-- Card 3 -->
           <div class="showcase-card card-3" data-hover-expand>
-            <div class="card-hover-wrapper" style="background-image: url('/src/assets/images/Project Card 3.png');">
-              <div class="project-info">
-                <h3>Project Three</h3>
-                <p>Bespoke Platform</p>
+            <img src="/src/assets/images/Project Card 3.png" alt="Project Three" class="project-card-image">
+            <div class="project-info">
+              <h3>Project Three</h3>
+              <div class="project-chips">
+                <span class="project-chip">Bespoke Platform</span>
+                <span class="project-chip">E-Commerce</span>
+                <span class="project-chip">Web3</span>
               </div>
             </div>
           </div>
           <!-- Card 4 -->
           <div class="showcase-card card-4" data-hover-expand>
-            <div class="card-hover-wrapper" style="background-image: url('/src/assets/images/Project Card 4.png');">
-              <div class="project-info">
-                <h3>Project Four</h3>
-                <p>Mobile Integration</p>
+            <img src="/src/assets/images/Project Card 4.png" alt="Project Four" class="project-card-image">
+            <div class="project-info">
+              <h3>Project Four</h3>
+              <div class="project-chips">
+                <span class="project-chip">Mobile Integration</span>
+                <span class="project-chip">iOS & Android</span>
               </div>
             </div>
           </div>
           <!-- Card 5 -->
           <div class="showcase-card card-5" data-hover-expand>
-            <div class="card-hover-wrapper" style="background-image: url('/src/assets/images/Project Card 5.png');">
-              <div class="project-info">
-                <h3>Project Five</h3>
-                <p>Brand Narrative</p>
+            <img src="/src/assets/images/Project Card 5.png" alt="Project Five" class="project-card-image">
+            <div class="project-info">
+              <h3>Project Five</h3>
+              <div class="project-chips">
+                <span class="project-chip">Brand Narrative</span>
+                <span class="project-chip">Identity</span>
               </div>
             </div>
           </div>
           <!-- Card 6 -->
           <div class="showcase-card card-6" data-hover-expand>
-            <div class="card-hover-wrapper" style="background-image: url('/src/assets/images/Project Card 6.png');">
-              <div class="project-info">
-                <h3>Project Six</h3>
-                <p>Creative Concept</p>
+            <img src="/src/assets/images/Project Card 6.png" alt="Project Six" class="project-card-image">
+            <div class="project-info">
+              <h3>Project Six</h3>
+              <div class="project-chips">
+                <span class="project-chip">Creative Concept</span>
+                <span class="project-chip">3D Motion</span>
               </div>
             </div>
           </div>
           <!-- Projects CTA -->
           <div class="projects-cta-overlay">
-            <a href="/projects.html" class="projects-cta-btn">more Projects &rarr;</a>
+            <a href="/projects.html" class="projects-cta-btn" data-hover-expand>more Projects &rarr;</a>
           </div>
         </div>
 
@@ -153,15 +163,69 @@
     <!-- Trust Section -->
     <section id="trust" class="trust-section light-section" data-bg="light">
       <div class="container trust-container">
-        <div class="trust-content">
-          <h2 class="trust-title">
-            <span class="trust-line line-1">Engineering</span>
-            <span class="trust-line line-2">that scales your</span>
-            <span class="trust-line line-3">vision into reality</span>
-          </h2>
+        <h2 class="trust-grid">
+          <span class="trust-line line-1" data-text="Engineering">Engineering</span>
+          <span class="trust-image-wrapper">
+            <img src="/src/assets/images/Trust section Image.png" alt="Trust Image" class="trust-image">
+          </span>
+          <span class="trust-line line-2" data-text="that scales your">that scales your</span>
+          <span class="trust-line line-3" data-text="vision into reality">vision into reality</span>
+        </h2>
+      </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services-section light-section" data-bg="light">
+      <div class="container services-container">
+        <div class="services-title-block">
+          <h2 class="services-title" data-text="Solutions">Solutions</h2>
+          <p class="services-subtitle"
+            data-text="we provide end-to-end technology solutions that drive business growth and innovation.">
+            we provide end-to-end technology solutions that drive business growth and innovation.
+          </p>
         </div>
-        <div class="trust-image-wrapper">
-          <img src="/src/assets/images/Trust section Image.png" alt="Trust Image" class="trust-image">
+
+        <div class="services-carousel-wrapper">
+          <div class="services-carousel">
+            <div class="solutions-card">
+              <img src="/src/assets/Components/Service Card 1.png" alt="Strategy & Architecture">
+            </div>
+            <div class="solutions-card">
+              <img src="/src/assets/Components/Service Card 2.png" alt="Product Development">
+            </div>
+            <div class="solutions-card">
+              <img src="/src/assets/Components/Service Card 3.png" alt="Cloud & Infrastructure">
+            </div>
+            <div class="solutions-card">
+              <img src="/src/assets/Components/Service Card 4.png" alt="AI & Intelligence">
+            </div>
+            <div class="solutions-card">
+              <img src="/src/assets/Components/Service Card 5.png" alt="Experience Design">
+            </div>
+          </div>
+        </div>
+
+        <!-- Services CTA -->
+        <div class="services-cta-wrapper">
+          <a href="#" class="services-cta-btn" data-hover-expand>know more &rarr;</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Our Process Section -->
+    <section id="process" class="process-section light-section" data-bg="light">
+      <div class="container process-container">
+        <div class="process-title-block">
+          <h2 class="process-title" data-text="Our Process">Our Process</h2>
+          <p class="process-subtitle" data-text="a structural methodology crafted to transform bold ideas into flagship digital products.">
+            a structural methodology crafted to transform bold ideas into flagship digital products.
+          </p>
+        </div>
+
+        <div class="process-grid-wrapper">
+          <div class="process-grid">
+            <!-- Dynamically generated and shuffled in animations.js -->
+          </div>
         </div>
       </div>
     </section>

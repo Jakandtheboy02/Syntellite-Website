@@ -1032,8 +1032,8 @@ main {
 .portfolio-wrapper {
   position: relative;
   width: 100%;
-  height: 340vh;
-  /* Increased to accommodate taller cards + CTA clearance */
+  height: 200vh;
+  /* Reduced to require only one additional scroll to complete morph and unpin */
   background: #ffffff;
 }
 
@@ -1075,7 +1075,44 @@ main {
   transform: translateY(20px);
 }
 
-.showcase-title,
+.showcase-title {
+  color: rgba(0, 0, 0, 0.15);
+  /* Light gray base text */
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(2.5rem, 8vw, 96px);
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -3.84px;
+  margin: 0;
+  display: block;
+  /* Stacks vertically */
+  width: fit-content;
+  /* Shrinks container to text width for precise gradient mask boundary */
+  margin-inline: auto;
+  /* Centers the shrink-wrapped block */
+  position: relative;
+}
+
+.showcase-title::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  color: #000000;
+  /* Darker copy of text (black) */
+  pointer-events: none;
+  white-space: nowrap;
+
+  /* Feathered soft mask reveal */
+  --reveal-pct: calc(var(--reveal-progress, 0) * 125% - 25%);
+  --reveal-fade: calc(var(--reveal-progress, 0) * 125%);
+  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 var(--reveal-pct), transparent var(--reveal-fade), transparent 100%);
+  mask-image: linear-gradient(to right, #000 0%, #000 var(--reveal-pct), transparent var(--reveal-fade), transparent 100%);
+}
+
 .projects-title {
   color: #000000;
   font-family: 'Outfit', sans-serif;
@@ -1088,13 +1125,40 @@ main {
 }
 
 .showcase-subtitle {
-  color: #000000;
+  color: rgba(0, 0, 0, 0.15);
+  /* Light gray base text */
   font-family: 'Outfit', sans-serif;
   font-size: clamp(1.1rem, 2.2vw, 24px);
   font-style: normal;
   font-weight: 400;
   line-height: normal;
   margin-top: 20px;
+  display: block;
+  /* Stacks vertically */
+  width: fit-content;
+  /* Shrinks container to text width for precise gradient mask boundary */
+  margin-inline: auto;
+  /* Centers the shrink-wrapped block */
+  position: relative;
+}
+
+.showcase-subtitle::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  color: #000000;
+  /* Darker copy of text (black) */
+  pointer-events: none;
+  white-space: nowrap;
+
+  /* Feathered soft mask reveal */
+  --reveal-pct: calc(var(--reveal-progress, 0) * 125% - 25%);
+  --reveal-fade: calc(var(--reveal-progress, 0) * 125%);
+  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 var(--reveal-pct), transparent var(--reveal-fade), transparent 100%);
+  mask-image: linear-gradient(to right, #000 0%, #000 var(--reveal-pct), transparent var(--reveal-fade), transparent 100%);
 }
 
 .morphing-cards-overlay {
@@ -1117,6 +1181,12 @@ main {
   will-change: transform, left, top, width, height, opacity;
   cursor: pointer;
   pointer-events: auto;
+  overflow: hidden;
+  /* Clips the child image during morph and scale */
+  border-radius: 20px;
+  /* Card border radius applied directly */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+  transition: box-shadow 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 
   /* Card responsive configuration variables for JS coordinates parsing */
   --card-size: 230px;
@@ -1124,68 +1194,74 @@ main {
   --grid-h: 1080px;
 }
 
-.card-hover-wrapper {
-  width: 100%;
-  height: 100%;
-  border-radius: 20px;
-  background-size: 115% 115%;
-  /* Extra margin for scroll parallax */
-  background-position: center center;
-  position: relative;
-  overflow: hidden;
-  box-shadow: none;
-
-  /* Symmetrical deceleration easing transitions */
-  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-  will-change: transform;
+.project-card-image {
+  width: 100% !important;
+  height: 100% !important;
+  /* Forces the image to fill the card exactly, overriding global height: auto rules */
+  object-fit: cover !important;
+  object-position: center center !important;
+  display: block !important;
+  pointer-events: none;
+  border-radius: inherit;
+  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: object-position;
 }
 
-.morphing-cards-overlay .showcase-card:hover .card-hover-wrapper {
-  transform: scale(1.05);
-  box-shadow: none;
-}
-
-/* Card content overlay gradient */
-.card-hover-wrapper::after {
-  content: '';
+.morphing-cards-overlay .project-info {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 60%);
-  z-index: 1;
-  opacity: var(--overlay-op, 0);
-  transition: opacity 0.3s ease;
-  border-radius: inherit;
-  pointer-events: none;
-}
-
-.morphing-cards-overlay .project-info {
-  position: absolute;
-  bottom: 32px;
-  left: 32px;
-  right: 32px;
   z-index: 2;
   color: #ffffff;
   opacity: 0;
-  /* hidden initially, faded in during JS scroll morph */
+  /* JS fades this in during scroll morph */
   text-align: left;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(20px, 3.5vw, 32px);
+  box-sizing: border-box;
 }
 
 .morphing-cards-overlay .project-info h3 {
-  margin: 0 0 6px 0;
+  margin: 0;
   font-family: 'Outfit', sans-serif;
-  font-size: 1.6rem;
+  font-size: clamp(1.4rem, 2.5vw, 2.2rem);
+  /* Larger font size */
   font-weight: 500;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.8px;
+  line-height: 1.1;
+  text-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  /* Readability shadow overlay */
 }
 
-.morphing-cards-overlay .project-info p {
-  margin: 0;
+.project-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: auto;
+  /* Force alignment to bottom */
+}
+
+.project-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 100px;
   font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.95rem;
-  opacity: 0.8;
+  font-size: clamp(0.75rem, 1.2vw, 0.85rem);
+  font-weight: 500;
+  color: #ffffff;
+  line-height: 1;
+  white-space: nowrap;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Projects CTA button – sits below the project grid inside the overlay */
@@ -1212,26 +1288,28 @@ main {
   font-family: 'Outfit', sans-serif;
   font-size: clamp(1rem, 1.5vw, 1.15rem);
   font-weight: 500;
-  color: #fff;
-  background: rgba(0, 0, 0, 0.55);
+  color: #000000;
+  background: rgba(0, 0, 0, 0.04);
   border-radius: 100px;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(0, 0, 0, 0.08);
   text-decoration: none;
   letter-spacing: 0.01em;
   transition:
     transform 0.3s cubic-bezier(0.25, 1, 0.5, 1),
     background 0.3s ease,
-    box-shadow 0.3s ease;
+    color 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
   white-space: nowrap;
 }
 
 .projects-cta-btn:hover,
 .projects-cta-btn:focus {
-  background: rgba(0, 0, 0, 0.75);
+  background: #000000;
+  color: #ffffff;
+  border-color: #000000;
   transform: translateY(-3px);
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
 }
 
 
@@ -1305,7 +1383,7 @@ main {
 /* Responsive adjustments */
 @media (max-width: 992px) {
   .portfolio-wrapper {
-    height: 300vh;
+    height: 180vh;
   }
 
   .showcase-title-block {
@@ -1385,7 +1463,7 @@ main {
 
 @media (max-width: 768px) {
   .portfolio-wrapper {
-    height: 270vh;
+    height: 160vh;
   }
 
   .showcase-title-block {
@@ -1483,105 +1561,568 @@ main {
 .trust-section {
   background: #ffffff;
   color: #000000;
-  padding: 180px 0;
+  padding: clamp(80px, 12vw, 180px) 0;
+  overflow: hidden;
   position: relative;
   z-index: 10;
 }
 
-.trust-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 60px;
+.trust-grid {
+  display: grid;
+  grid-template-columns: auto auto;
+  /* Two tight columns matching content size */
+  justify-content: center;
+  /* Perfectly centers the elements as a single group */
+  align-items: start;
+  column-gap: 0.8em;
+  /* Proportional gap scaling with typography */
+  row-gap: 0.2em;
   max-width: 1300px;
   margin: 0 auto;
-  padding: 0 48px;
+  padding: 0 clamp(24px, 4vw, 48px);
   box-sizing: border-box;
-}
-
-.trust-content {
-  flex: 1.3;
-}
-
-.trust-title {
-  color: #000;
-  font-family: Outfit, sans-serif;
-  font-size: clamp(52px, 6.66vw, 128px);
-  font-style: normal;
+  font-size: clamp(32px, 6.2vw, 128px);
+  font-family: 'Outfit', sans-serif;
   font-weight: 400;
   line-height: 1.1;
-  letter-spacing: clamp(-5.12px, -0.266vw, -2px);
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.trust-title .line-1 {
-  margin-left: 9vw;
-  /* Responsive right shift */
-}
-
-.trust-title .line-2 {
-  margin-left: 0;
-  /* Leftmost line */
-}
-
-.trust-title .line-3 {
-  margin-left: 14vw;
-  /* Responsive furthest right shift */
+  letter-spacing: clamp(-5.12px, -0.266vw, -1.2px);
 }
 
 .trust-line {
   display: block;
   white-space: nowrap;
-  /* Prevent words from wrapping on resize */
   opacity: 0;
   transform: translateY(30px);
   will-change: transform, opacity;
+  position: relative;
+  color: rgba(0, 0, 0, 0.15);
+  /* Light gray base text */
+}
+
+.trust-line::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  color: #000000;
+  /* Darker copy of text (black) */
+  pointer-events: none;
+  white-space: nowrap;
+
+  /* Feathered soft mask reveal */
+  --reveal-pct: calc(var(--reveal-progress, 0) * 125% - 25%);
+  --reveal-fade: calc(var(--reveal-progress, 0) * 125%);
+  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 var(--reveal-pct), transparent var(--reveal-fade), transparent 100%);
+  mask-image: linear-gradient(to right, #000 0%, #000 var(--reveal-pct), transparent var(--reveal-fade), transparent 100%);
+}
+
+.trust-line.line-1 {
+  grid-column: 1;
+  grid-row: 1;
+  margin-left: 1.2em;
+  /* Fluid typographic stagger */
 }
 
 .trust-image-wrapper {
-  flex: 0.7;
-  display: flex;
-  justify-content: flex-end;
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  width: 4.1em;
+  /* Scales proportionally with text font-size */
+  aspect-ratio: 16 / 9;
+  align-self: start;
 }
 
 .trust-image {
   width: 100%;
-  max-width: 440px;
-  height: auto;
-  border-radius: 20px;
+  height: 100%;
+  object-fit: cover;
+  border-radius: clamp(8px, 1.2vw, 20px);
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
   opacity: 0;
   will-change: transform, opacity;
 }
 
+.trust-line.line-2 {
+  grid-column: 1;
+  grid-row: 2;
+  margin-left: 0;
+}
+
+.trust-line.line-3 {
+  grid-column: 1 / span 2;
+  grid-row: 3;
+  margin-left: 2.2em;
+  /* Fluid typographic stagger under image */
+}
+
+@media (max-width: 768px) {
+  .trust-line.line-1 {
+    margin-left: 0.6em;
+    /* Shorter stagger on mobile viewports */
+  }
+
+  .trust-line.line-3 {
+    margin-left: 1.2em;
+    /* Shorter stagger on mobile viewports */
+  }
+}
+
+/* ==========================================
+   SERVICES (SOLUTIONS) SECTION STYLES
+   ========================================== */
+.services-section {
+  background: #ffffff;
+  color: #ffffff;
+  padding: clamp(80px, 12vw, 180px) 0;
+  overflow: hidden;
+  position: relative;
+  z-index: 10;
+}
+
+.services-container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 clamp(24px, 4vw, 48px);
+  box-sizing: border-box;
+}
+
+.services-title-block {
+  text-align: center;
+  margin-bottom: clamp(40px, 6vw, 80px);
+}
+
+.services-title {
+  color: rgba(0, 0, 0, 0.15);
+  /* Light gray base text */
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(2.5rem, 8vw, 96px);
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -3.84px;
+  margin: 0;
+  display: block;
+  /* Stacks vertically */
+  width: fit-content;
+  /* Shrinks container to text width for precise gradient mask boundary */
+  margin-inline: auto;
+  /* Centers the shrink-wrapped block */
+  position: relative;
+}
+
+.services-title::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  color: #000000;
+  /* Darker copy of text (black) */
+  pointer-events: none;
+  white-space: nowrap;
+
+  /* Feathered soft mask reveal */
+  --reveal-pct: calc(var(--reveal-progress, 0) * 125% - 25%);
+  --reveal-fade: calc(var(--reveal-progress, 0) * 125%);
+  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 var(--reveal-pct), transparent var(--reveal-fade), transparent 100%);
+  mask-image: linear-gradient(to right, #000 0%, #000 var(--reveal-pct), transparent var(--reveal-fade), transparent 100%);
+}
+
+.services-subtitle {
+  color: rgba(0, 0, 0, 0.15);
+  /* Light gray base text */
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(1.1rem, 2.2vw, 24px);
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin-top: 20px;
+  display: block;
+  /* Stacks vertically */
+  width: fit-content;
+  /* Shrinks container to text width for precise gradient mask boundary */
+  margin-inline: auto;
+  /* Centers the shrink-wrapped block */
+  position: relative;
+  max-width: 600px;
+  text-align: center;
+}
+
+.services-subtitle::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  color: #000000;
+  /* Darker copy of text (black) */
+  pointer-events: none;
+
+  /* Feathered soft mask reveal */
+  --reveal-pct: calc(var(--reveal-progress, 0) * 125% - 25%);
+  --reveal-fade: calc(var(--reveal-progress, 0) * 125%);
+  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 var(--reveal-pct), transparent var(--reveal-fade), transparent 100%);
+  mask-image: linear-gradient(to right, #000 0%, #000 var(--reveal-pct), transparent var(--reveal-fade), transparent 100%);
+}
+
+.services-carousel-wrapper {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.services-carousel {
+  display: flex;
+  gap: clamp(20px, 3vw, 40px);
+  overflow-x: auto;
+  scroll-behavior: auto;
+  /* Disabled smooth-scroll on manual swipe to prevent fighting the JS ticker */
+  scrollbar-width: none;
+  /* Hide scrollbar Firefox */
+  padding: 20px 0;
+  cursor: grab;
+  user-select: none;
+  will-change: scroll-position;
+}
+
+.services-carousel::-webkit-scrollbar {
+  display: none;
+  /* Hide scrollbar Safari/Chrome */
+}
+
+.services-carousel.dragging {
+  cursor: grabbing;
+}
+
+.solutions-card {
+  flex: 0 0 clamp(280px, 30vw, 380px);
+  aspect-ratio: 3 / 4;
+  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), filter 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: transform;
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.05));
+  /* Mild drop shadow matching transparent card boundary */
+}
+
+.solutions-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  /* Keeps raw card graphic exactly as designed without clipping */
+  pointer-events: none;
+  display: block;
+}
+
+.solutions-card:hover {
+  transform: translateY(-8px);
+  filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.08));
+  /* Hover shadow lift */
+}
+
+.services-cta-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: clamp(40px, 6vw, 60px);
+}
+
+.services-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 1rem 2.4rem;
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(1rem, 1.5vw, 1.15rem);
+  font-weight: 500;
+  color: #000000;
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 100px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  transition:
+    transform 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+    background 0.3s ease,
+    color 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+  white-space: nowrap;
+}
+
+.services-cta-btn:hover,
+.services-cta-btn:focus {
+  background: #000000;
+  color: #ffffff;
+  border-color: #000000;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+
+/* ==========================================
+   OUR PROCESS SECTION STYLES
+   ========================================== */
+.process-section {
+  background: #ffffff;
+  /* White background */
+  padding: clamp(80px, 12vw, 180px) 0;
+  overflow: hidden;
+  position: relative;
+  z-index: 10;
+}
+
+.process-container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.process-title-block {
+  text-align: center;
+  margin-bottom: clamp(40px, 6vw, 80px);
+  padding: 0 clamp(24px, 4vw, 48px);
+}
+
+.process-title {
+  color: rgba(0, 0, 0, 0.15);
+  /* Light translucent black base text */
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(2.5rem, 8vw, 96px);
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -3.84px;
+  margin: 0;
+  display: block;
+  width: fit-content;
+  margin-inline: auto;
+  position: relative;
+}
+
+.process-title::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  color: #000000;
+  /* Black reveal */
+  pointer-events: none;
+  white-space: nowrap;
+
+  /* Feathered soft mask reveal */
+  --reveal-pct: calc(var(--reveal-progress, 0) * 125% - 25%);
+  --reveal-fade: calc(var(--reveal-progress, 0) * 125%);
+  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 var(--reveal-pct), transparent var(--reveal-fade), transparent 100%);
+  mask-image: linear-gradient(to right, #000 0%, #000 var(--reveal-pct), transparent var(--reveal-fade), transparent 100%);
+}
+
+.process-subtitle {
+  color: rgba(0, 0, 0, 0.15);
+  /* Light translucent black base text */
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(1.1rem, 2.2vw, 24px);
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin-top: 20px;
+  display: block;
+  width: fit-content;
+  margin-inline: auto;
+  position: relative;
+  max-width: 600px;
+  text-align: center;
+}
+
+.process-subtitle::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  color: #000000;
+  /* Black reveal */
+  pointer-events: none;
+
+  /* Feathered soft mask reveal */
+  --reveal-pct: calc(var(--reveal-progress, 0) * 125% - 25%);
+  --reveal-fade: calc(var(--reveal-progress, 0) * 125%);
+  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 var(--reveal-pct), transparent var(--reveal-fade), transparent 100%);
+  mask-image: linear-gradient(to right, #000 0%, #000 var(--reveal-pct), transparent var(--reveal-fade), transparent 100%);
+}
+
+.process-grid-wrapper {
+  width: 100%;
+  overflow: visible;
+  /* Let grid overflow screen edges */
+  display: flex;
+  justify-content: center;
+}
+
+.process-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr); /* 6 columns landscape layout */
+  gap: clamp(16px, 2.5vw, 32px); /* Larger gap */
+  width: 145vw; /* Wider landscape overflow */
+  max-width: 2900px; /* Higher desktop cap */
+  margin-left: -22.5vw; /* Center offset for 145vw width */
+  padding: 40px 0;
+  box-sizing: border-box;
+  will-change: transform;
+}
+
+.process-card {
+  aspect-ratio: 1 / 1;
+  border-radius: clamp(20px, 3vw, 36px);
+  /* Larger border radius */
+  position: relative;
+  box-sizing: border-box;
+  will-change: transform, opacity;
+}
+
+.process-card.placeholder {
+  background: #fafafa; /* Lighter grey, looks almost white but distinct */
+  border: 1px solid rgba(0, 0, 0, 0.02); /* Extremely fine border */
+}
+
+.process-card.elevated {
+  background: transparent; /* Outer box is a transparent 3D perspective wrapper */
+  border: none;
+  padding: 0;
+  box-shadow: none;
+  perspective: 1200px; /* Crucial for realistic 3D depth rotation */
+  z-index: 5;
+  transition: transform 0.1s linear; /* bound smoothly to tick scroll cycle */
+}
+
+/* Card inner container executing rotation */
+.process-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: inherit;
+}
+
+/* Trigger flip on hover */
+.process-card.elevated:hover .process-card-inner {
+  transform: rotateY(180deg);
+}
+
+/* Front & Back Face properties */
+.process-card-front,
+.process-card-back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: inherit;
+  background: #ffffff;
+  padding: clamp(24px, 3vw, 40px);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid rgba(0, 0, 0, 0.02);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.015);
+}
+
+/* Rotate back card face by default */
+.process-card-back {
+  transform: rotateY(180deg);
+  background: #ffffff;
+  justify-content: center; /* Center duration metrics vertically */
+}
+
+.process-card-front .process-num,
+.process-card-back .process-num {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(1.4rem, 2.5vw, 2.2rem);
+  font-weight: 600;
+  background: var(--accent-gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+}
+
+.process-card-front .process-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.process-card-front h3 {
+  margin: 0;
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(1.3rem, 1.8vw, 1.8rem);
+  font-weight: 600;
+  color: #000000;
+  letter-spacing: -0.4px;
+  line-height: 1.2;
+}
+
+.process-card-front p {
+  margin: 0;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(0.85rem, 1.1vw, 1rem);
+  color: #475569;
+  line-height: 1.45;
+}
+
+/* Back Face Content Layout */
+.process-back-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  gap: 8px;
+  text-align: center;
+}
+
+.process-card-back .time-label {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(0.75rem, 1vw, 0.85rem);
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+}
+
+.process-card-back .time-value {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(1.6rem, 2.5vw, 2.4rem);
+  font-weight: 700;
+  background: var(--accent-gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.5px;
+}
+
+/* Responsive adjustments */
 @media (max-width: 992px) {
-  .trust-section {
-    padding: 100px 0;
+  .process-grid {
+    grid-template-columns: repeat(4, 1fr); /* 4 columns on tablet */
+    width: 155vw;
+    margin-left: -27.5vw;
   }
+}
 
-  .trust-container {
-    flex-direction: column;
-    gap: 48px;
-    text-align: center;
-    padding: 0 24px;
-  }
-
-  .trust-title {
-    align-items: center;
-    font-size: clamp(2rem, 8vw, 80px);
-    letter-spacing: -3px;
-  }
-
-  .trust-title .line-1,
-  .trust-title .line-2,
-  .trust-title .line-3 {
-    margin-left: 0;
-  }
-
-  .trust-image-wrapper {
-    justify-content: center;
+@media (max-width: 768px) {
+  .process-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns on mobile */
+    width: 165vw;
+    margin-left: -32.5vw;
   }
 }

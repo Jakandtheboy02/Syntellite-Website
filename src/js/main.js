@@ -9,7 +9,9 @@ import {
   initBottomNavThemeTracker,
   initScrollPill,
   initPortfolioMorph,
-  initTrustAnimation
+  initTrustAnimation,
+  initServicesSection,
+  initProcessSection
 } from './modules/animations.js';
 
 import { initSmoothScroll } from './modules/smoothScroll.js';
@@ -31,6 +33,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initialize Trust Section scroll-driven staggered text reveals
   initTrustAnimation();
+
+  // Initialize Services Horizontal Carousel Section
+  initServicesSection();
+
+  // Initialize Our Process Grid Section
+  initProcessSection();
 
   // Initialize Hamburger Menu
   initMobileMenu();
