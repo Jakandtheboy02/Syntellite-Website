@@ -11,7 +11,9 @@ import {
   initPortfolioMorph,
   initTrustAnimation,
   initServicesSection,
-  initProcessSection
+  initProcessSection,
+  initClientsMarquee,
+  initTestimonialsSection
 } from './modules/animations.js';
 
 import { initSmoothScroll } from './modules/smoothScroll.js';
@@ -39,6 +41,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initialize Our Process Grid Section
   initProcessSection();
+
+  // Initialize Clients Auto-Marquee
+  initClientsMarquee();
+
+  // Initialize Testimonials Section Title Scroll Sweep
+  initTestimonialsSection();
 
   // Initialize Hamburger Menu
   initMobileMenu();

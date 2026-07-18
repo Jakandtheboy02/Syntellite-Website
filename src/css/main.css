@@ -1273,6 +1273,11 @@ main {
   pointer-events: none;
   z-index: 20;
   transition: opacity 0.4s ease;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
 }
 
 .projects-cta-overlay.visible {
@@ -1862,162 +1867,146 @@ main {
 
 
 /* ==========================================
-   OUR PROCESS SECTION STYLES
+   OUR PROCESS SCROLL REVEAL STYLES
    ========================================== */
-.process-section {
-  background: #ffffff;
-  /* White background */
-  padding: clamp(80px, 12vw, 180px) 0;
-  overflow: hidden;
+.process-pin-section {
   position: relative;
+  height: 350vh;
+  /* Pinned scrolling space */
+  background: #ffffff;
+  width: 100%;
+}
+
+.process-sticky-container {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   z-index: 10;
 }
 
-.process-container {
-  max-width: 100%;
-  margin: 0 auto;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-.process-title-block {
-  text-align: center;
-  margin-bottom: clamp(40px, 6vw, 80px);
-  padding: 0 clamp(24px, 4vw, 48px);
-}
-
-.process-title {
-  color: rgba(0, 0, 0, 0.15);
-  /* Light translucent black base text */
-  font-family: 'Outfit', sans-serif;
-  font-size: clamp(2.5rem, 8vw, 96px);
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-  letter-spacing: -3.84px;
-  margin: 0;
-  display: block;
-  width: fit-content;
-  margin-inline: auto;
-  position: relative;
-}
-
-.process-title::after {
-  content: attr(data-text);
+/* Phase 1: Zooming Pill Wrapper */
+.process-zoom-wrapper {
   position: absolute;
-  left: 0;
   top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  color: #000000;
-  /* Black reveal */
-  pointer-events: none;
-  white-space: nowrap;
-
-  /* Feathered soft mask reveal */
-  --reveal-pct: calc(var(--reveal-progress, 0) * 125% - 25%);
-  --reveal-fade: calc(var(--reveal-progress, 0) * 125%);
-  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 var(--reveal-pct), transparent var(--reveal-fade), transparent 100%);
-  mask-image: linear-gradient(to right, #000 0%, #000 var(--reveal-pct), transparent var(--reveal-fade), transparent 100%);
-}
-
-.process-subtitle {
-  color: rgba(0, 0, 0, 0.15);
-  /* Light translucent black base text */
-  font-family: 'Outfit', sans-serif;
-  font-size: clamp(1.1rem, 2.2vw, 24px);
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-  margin-top: 20px;
-  display: block;
-  width: fit-content;
-  margin-inline: auto;
-  position: relative;
-  max-width: 600px;
-  text-align: center;
-}
-
-.process-subtitle::after {
-  content: attr(data-text);
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  color: #000000;
-  /* Black reveal */
-  pointer-events: none;
-
-  /* Feathered soft mask reveal */
-  --reveal-pct: calc(var(--reveal-progress, 0) * 125% - 25%);
-  --reveal-fade: calc(var(--reveal-progress, 0) * 125%);
-  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 var(--reveal-pct), transparent var(--reveal-fade), transparent 100%);
-  mask-image: linear-gradient(to right, #000 0%, #000 var(--reveal-pct), transparent var(--reveal-fade), transparent 100%);
-}
-
-.process-grid-wrapper {
-  width: 100%;
-  overflow: visible;
-  /* Let grid overflow screen edges */
   display: flex;
+  align-items: center;
   justify-content: center;
+  z-index: 20;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-.process-grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr); /* 6 columns landscape layout */
-  gap: clamp(16px, 2.5vw, 32px); /* Larger gap */
-  width: 145vw; /* Wider landscape overflow */
-  max-width: 2900px; /* Higher desktop cap */
-  margin-left: -22.5vw; /* Center offset for 145vw width */
-  padding: 40px 0;
-  box-sizing: border-box;
+.process-zoom-pill {
+  position: relative;
+  width: 80vw;
+  /* Rendered natively at high-resolution layout size */
+  height: 80vh;
+  border-radius: 12;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  transform-origin: center center;
+  will-change: transform, border-radius;
+}
+
+.process-zoom-video {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 80vw;
+  /* Matches the container's native width */
+  height: 45vw;
+  /* 16:9 aspect ratio based on width */
+  max-width: none !important;
+  /* Bypass global constraints */
+  object-fit: cover;
+  pointer-events: none;
+  transform: translateY(-50%);
+  transform-origin: center center;
+}
+
+.process-zoom-text {
+  position: absolute;
+  /* Place on top of pill without inheriting scale */
+  font-family: 'Outfit', sans-serif;
+  font-size: 24px;
+  /* Fits inside the 320x90 initial visual frame */
+  font-weight: 500;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+  z-index: 30;
+  white-space: nowrap;
+  pointer-events: none;
+  transform-origin: center center;
   will-change: transform;
 }
 
-.process-card {
-  aspect-ratio: 1 / 1;
-  border-radius: clamp(20px, 3vw, 36px);
-  /* Larger border radius */
-  position: relative;
-  box-sizing: border-box;
-  will-change: transform, opacity;
+/* Phase 2: Split Grid Wrapper */
+.process-split-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.process-card.placeholder {
-  background: #fafafa; /* Lighter grey, looks almost white but distinct */
-  border: 1px solid rgba(0, 0, 0, 0.02); /* Extremely fine border */
-}
-
-.process-card.elevated {
-  background: transparent; /* Outer box is a transparent 3D perspective wrapper */
-  border: none;
+.process-split-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  width: 80vw;
+  /* Scales to 80% screen width at final frame */
+  height: 80vh;
+  /* Scales to 80% screen height at final frame */
+  gap: 0;
   padding: 0;
-  box-shadow: none;
-  perspective: 1200px; /* Crucial for realistic 3D depth rotation */
-  z-index: 5;
-  transition: transform 0.1s linear; /* bound smoothly to tick scroll cycle */
+  box-sizing: border-box;
+  will-change: gap, padding;
 }
 
-/* Card inner container executing rotation */
-.process-card-inner {
+.split-card {
+  position: relative;
+  perspective: 1500px;
+  border-radius: 12px;
+  overflow: visible;
+  box-sizing: border-box;
+  will-change: border-radius;
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Hover effect in the final state */
+.process-split-container.active .split-card:hover {
+  transform: scale(1.02);
+  z-index: 30;
+}
+
+.split-card-inner {
   position: relative;
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
-  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   border-radius: inherit;
+  will-change: transform;
 }
 
-/* Trigger flip on hover */
-.process-card.elevated:hover .process-card-inner {
-  transform: rotateY(180deg);
-}
-
-/* Front & Back Face properties */
-.process-card-front,
-.process-card-back {
+/* Front & Back Faces */
+.split-card-front,
+.split-card-back {
   position: absolute;
   top: 0;
   left: 0;
@@ -2026,103 +2015,397 @@ main {
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   border-radius: inherit;
-  background: #ffffff;
-  padding: clamp(24px, 3vw, 40px);
   box-sizing: border-box;
+}
+
+/* Back Face is the continuous video container */
+.split-card-back {
+  background-color: #0b76e1;
+  overflow: hidden;
+  /* Clip video bounds inside the card quadrant */
+}
+
+.split-back-video {
+  position: absolute;
+  width: 80vw;
+  height: 45vw;
+  /* 16:9 aspect ratio based on width */
+  max-width: none !important;
+  /* Prevent global resets from cropping the width */
+  object-fit: cover;
+  pointer-events: none;
+}
+
+/* Offset video alignments to form a seamless background video when joined */
+.card-1 .split-back-video {
+  top: calc(40vh - 22.5vw);
+  left: 0;
+}
+
+.card-2 .split-back-video {
+  top: calc(40vh - 22.5vw);
+  left: -40vw;
+}
+
+.card-3 .split-back-video {
+  top: calc(-22.5vw);
+  left: 0;
+}
+
+.card-4 .split-back-video {
+  top: calc(-22.5vw);
+  left: -40vw;
+}
+
+/* Front Face is the individual gradient svg card content */
+.split-card-front {
+  transform: rotateY(180deg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: clamp(24px, 4vw, 48px);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  border: 1px solid rgba(0, 0, 0, 0.02);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.015);
+  justify-content: flex-end;
+  color: #ffffff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
 }
 
-/* Rotate back card face by default */
-.process-card-back {
-  transform: rotateY(180deg);
-  background: #ffffff;
-  justify-content: center; /* Center duration metrics vertically */
-}
-
-.process-card-front .process-num,
-.process-card-back .process-num {
-  font-family: 'Outfit', sans-serif;
-  font-size: clamp(1.4rem, 2.5vw, 2.2rem);
-  font-weight: 600;
-  background: var(--accent-gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  line-height: 1;
-}
-
-.process-card-front .process-content {
+.split-card-content {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  padding-right: clamp(50px, 6vw, 75px);
+  /* Clear the absolute arrow button */
 }
 
-.process-card-front h3 {
-  margin: 0;
-  font-family: 'Outfit', sans-serif;
-  font-size: clamp(1.3rem, 1.8vw, 1.8rem);
-  font-weight: 600;
-  color: #000000;
-  letter-spacing: -0.4px;
-  line-height: 1.2;
-}
-
-.process-card-front p {
-  margin: 0;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: clamp(0.85rem, 1.1vw, 1rem);
-  color: #475569;
-  line-height: 1.45;
-}
-
-/* Back Face Content Layout */
-.process-back-content {
+.split-card-arrow {
+  position: absolute;
+  bottom: clamp(24px, 4vw, 48px);
+  right: clamp(24px, 4vw, 48px);
+  width: clamp(40px, 3.5vw, 52px);
+  height: clamp(40px, 3.5vw, 52px);
+  border-radius: 50%;
+  background-color: #ffffff;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex-grow: 1;
-  gap: 8px;
-  text-align: center;
+  color: #111111;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.3s ease, color 0.3s ease;
+  z-index: 10;
 }
 
-.process-card-back .time-label {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: clamp(0.75rem, 1vw, 0.85rem);
-  color: #64748b;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-weight: 600;
+.split-card-arrow svg {
+  width: 45%;
+  height: 45%;
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-.process-card-back .time-value {
+/* Hover effects when the split card container is hovered */
+.split-card:hover .split-card-arrow {
+  background-color: #000000;
+  color: #ffffff;
+  transform: scale(1.08);
+}
+
+.split-card:hover .split-card-arrow svg {
+  transform: rotate(-45deg);
+  /* Point diagonally up-right on hover */
+}
+
+/* Responsive adjustments */
+
+.split-card-front h3 {
+  margin: 0;
   font-family: 'Outfit', sans-serif;
-  font-size: clamp(1.6rem, 2.5vw, 2.4rem);
-  font-weight: 700;
-  background: var(--accent-gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-size: clamp(1.6rem, 2.5vw, 2.6rem);
+  font-weight: 500;
+  color: #ffffff;
   letter-spacing: -0.5px;
+  line-height: 1.25;
+}
+
+.split-card-front p {
+  margin: 0;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(0.85rem, 1.2vw, 1.05rem);
+  font-weight: 400;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 480px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .split-card-front {
+    padding: 20px;
+  }
+
+  .split-card-content {
+    gap: 8px;
+    padding-right: 50px;
+    /* Keep padding clear on mobile */
+  }
+}
+
+/* ==========================================================================
+   Clients Section (Trusted by)
+   ========================================================================== */
+.clients-section {
+  position: relative;
+  background: #ffffff;
+  padding: clamp(200px, 6vw, 200px) 0;
+  width: 100vw;
+  overflow: hidden;
+  /* border-bottom: 1px solid rgba(0, 0, 0, 0.05); */
+}
+
+.clients-container {
+  display: flex;
+  align-items: center;
+  gap: clamp(40px, 6vw, 80px);
+}
+
+.clients-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  font-weight: 500;
+  color: #111111;
+  letter-spacing: -0.8px;
+  flex-shrink: 0;
+}
+
+.clients-marquee-wrapper {
+  flex-grow: 1;
+  overflow: hidden;
+  position: relative;
+  mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+}
+
+.clients-marquee {
+  display: flex;
+  align-items: center;
+  gap: clamp(40px, 6vw, 80px);
+  overflow-x: auto;
+  scrollbar-width: none;
+  /* Hide standard Firefox scrollbars */
+  -ms-overflow-style: none;
+  /* Hide IE scrollbars */
+  user-select: none;
+  cursor: grab;
+  will-change: scroll-left;
+  -webkit-overflow-scrolling: touch;
+}
+
+.clients-marquee::-webkit-scrollbar {
+  display: none;
+  /* Hide standard Chrome scrollbars */
+}
+
+.clients-marquee.grabbing {
+  cursor: grabbing;
+}
+
+.client-logo-wrapper {
+  position: relative;
+  height: clamp(30px, 4vw, 42px);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.client-logo-wrapper img {
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.client-logo-wrapper .logo-mono {
+  opacity: 0.4;
+  transition: opacity 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.client-logo-wrapper .logo-color {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Hover effect */
+.client-logo-wrapper:hover .logo-mono {
+  opacity: 0;
+}
+
+.client-logo-wrapper:hover .logo-color {
+  opacity: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .clients-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .clients-marquee-wrapper {
+    width: 100%;
+  }
+}
+
+/* ==========================================================================
+   Testimonials Section
+   ========================================================================== */
+.testimonials-section {
+  position: relative;
+  background: #ffffff;
+  padding: clamp(60px, 8vw, 100px) 0;
+  width: 100%;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.testimonials-title {
+  color: rgba(0, 0, 0, 0.15);
+  /* Light gray base text */
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(1.4rem, 4.5vw, 3.8rem);
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -1.8px;
+  margin: 0;
+  display: block;
+  width: fit-content;
+  margin-inline: auto;
+  position: relative;
+  text-align: center;
+  margin-bottom: clamp(40px, 6vw, 65px);
+}
+
+.testimonials-title::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  color: #000000;
+  /* Darker copy of text (black) */
+  pointer-events: none;
+  white-space: nowrap;
+
+  /* Feathered soft mask reveal */
+  --reveal-pct: calc(var(--reveal-progress, 0) * 125% - 25%);
+  --reveal-fade: calc(var(--reveal-progress, 0) * 125%);
+  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 var(--reveal-pct), transparent var(--reveal-fade), transparent 100%);
+}
+
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.testimonial-card {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.4s var(--ease-out-expo), box-shadow 0.4s var(--ease-out-expo);
+}
+
+.testimonial-card:hover {
+  transform: translate3d(0, -6px, 0);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.07);
+}
+
+.testimonial-image-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1.15 / 1;
+  overflow: hidden;
+}
+
+.testimonial-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s var(--ease-out-expo);
+}
+
+.testimonial-card:hover .testimonial-image {
+  transform: scale(1.03);
+}
+
+.testimonial-image-fade {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40%;
+  background: linear-gradient(to bottom, transparent, #ffffff);
+}
+
+.testimonial-content {
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  position: relative;
+}
+
+.testimonial-quote-icon {
+  font-family: 'Outfit', sans-serif;
+  font-size: 3rem;
+  color: #0b76e1;
+  line-height: 1;
+  margin-bottom: -10px;
+  margin-top: -10px;
+  font-weight: 700;
+  opacity: 0.8;
+}
+
+.testimonial-text {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(0.95rem, 1.15vw, 1.15rem);
+  line-height: 1.6;
+  color: #333333;
+  font-weight: 300;
+  /* Outfit looks beautiful and premium at weight 300 */
+  margin-bottom: 24px;
+  flex-grow: 1;
+}
+
+.testimonial-author {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #888888;
+  text-align: right;
+  letter-spacing: -0.2px;
 }
 
 /* Responsive adjustments */
 @media (max-width: 992px) {
-  .process-grid {
-    grid-template-columns: repeat(4, 1fr); /* 4 columns on tablet */
-    width: 155vw;
-    margin-left: -27.5vw;
+  .testimonials-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 768px) {
-  .process-grid {
-    grid-template-columns: repeat(2, 1fr); /* 2 columns on mobile */
-    width: 165vw;
-    margin-left: -32.5vw;
+  .testimonials-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
   }
 }

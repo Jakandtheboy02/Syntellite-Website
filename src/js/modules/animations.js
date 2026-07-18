@@ -109,6 +109,11 @@ export function initMobileMenu() {
     menuToggle.setAttribute('aria-expanded', !isOpen);
     menuToggle.classList.toggle('active');
     headerNav.classList.toggle('nav-open');
+
+    // Force expand the links card when menu toggle is clicked
+    if (headerNav.classList.contains('nav-collapsed')) {
+      headerNav.classList.remove('nav-collapsed');
+    }
   });
 
   // Close menu when clicking link
@@ -119,6 +124,30 @@ export function initMobileMenu() {
       headerNav.classList.remove('nav-open');
     });
   });
+
+  // Dynamic Scroll Collapse: collapse inactive links when scrolling down, expand on scrolling up
+  let lastScrollY = window.scrollY;
+  const onScroll = () => {
+    const currentScrollY = window.scrollY;
+    
+    // If the mobile menu toggle is active, keep header expanded
+    if (menuToggle.classList.contains('active') || headerNav.classList.contains('nav-open')) {
+      lastScrollY = currentScrollY;
+      return;
+    }
+
+    if (currentScrollY > lastScrollY && currentScrollY > 120) {
+      // Scroll Down -> Collapse Center Card to Active item only
+      headerNav.classList.add('nav-collapsed');
+    } else if (currentScrollY < lastScrollY) {
+      // Scroll Up -> Expand back to default state
+      headerNav.classList.remove('nav-collapsed');
+    }
+    lastScrollY = currentScrollY;
+  };
+
+  subscribeScroll(onScroll);
+  onScroll();
 }
 
 /**
@@ -381,16 +410,16 @@ export function initPortfolioMorph() {
       if (showcaseSubtitle) showcaseSubtitle.style.setProperty('--reveal-progress', showcase_subtitle_p);
 
       const projectsTitle = projectsTitleBlock.querySelector('.projects-title');
-      if (p < 0.65) {
-        // Phase 1 & 2: Showcase Title centered, Projects Title hidden below the viewport
+      if (p < 0.45) {
+        // Phase 1: Showcase Title centered, Projects Title hidden below the viewport
         showcaseTitleBlock.style.opacity = 1;
         showcaseTitleBlock.style.transform = 'translateY(0)';
         projectsTitleBlock.style.opacity = 1;
         projectsTitleBlock.style.transform = `translateY(${windowHeight}px)`;
         if (projectsTitle) projectsTitle.style.clipPath = 'inset(0 100% 0 0)';
-      } else if (p < 0.9) {
-        // Phase 3: Smooth rise-up transition synchronized with Morph progress
-        const p_morph_title = (p - 0.65) / 0.25;
+      } else if (p < 0.70) {
+        // Phase 2/3: Smooth rise-up transition synchronized with Morph progress (starts earlier and finishes faster)
+        const p_morph_title = (p - 0.45) / 0.25;
         showcaseTitleBlock.style.opacity = 1;
         showcaseTitleBlock.style.transform = `translateY(${-500 * p_morph_title}px)`;
         projectsTitleBlock.style.opacity = 1;
@@ -717,157 +746,255 @@ export function initServicesSection() {
  * and random shuffled active cards each time the user returns to the section.
  */
 export function initProcessSection() {
-  const section = document.getElementById('process');
-  const title = section ? section.querySelector('.process-title') : null;
-  const subtitle = section ? section.querySelector('.process-subtitle') : null;
-  const grid = section ? section.querySelector('.process-grid') : null;
+  const pinSection = document.getElementById('process');
+  const stickyContainer = pinSection ? pinSection.querySelector('.process-sticky-container') : null;
+  const zoomWrapper = pinSection ? pinSection.querySelector('.process-zoom-wrapper') : null;
+  const zoomPill = pinSection ? pinSection.querySelector('.process-zoom-pill') : null;
+  const zoomText = pinSection ? pinSection.querySelector('.process-zoom-text') : null;
+  const zoomVideo = pinSection ? pinSection.querySelector('.process-zoom-video') : null;
+  const splitContainer = pinSection ? pinSection.querySelector('.process-split-container') : null;
+  const splitGrid = pinSection ? pinSection.querySelector('.process-split-grid') : null;
+  const cards = pinSection ? pinSection.querySelectorAll('.split-card') : [];
+  const cardInners = pinSection ? pinSection.querySelectorAll('.split-card-inner') : [];
 
-  if (!section || !grid) return;
+  if (!pinSection || !zoomPill || !splitContainer) return;
 
-  const steps = [
-    { num: '01', title: 'Discovery & Feasibility', desc: 'Aligning vision, technology audits, scoping, and roadmap scoping.', time: '1-2 WEEK' },
-    { num: '02', title: 'Proposal & Kickoff', desc: 'High-fidelity UI systems, premium motion design, and user flows.', time: '3-5 WEEK' },
-    { num: '03', title: 'Research & Planning', desc: 'Clean engineering, custom animation integration, and performance audits.', time: '1-2 WEEK' },
-    { num: '04', title: 'Execution & Updates', desc: 'Rigorous quality checks, continuous delivery, and product launching.', time: '4-12 WEEK' }
-  ];
+  // Configure symmetrical book-opening flips: left cards (1 & 3) open left, right cards (2 & 4) open right
+  cards.forEach((card, idx) => {
+    const isLeftColumn = (idx === 0 || idx === 2);
+    const axis = 'Y';
+    const dir = isLeftColumn ? -1 : 1;
 
-  function getLayoutConfig() {
-    let cols = 6;
-    let slots = 24;
-    if (window.innerWidth <= 768) {
-      cols = 2;
-      slots = 8;
-    } else if (window.innerWidth <= 992) {
-      cols = 4;
-      slots = 16;
+    card.setAttribute('data-rot-axis', axis);
+    card.setAttribute('data-rot-dir', dir);
+    
+    const frontFace = card.querySelector('.split-card-front');
+    if (frontFace) {
+      frontFace.style.transform = `rotate${axis}(${dir * 180}deg)`;
     }
-    return { cols, slots };
-  }
+  });
 
-  // Distribute active content cards across segments of the grid to prevent clustering
-  function getRandomIndices(slots) {
-    const segmentSize = Math.floor(slots / 4);
-    const indices = [];
-    for (let i = 0; i < 4; i++) {
-      const start = i * segmentSize;
-      const offset = Math.floor(Math.random() * Math.max(1, segmentSize));
-      indices.push(start + offset);
+  const onScroll = () => {
+    const rect = pinSection.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+    const windowWidth = window.innerWidth;
+
+    // Calculate scroll progress p of the pinned section (0 to 1)
+    const totalDist = rect.height - windowHeight;
+    let p = 0;
+    if (rect.top <= 0) {
+      p = -rect.top / totalDist;
     }
-    return indices;
-  }
+    p = Math.min(1, Math.max(0, p));
 
-  let cards = [];
-  let elevatedCards = [];
-  let currentCols = 6;
+    // Phase 1: Zooming Pill (p from 0 to 0.45)
+    if (p <= 0.45) {
+      // Show zoom wrapper, hide split container
+      zoomWrapper.style.opacity = '1';
+      zoomWrapper.style.pointerEvents = 'auto';
+      
+      splitContainer.style.opacity = '0';
+      splitContainer.style.pointerEvents = 'none';
+      splitContainer.classList.remove('active');
 
-  function shuffleProcessGrid() {
-    const config = getLayoutConfig();
-    currentCols = config.cols;
-    const randomIndices = getRandomIndices(config.slots);
+      const z = p / 0.45;
+      // Smoother easing
+      const easedZ = z * z * (3 - 2 * z);
 
-    grid.innerHTML = '';
-    cards = [];
-    elevatedCards = [];
+      // Base element size in the DOM is 80vw x 80vh
+      const targetW = windowWidth * 0.8;
+      const targetH = windowHeight * 0.8;
 
-    for (let i = 0; i < config.slots; i++) {
-      const card = document.createElement('div');
-      const stepIndex = randomIndices.indexOf(i);
+      // Starting scale factor to shrink 80vw/80vh down to exactly 320x90
+      const startSx = 320 / targetW;
+      const startSy = 90 / targetH;
 
-      if (stepIndex !== -1) {
-        const step = steps[stepIndex];
-        card.className = 'process-card elevated';
-        card.setAttribute('data-index', stepIndex + 1);
-        card.innerHTML = `
-          <div class="process-card-inner">
-            <div class="process-card-front">
-              <div class="process-num">${step.num}</div>
-              <div class="process-content">
-                <h3>${step.title}</h3>
-                <p>${step.desc}</p>
-              </div>
-            </div>
-            <div class="process-card-back">
-              <div class="process-back-content">
-                <span class="time-label">Estimated Duration</span>
-                <div class="time-value">${step.time}</div>
-              </div>
-            </div>
-          </div>
-        `;
-        elevatedCards.push(card);
-      } else {
-        card.className = 'process-card placeholder';
+      // Interpolate scales from the start scale up to 1.0
+      const sx = startSx + (1 - startSx) * easedZ;
+      const sy = startSy + (1 - startSy) * easedZ;
+
+      zoomPill.style.transform = `scale3d(${sx}, ${sy}, 1)`;
+      
+      // Keep visual border radius constant at exactly 12px throughout the transition
+      const borderRadiusVal = 12 / sy;
+      zoomPill.style.borderRadius = `${borderRadiusVal}px`;
+
+      // Apply counter-scale to video vertical axis to lock aspect ratio (fit to width)
+      if (zoomVideo) {
+        const videoScaleY = sx / sy;
+        zoomVideo.style.transform = `translate3d(0, -50%, 0) scale3d(1, ${videoScaleY}, 1)`;
       }
-      grid.appendChild(card);
-      cards.push(card);
+
+      // Scale text directly since it sits on an independent layer (no compression!)
+      // Grow it from 1.0 (24px) up to 2.8x (67px) on large screens
+      const targetTextScale = 1 + (windowWidth > 768 ? 1.8 : 1.0) * easedZ;
+      zoomText.style.transform = `scale3d(${targetTextScale}, ${targetTextScale}, 1)`;
+
+    } else {
+      // Phase 2: Split & Flip (p from 0.45 to 0.95)
+      // Hide zoom wrapper, show split container
+      zoomWrapper.style.opacity = '0';
+      zoomWrapper.style.pointerEvents = 'none';
+      
+      splitContainer.style.opacity = '1';
+      splitContainer.style.pointerEvents = 'auto';
+
+      const s = Math.min(1, Math.max(0, (p - 0.45) / 0.5));
+      const easedS = s * s * (3 - 2 * s);
+
+      // Split open gap and padding
+      const targetGap = Math.min(32, Math.max(16, windowWidth * 0.025)); // clamp(16px, 2.5vw, 32px)
+      const targetPadding = Math.min(60, Math.max(20, windowWidth * 0.04)); // clamp(20px, 4vw, 60px)
+
+      const currentGap = targetGap * easedS;
+      const currentPadding = targetPadding * easedS;
+
+      splitGrid.style.gap = `${currentGap}px`;
+      splitGrid.style.padding = `${currentPadding}px`;
+
+      // Keep card corner radius always 12px
+      cards.forEach(card => {
+        card.style.borderRadius = '12px';
+      });
+
+      // Flip rotation: goes from 0deg (showing back face) to 180deg (showing front face)
+      cardInners.forEach((inner, idx) => {
+        const card = cards[idx];
+        if (card) {
+          const rotAxis = card.getAttribute('data-rot-axis') || 'Y';
+          const rotDir = parseInt(card.getAttribute('data-rot-dir') || '1', 10);
+          const rotationVal = easedS * 180 * rotDir;
+          inner.style.transform = `rotate${rotAxis}(${rotationVal}deg)`;
+        }
+      });
+
+      // Activate hover interaction state if we are fully split
+      if (s >= 0.98) {
+        splitContainer.classList.add('active');
+      } else {
+        splitContainer.classList.remove('active');
+      }
     }
-  }
+  };
 
-  // Initial shuffle
-  shuffleProcessGrid();
+  subscribeScroll(onScroll);
+  onScroll();
+}
 
-  // Reset tracker so grid shuffles when scrolled completely off-screen and back in
-  let hasReset = true;
+/**
+ * Infinite Autoplay Marquee with Drag-to-Scroll & Touch Support for Clients Section
+ */
+export function initClientsMarquee() {
+  const marquee = document.getElementById('clients-marquee');
+  if (!marquee) return;
+
+  // Duplicate elements inside the marquee to create a seamless infinite loop
+  const logos = Array.from(marquee.children);
+  if (!logos.length) return;
+  
+  // Clone twice to make sure we always have enough overflow width on all resolutions
+  logos.forEach(logo => {
+    marquee.appendChild(logo.cloneNode(true));
+  });
+  logos.forEach(logo => {
+    marquee.appendChild(logo.cloneNode(true));
+  });
+
+  let isDown = false;
+  let startX;
+  let scrollLeft;
+  let isInteracting = false;
+  let lastInteractionTime = 0;
+  const speed = 0.65; // Pixels per frame (very slow, smooth and premium!)
+
+  // Drag and drop event listeners for desktop
+  marquee.addEventListener('pointerdown', (e) => {
+    isDown = true;
+    marquee.classList.add('grabbing');
+    startX = e.pageX - marquee.offsetLeft;
+    scrollLeft = marquee.scrollLeft;
+    isInteracting = true;
+    lastInteractionTime = Date.now();
+  });
+
+  marquee.addEventListener('pointerleave', () => {
+    isDown = false;
+    marquee.classList.remove('grabbing');
+    isInteracting = false;
+  });
+
+  marquee.addEventListener('pointerup', () => {
+    isDown = false;
+    marquee.classList.remove('grabbing');
+    isInteracting = false;
+    lastInteractionTime = Date.now();
+  });
+
+  marquee.addEventListener('pointermove', (e) => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - marquee.offsetLeft;
+    const walk = (x - startX) * 1.5; // Drag sensitivity
+    marquee.scrollLeft = scrollLeft - walk;
+    lastInteractionTime = Date.now();
+  });
+
+  // Track scroll and touch interaction state
+  marquee.addEventListener('touchstart', () => {
+    isInteracting = true;
+    lastInteractionTime = Date.now();
+  }, { passive: true });
+
+  marquee.addEventListener('touchend', () => {
+    isInteracting = false;
+    lastInteractionTime = Date.now();
+  }, { passive: true });
+
+  marquee.addEventListener('wheel', () => {
+    lastInteractionTime = Date.now();
+  }, { passive: true });
+
+  // Autoplay requestAnimationFrame loop
+  const step = () => {
+    const now = Date.now();
+    
+    // Auto scroll only if the user is not actively interacting and 1.5s passed since last interaction
+    if (!isInteracting && !isDown && (now - lastInteractionTime > 1500)) {
+      marquee.scrollLeft += speed;
+      
+      // Infinite loop wrap calculation:
+      // Since we duplicated the logos twice, the true width of the single loop set is scrollWidth / 3.
+      // Reset when scrollLeft reaches this boundary.
+      const loopWidth = marquee.scrollWidth / 3;
+      if (marquee.scrollLeft >= loopWidth) {
+        marquee.scrollLeft = 0;
+      }
+    }
+    requestAnimationFrame(step);
+  };
+
+  requestAnimationFrame(step);
+}
+
+/**
+ * Scroll-driven progressive feathered sweep reveal for the Testimonials Section Title
+ */
+export function initTestimonialsSection() {
+  const section = document.getElementById('testimonials');
+  const title = section ? section.querySelector('.testimonials-title') : null;
+  if (!section || !title) return;
 
   const onScroll = () => {
     const rect = section.getBoundingClientRect();
     const windowHeight = window.innerHeight;
 
-    // 0 when section enters, 1 when it leaves
+    // 0 when section top enters viewport bottom, 1 when section bottom leaves viewport top
     const entryProgress = (windowHeight - rect.top) / (windowHeight + rect.height);
     const p = Math.min(1, Math.max(0, entryProgress));
 
-    // Handle shuffling boundary resets
-    if (p <= 0.005 || p >= 0.995) {
-      if (!hasReset) {
-        shuffleProcessGrid();
-        hasReset = true;
-      }
-    } else if (p > 0.05 && p < 0.95) {
-      hasReset = false;
-    }
-
-    // Showcase-matching progressive feathered mask reveals for titles
-    const title_p = Math.min(1, Math.max(0, (p - 0.15) / 0.22));
-    const subtitle_p = Math.min(1, Math.max(0, (p - 0.22) / 0.22));
-
-    if (title) title.style.setProperty('--reveal-progress', title_p);
-    if (subtitle) subtitle.style.setProperty('--reveal-progress', subtitle_p);
-
-    // Staggered horizontal horizontal scroll parallax shift for each row of the grid
-    // Even rows slide left, odd rows slide right, linking movements directly to scrolling direction
-    cards.forEach((card, index) => {
-      const row = Math.floor(index / currentCols);
-      const direction = (row % 2 === 0) ? -1 : 1;
-      const shiftX = (p - 0.5) * 150 * direction; // Shifts up to 150px horizontally
-
-      const stagger = (index % currentCols) * 0.015 + Math.floor(index / currentCols) * 0.02;
-      const cardProgress = Math.min(1, Math.max(0, (p - stagger) / 0.45));
-      const easedProgress = cardProgress * cardProgress * (3 - 2 * cardProgress);
-
-      if (!card.classList.contains('elevated')) {
-        card.style.opacity = easedProgress * 0.85; // Solid visibility for light grey cubes
-        card.style.transform = `translate3d(${shiftX}px, ${(1 - easedProgress) * 20}px, 0)`;
-      } else {
-        const elevationProgress = Math.sin(p * Math.PI);
-        const lift = elevationProgress * -35; // Lifts up to -35px
-        const scale = 1 + elevationProgress * 0.05; // Scales up to 1.05x
-
-        // Extremely soft shadow casting dynamics on the light background
-        const shadowBlur = 20 + elevationProgress * 25;
-        const shadowSpread = 2 + elevationProgress * 8;
-        const shadowOpacity = 0.015 + elevationProgress * 0.025; // Fainter, softer shadow overlay
-
-        card.style.transform = `translate3d(${shiftX}px, ${lift}px, 0) scale(${scale})`;
-        card.style.opacity = Math.min(1, Math.max(0, p / 0.25));
-
-        const faces = card.querySelectorAll('.process-card-front, .process-card-back');
-        const shadowValue = `0 ${shadowBlur}px ${shadowSpread}px rgba(0, 0, 0, ${shadowOpacity}), 0 8px 24px rgba(0, 0, 0, 0.01)`;
-        faces.forEach(face => {
-          face.style.boxShadow = shadowValue;
-        });
-      }
-    });
+    // Staggered progressive feathered mask reveal sweep (starts at p = 0.15, fully colored by p = 0.45)
+    const reveal_p = Math.min(1, Math.max(0, (p - 0.15) / 0.3));
+    title.style.setProperty('--reveal-progress', reveal_p);
   };
 
   subscribeScroll(onScroll);

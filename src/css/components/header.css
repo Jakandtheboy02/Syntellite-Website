@@ -103,6 +103,17 @@
   padding: 0 calc(var(--nav-size) * 0.5);
   gap: var(--nav-item-gap);
   display: flex;
+  transition: background-color 0.4s var(--ease-out-expo), 
+              border-color 0.4s var(--ease-out-expo), 
+              transform 0.4s var(--ease-out-expo), 
+              box-shadow 0.4s var(--ease-out-expo),
+              gap 0.4s var(--ease-out-expo),
+              padding 0.4s var(--ease-out-expo);
+}
+
+.nav-links-card.nav-collapsed {
+  gap: 0;
+  padding: 0 calc(var(--nav-size) * 0.5);
 }
 
 .nav-item {
@@ -113,7 +124,24 @@
   padding: 8px 0;
   color: var(--nav-text);
   opacity: 0.7;
-  transition: opacity 0.3s var(--ease-out-expo);
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 150px; /* Safe upper bound for text width */
+  transition: opacity 0.4s var(--ease-out-expo),
+              max-width 0.4s var(--ease-out-expo),
+              padding 0.4s var(--ease-out-expo),
+              margin 0.4s var(--ease-out-expo);
+}
+
+.nav-links-card.nav-collapsed .nav-item:not(.active) {
+  opacity: 0 !important;
+  max-width: 0px !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  pointer-events: none;
 }
 
 .nav-item:hover, 

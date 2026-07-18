@@ -153,12 +153,51 @@
           <!-- Projects CTA -->
           <div class="projects-cta-overlay">
             <a href="/projects.html" class="projects-cta-btn" data-hover-expand>more Projects &rarr;</a>
+            <a href="#" class="projects-cta-btn download-portfolio-btn" data-hover-expand>Download Portfolio &darr;</a>
           </div>
         </div>
 
       </div>
     </div>
 
+    <!-- Clients Section (Trusted by) -->
+    <section id="clients" class="clients-section" data-bg="light">
+      <div class="container clients-container">
+        <div class="clients-title">Trusted by</div>
+        <div class="clients-marquee-wrapper">
+          <div class="clients-marquee" id="clients-marquee">
+            <div class="client-logo-wrapper">
+              <img src="/src/assets/icons/Google Logo Mono.png" alt="Google" class="logo-mono">
+              <img src="/src/assets/icons/Google Logo Color.png" alt="Google Colored" class="logo-color">
+            </div>
+            <div class="client-logo-wrapper">
+              <img src="/src/assets/icons/Facebook Logo Mono.png" alt="Facebook" class="logo-mono">
+              <img src="/src/assets/icons/Facebookl Logo Color.png" alt="Facebook Colored" class="logo-color">
+            </div>
+            <div class="client-logo-wrapper">
+              <img src="/src/assets/icons/Amazon Logo Mono.png" alt="Amazon" class="logo-mono">
+              <img src="/src/assets/icons/Amazon Logo Color.png" alt="Amazon Colored" class="logo-color">
+            </div>
+            <div class="client-logo-wrapper">
+              <img src="/src/assets/icons/Flipkart Logo Mono.png" alt="Flipkart" class="logo-mono">
+              <img src="/src/assets/icons/Flipkart Logo Color.png" alt="Flipkart Colored" class="logo-color">
+            </div>
+            <div class="client-logo-wrapper">
+              <img src="/src/assets/icons/Zepto Logo Mono.png" alt="Zepto" class="logo-mono">
+              <img src="/src/assets/icons/Zepto Logo Color.png" alt="Zepto Colored" class="logo-color">
+            </div>
+            <div class="client-logo-wrapper">
+              <img src="/src/assets/icons/Blinkit Logo Mono.png" alt="Blinkit" class="logo-mono">
+              <img src="/src/assets/icons/Blinkit Logo Color.png" alt="Blinkit Colored" class="logo-color">
+            </div>
+            <div class="client-logo-wrapper">
+              <img src="/src/assets/icons/Snabbit Logo Mono.png" alt="Snabbit" class="logo-mono">
+              <img src="/src/assets/icons/Snabbit Logo Color.png" alt="Snabbit Colored" class="logo-color">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- Trust Section -->
     <section id="trust" class="trust-section light-section" data-bg="light">
@@ -213,18 +252,164 @@
     </section>
 
     <!-- Our Process Section -->
-    <section id="process" class="process-section light-section" data-bg="light">
-      <div class="container process-container">
-        <div class="process-title-block">
-          <h2 class="process-title" data-text="Our Process">Our Process</h2>
-          <p class="process-subtitle" data-text="a structural methodology crafted to transform bold ideas into flagship digital products.">
-            a structural methodology crafted to transform bold ideas into flagship digital products.
-          </p>
+    <section id="process" class="process-pin-section" data-bg="light">
+      <div class="process-sticky-container">
+        
+        <!-- Phase 1: Zooming Pill -->
+        <div class="process-zoom-wrapper">
+          <div class="process-zoom-pill">
+            <video autoplay muted loop playsinline class="process-zoom-video">
+              <source src="/video/hero-bg.webm" type="video/webm">
+            </video>
+          </div>
+          <span class="process-zoom-text">Our Process</span>
         </div>
 
-        <div class="process-grid-wrapper">
-          <div class="process-grid">
-            <!-- Dynamically generated and shuffled in animations.js -->
+        <!-- Phase 2: Split Grid -->
+        <div class="process-split-container">
+          <div class="process-split-grid">
+            
+            <!-- Card 1 -->
+            <div class="split-card card-1">
+              <div class="split-card-inner">
+                <div class="split-card-back">
+                  <video autoplay muted loop playsinline class="split-back-video">
+                    <source src="/video/hero-bg.webm" type="video/webm">
+                  </video>
+                </div>
+                <div class="split-card-front" style="background-image: url('/src/assets/Components/Our Process Card 1 bg image.png');">
+                  <div class="split-card-content">
+                    <h3>Discovery & Feasibility</h3>
+                    <p>we start with a discovery session to understand your goal, evaluate feasibility, and align on expectations.</p>
+                  </div>
+                  <div class="split-card-arrow" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                      <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="split-card card-2">
+              <div class="split-card-inner">
+                <div class="split-card-back">
+                  <video autoplay muted loop playsinline class="split-back-video">
+                    <source src="/video/hero-bg.webm" type="video/webm">
+                  </video>
+                </div>
+                <div class="split-card-front" style="background-image: url('/src/assets/Components/Our Process Card 2 bg image.png');">
+                  <div class="split-card-content">
+                    <h3>Proposal & Kickoff</h3>
+                    <p>We share a tailored quotation, wireframes, and project proposal. Once approved, we officially begin.</p>
+                  </div>
+                  <div class="split-card-arrow" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                      <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="split-card card-3">
+              <div class="split-card-inner">
+                <div class="split-card-back">
+                  <video autoplay muted loop playsinline class="split-back-video">
+                    <source src="/video/hero-bg.webm" type="video/webm">
+                  </video>
+                </div>
+                <div class="split-card-front" style="background-image: url('/src/assets/Components/Our Process Card 3 bg image.png');">
+                  <div class="split-card-content">
+                    <h3>Research & Planning</h3>
+                    <p>Our team conducts detailed analysis and prepared a structured project plan covering design and development</p>
+                  </div>
+                  <div class="split-card-arrow" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                      <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="split-card card-4">
+              <div class="split-card-inner">
+                <div class="split-card-back">
+                  <video autoplay muted loop playsinline class="split-back-video">
+                    <source src="/video/hero-bg.webm" type="video/webm">
+                  </video>
+                </div>
+                <div class="split-card-front" style="background-image: url('/src/assets/Components/Our Process Card 4 bg image.png');">
+                  <div class="split-card-content">
+                    <h3>Execution & Updates</h3>
+                    <p>Development begins with regular progress reports and continuous collaboration to keep you in the loop.</p>
+                  </div>
+                  <div class="split-card-arrow" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                      <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="testimonials-section light-section" data-bg="light">
+      <div class="container testimonials-container">
+        <h2 class="testimonials-title section-title" data-text="See what they talk about us!">See what they talk about us!</h2>
+        
+        <div class="testimonials-grid">
+          <!-- Card 1 -->
+          <div class="testimonial-card scroll-reveal">
+            <div class="testimonial-image-container">
+              <img src="/src/assets/images/testimonial_sarah.png" alt="Sarah, Kickflip" class="testimonial-image">
+              <div class="testimonial-image-fade"></div>
+            </div>
+            <div class="testimonial-content">
+              <span class="testimonial-quote-icon">“</span>
+              <p class="testimonial-text">He is super fast and creative, delivered the website design within a week. Highly skilled and professional designer!</p>
+              <div class="testimonial-author">— Sarah, Kickflip</div>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="testimonial-card scroll-reveal">
+            <div class="testimonial-image-container">
+              <img src="/src/assets/images/testimonial_martha.png" alt="Martha, Unicell" class="testimonial-image">
+              <div class="testimonial-image-fade"></div>
+            </div>
+            <div class="testimonial-content">
+              <span class="testimonial-quote-icon">“</span>
+              <p class="testimonial-text">Impressed by the Professionalism and attention to details in UI design. Highly Recommended!</p>
+              <div class="testimonial-author">— Martha, Unicell</div>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="testimonial-card scroll-reveal">
+            <div class="testimonial-image-container">
+              <img src="/src/assets/images/testimonial_victor.png" alt="Victor, Horizone" class="testimonial-image">
+              <div class="testimonial-image-fade"></div>
+            </div>
+            <div class="testimonial-content">
+              <span class="testimonial-quote-icon">“</span>
+              <p class="testimonial-text">A Seamless experience from start to finish. Josh made our app design and experience really impressive.</p>
+              <div class="testimonial-author">— Victor, Horizone</div>
+            </div>
           </div>
         </div>
       </div>
