@@ -2315,6 +2315,7 @@ main {
 }
 
 .testimonial-card {
+  --hover-y: 0px;
   background: #ffffff;
   border-radius: 16px;
   border: 1px solid rgba(0, 0, 0, 0.05);
@@ -2322,11 +2323,14 @@ main {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: transform 0.4s var(--ease-out-expo), box-shadow 0.4s var(--ease-out-expo);
+  opacity: var(--card-opacity, 0);
+  transform: translate3d(0, calc(var(--card-rise-y, 90px) + var(--hover-y, 0px)), 0) scale(var(--card-scale, 0.94));
+  will-change: transform, opacity;
+  transition: box-shadow 0.4s var(--ease-out-expo);
 }
 
 .testimonial-card:hover {
-  transform: translate3d(0, -6px, 0);
+  --hover-y: -6px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.07);
 }
 

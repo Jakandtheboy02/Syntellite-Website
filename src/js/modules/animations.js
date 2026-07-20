@@ -977,12 +977,16 @@ export function initClientsMarquee() {
 }
 
 /**
- * Scroll-driven progressive feathered sweep reveal for the Testimonials Section Title
+ * Scroll-driven progressive feathered sweep reveal for the Testimonials Section Title & Staggered Rising Cards
  */
 export function initTestimonialsSection() {
   const section = document.getElementById('testimonials');
   const title = section ? section.querySelector('.testimonials-title') : null;
-  if (!section || !title) return;
+  const cards = section ? section.querySelectorAll('.testimonial-card') : [];
+  if (!section) return;
+
+  let targetP = 0;
+  let currentP = 0;
 
   const onScroll = () => {
     const rect = section.getBoundingClientRect();
@@ -990,13 +994,112 @@ export function initTestimonialsSection() {
 
     // 0 when section top enters viewport bottom, 1 when section bottom leaves viewport top
     const entryProgress = (windowHeight - rect.top) / (windowHeight + rect.height);
-    const p = Math.min(1, Math.max(0, entryProgress));
-
-    // Staggered progressive feathered mask reveal sweep (starts at p = 0.15, fully colored by p = 0.45)
-    const reveal_p = Math.min(1, Math.max(0, (p - 0.15) / 0.3));
-    title.style.setProperty('--reveal-progress', reveal_p);
+    targetP = Math.min(1, Math.max(0, entryProgress));
   };
 
   subscribeScroll(onScroll);
+  window.addEventListener('resize', onScroll, { passive: true });
   onScroll();
+
+  // 120fps rAF lerp loop for silky-smooth motion inertia
+  const render = () => {
+    // Smoothly interpolate currentP towards targetP
+    currentP += (targetP - currentP) * 0.08;
+
+    // Title progressive feathered mask reveal sweep
+    if (title) {
+      const reveal_p = Math.min(1, Math.max(0, (currentP - 0.08) / 0.28));
+      title.style.setProperty('--reveal-progress', reveal_p);
+    }
+
+    // Staggered rise animation for Testimonial Cards
+    cards.forEach((card, index) => {
+      const startReveal = 0.10 + index * 0.06;
+      const endReveal = 0.35 + index * 0.06;
+      const card_p = Math.min(1, Math.max(0, (currentP - startReveal) / (endReveal - startReveal)));
+      const easedCard = card_p * card_p * (3 - 2 * card_p); // Smooth cubic ease-in-out
+
+      const cardTranslateY = (1 - easedCard) * 75; // Smoothly rises 75px
+      const cardOpacity = easedCard;
+      const cardScale = 0.95 + 0.05 * easedCard;
+
+      card.style.setProperty('--card-rise-y', `${cardTranslateY.toFixed(2)}px`);
+      card.style.setProperty('--card-opacity', cardOpacity.toFixed(3));
+      card.style.setProperty('--card-scale', cardScale.toFixed(3));
+    });
+
+    requestAnimationFrame(render);
+  };
+
+  requestAnimationFrame(render);
+}
+
+/**
+ * Scroll-driven progressive rise-in animation for the Footer Card
+ * and dynamic lock-in alignment for #bottom-nav with footer bottom bar (.footer-bottom-flex)
+ */
+export function initFooterAnimation() {
+  const footer = document.getElementById('main-footer');
+  if (!footer) return;
+
+  const cardContainer = footer.querySelector('.footer-card-container');
+  const footerBottomFlex = footer.querySelector('.footer-bottom-flex');
+  const bottomNav = document.getElementById('bottom-nav');
+  if (!cardContainer) return;
+
+  let targetP = 0;
+  let currentP = 0;
+
+  const onScroll = () => {
+    const rect = footer.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+
+    // 0 when top of footer enters bottom of viewport, 1 when footer card is in view
+    const entryProgress = (windowHeight - rect.top) / (windowHeight * 0.7);
+    targetP = Math.min(1, Math.max(0, entryProgress));
+  };
+
+  subscribeScroll(onScroll);
+  window.addEventListener('resize', onScroll, { passive: true });
+  onScroll();
+
+  // 120fps rAF lerp loop for smooth rise-in animation and bottom-nav alignment
+  const render = () => {
+    currentP += (targetP - currentP) * 0.08;
+
+    const el_p = Math.min(1, Math.max(0, currentP / 0.75));
+    const eased = el_p * el_p * (3 - 2 * el_p); // Smooth cubic ease-in-out
+
+    const translateY = (1 - eased) * 60; // Smoothly rises 60px
+    const opacity = eased;
+    const scale = 0.96 + 0.04 * eased;
+
+    cardContainer.style.setProperty('--footer-rise-y', `${translateY.toFixed(2)}px`);
+    cardContainer.style.setProperty('--footer-opacity', opacity.toFixed(3));
+    cardContainer.style.setProperty('--footer-scale', scale.toFixed(3));
+
+    // Dynamic vertical alignment of #bottom-nav with .footer-bottom-flex
+    if (bottomNav && footerBottomFlex) {
+      const flexRect = footerBottomFlex.getBoundingClientRect();
+      const navRect = bottomNav.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+
+      // Distance from viewport bottom to vertical center of .footer-bottom-flex
+      const flexCenterYFromBottom = windowHeight - (flexRect.top + flexRect.height / 2);
+      
+      // Target bottom px so bottomNav vertical center matches flexCenterYFromBottom
+      const targetNavBottom = flexCenterYFromBottom - navRect.height / 2;
+      const defaultNavBottom = 30;
+
+      if (targetNavBottom > defaultNavBottom && flexRect.top < windowHeight) {
+        bottomNav.style.bottom = `${targetNavBottom.toFixed(1)}px`;
+      } else {
+        bottomNav.style.bottom = '';
+      }
+    }
+
+    requestAnimationFrame(render);
+  };
+
+  requestAnimationFrame(render);
 }

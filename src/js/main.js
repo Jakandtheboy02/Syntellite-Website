@@ -13,7 +13,8 @@ import {
   initServicesSection,
   initProcessSection,
   initClientsMarquee,
-  initTestimonialsSection
+  initTestimonialsSection,
+  initFooterAnimation
 } from './modules/animations.js';
 
 import { initSmoothScroll } from './modules/smoothScroll.js';
@@ -47,6 +48,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initialize Testimonials Section Title Scroll Sweep
   initTestimonialsSection();
+
+  // Initialize Footer Scroll Rise-in Animation
+  initFooterAnimation();
 
   // Initialize Hamburger Menu
   initMobileMenu();
