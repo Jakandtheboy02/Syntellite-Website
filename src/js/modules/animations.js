@@ -1103,3 +1103,125 @@ export function initFooterAnimation() {
 
   requestAnimationFrame(render);
 }
+
+/**
+ * Scroll-driven progressive text mask reveal and staggered rise animation for Projects Hero Banner
+ */
+export function initProjectsHeroAnimation() {
+  const section = document.getElementById('projects-hero');
+  if (!section) return;
+
+  const lines = section.querySelectorAll('.projects-hero-line');
+  const subtitle = section.querySelector('.projects-hero-subtitle');
+  const filterWrapper = section.querySelector('.projects-filter-wrapper');
+
+  let targetP = 0;
+  let currentP = 0;
+
+  // Trigger load reveal animation on page entry
+  setTimeout(() => {
+    targetP = 1;
+  }, 50);
+
+  const onScroll = () => {
+    const scrollY = window.scrollY;
+    // When user scrolls down significantly past top section, update progress
+    if (scrollY > 100) {
+      const rect = section.getBoundingClientRect();
+      const exitProgress = (rect.bottom) / (rect.height);
+      targetP = Math.min(1, Math.max(0, exitProgress));
+    }
+  };
+
+  subscribeScroll(onScroll);
+  window.addEventListener('resize', onScroll, { passive: true });
+
+  // 120fps rAF lerp loop for smooth load & scroll mask reveal
+  const render = () => {
+    currentP += (targetP - currentP) * 0.07; // Silky smooth cubic lerp
+
+    // Staggered multi-line reveal for title lines
+    lines.forEach((line, index) => {
+      const startReveal = index * 0.15;
+      const endReveal = 0.55 + index * 0.15;
+      const line_p = Math.min(1, Math.max(0, (currentP - startReveal) / (endReveal - startReveal)));
+      const easedLine = line_p * line_p * (3 - 2 * line_p);
+
+      const opacity = easedLine;
+      const translateY = (1 - easedLine) * 35;
+
+      line.style.opacity = opacity.toFixed(3);
+      line.style.transform = `translateY(${translateY.toFixed(2)}px)`;
+      line.style.setProperty('--reveal-progress', easedLine.toFixed(3));
+    });
+
+    // Subtitle reveal
+    if (subtitle) {
+      const startSub = 0.32;
+      const endSub = 0.80;
+      const sub_p = Math.min(1, Math.max(0, (currentP - startSub) / (endSub - startSub)));
+      const easedSub = sub_p * sub_p * (3 - 2 * sub_p);
+
+      subtitle.style.opacity = easedSub.toFixed(3);
+      subtitle.style.transform = `translateY(${((1 - easedSub) * 25).toFixed(2)}px)`;
+      subtitle.style.setProperty('--reveal-progress', easedSub.toFixed(3));
+    }
+
+    // Filter pill reveal
+    if (filterWrapper) {
+      const startFilter = 0.48;
+      const endFilter = 0.95;
+      const filter_p = Math.min(1, Math.max(0, (currentP - startFilter) / (endFilter - startFilter)));
+      const easedFilter = filter_p * filter_p * (3 - 2 * filter_p);
+
+      filterWrapper.style.opacity = easedFilter.toFixed(3);
+      filterWrapper.style.transform = `translateY(${((1 - easedFilter) * 20).toFixed(2)}px)`;
+    }
+
+    requestAnimationFrame(render);
+  };
+
+  requestAnimationFrame(render);
+}
+
+/**
+ * Filter tab click handler for ALL, B2B, B2C project cards
+ */
+export function initProjectFilters() {
+  const filterTabs = document.querySelectorAll('.filter-tab');
+  const projectCards = document.querySelectorAll('.projects-page-card');
+
+  if (!filterTabs.length || !projectCards.length) return;
+
+  filterTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const filter = tab.getAttribute('data-filter');
+
+      // Update active tab button state
+      filterTabs.forEach(t => {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+      });
+      tab.classList.add('active');
+      tab.setAttribute('aria-selected', 'true');
+
+      // Filter project cards with smooth fade/scale transition
+      projectCards.forEach(card => {
+        const category = card.getAttribute('data-category');
+        if (filter === 'all' || category === filter) {
+          card.style.display = 'flex';
+          setTimeout(() => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0) scale(1)';
+          }, 10);
+        } else {
+          card.style.opacity = '0';
+          card.style.transform = 'translateY(15px) scale(0.95)';
+          setTimeout(() => {
+            card.style.display = 'none';
+          }, 300);
+        }
+      });
+    });
+  });
+}

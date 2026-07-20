@@ -1,6 +1,9 @@
 /* Import Component Stylesheets */
 @import "./components/header.css";
 @import "./components/footer.css";
+@import "./components/projects-page.css";
+@import "./components/cta-banner.css";
+@import "./components/project-detail.css";
 
 /* ==========================================
    DESIGN TOKENS & SYSTEM VARIABLES
@@ -1182,6 +1185,8 @@ main {
   cursor: pointer;
   pointer-events: auto;
   overflow: hidden;
+  text-decoration: none;
+  color: inherit;
   /* Clips the child image during morph and scale */
   border-radius: 20px;
   /* Card border radius applied directly */

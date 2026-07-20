@@ -1,24 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Our Projects | Syntellite Agency</title>
-  <meta name="description" content="View the portfolio of premium digital experiences, web apps, and creative designs engineered by Syntellite.">
-  
+  <meta name="description"
+    content="Explore the portfolio of premium digital experiences, web apps, and creative designs engineered by Syntellite.">
+
   <!-- Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+
   <!-- Stylesheets -->
   <link rel="stylesheet" href="/src/css/main.css">
 </head>
+
 <body>
   <!-- Scroll Progress Indicator -->
   <div id="scroll-progress" aria-hidden="true"></div>
-
-
 
   <!-- Bottom Navigation Bar -->
   <nav id="bottom-nav" class="bottom-nav-bar">
@@ -45,66 +48,301 @@
 
   <!-- Main Content -->
   <main id="main-content">
-    <!-- Projects Hero -->
-    <section id="projects-hero" class="projects-hero-section">
-      <div class="glow-bg" id="projects-glow"></div>
-      <div class="container hero-container">
-        <span class="section-tag reveal-text">Case Studies</span>
-        <h1 class="hero-title reveal-text-delayed">
-          Recent releases & <br>
-          <span class="text-gradient">selected works</span>
-        </h1>
-        <p class="hero-subtitle reveal-fade">
-          A showcase of our engineering capabilities, user interface designs, and interactive storytelling.
-        </p>
-      </div>
-    </section>
-
-    <!-- Projects Grid -->
-    <section id="portfolio" class="portfolio-section">
+    <!-- Projects Hero Banner -->
+    <section id="projects-hero" class="projects-hero-banner light-section" data-bg="light">
       <div class="container">
-        <div class="portfolio-grid">
-          <!-- Project 1 -->
-          <article class="project-card scroll-reveal" data-hover-expand>
-            <div class="project-img-placeholder" aria-hidden="true">
-              <span class="project-overlay-text">AURA</span>
-            </div>
-            <div class="project-info">
-              <span class="project-category">UI/UX & Creative Frontend</span>
-              <h3 class="project-title">Aura Cosmetic System</h3>
-              <p class="project-desc">A highly interactive visual campaign website featuring advanced web design layouts and custom scroll behavior.</p>
-              <a href="#" class="project-link" data-hover-expand>Explore Case Study <span>→</span></a>
-            </div>
-          </article>
+        <div class="projects-hero-title-block">
+          <h1 class="projects-hero-title">
+            <span class="projects-hero-line line-1" data-text="We don't just think.">We don't just think.</span>
+            <span class="projects-hero-line line-2" data-text="We do.">We do.</span>
+          </h1>
+          <p class="projects-hero-subtitle" data-text="Deep dives into our most complex challenges, the strategies we applied, and the digital solutions that solved them.">
+            Deep dives into our most complex challenges, the strategies we applied, and the digital solutions that solved them.
+          </p>
 
-          <!-- Project 2 -->
-          <article class="project-card scroll-reveal" data-hover-expand>
-            <div class="project-img-placeholder" aria-hidden="true">
-              <span class="project-overlay-text">KRYPTON</span>
+          <!-- Filter Toggle Tabs -->
+          <div class="projects-filter-wrapper">
+            <div class="projects-filter-tabs" role="tablist" aria-label="Project Categories">
+              <button class="filter-tab active" data-filter="all" role="tab" aria-selected="true" data-hover-expand>ALL</button>
+              <button class="filter-tab" data-filter="b2b" role="tab" aria-selected="false" data-hover-expand>B2B</button>
+              <button class="filter-tab" data-filter="b2c" role="tab" aria-selected="false" data-hover-expand>B2C</button>
             </div>
-            <div class="project-info">
-              <span class="project-category">Web3 & Performance Engineering</span>
-              <h3 class="project-title">Krypton Asset Protocol</h3>
-              <p class="project-desc">Real-time asset tracking interface engineered with performant web rendering and smooth micro-interactions.</p>
-              <a href="#" class="project-link" data-hover-expand>Explore Case Study <span>→</span></a>
-            </div>
-          </article>
-
-          <!-- Project 3 -->
-          <article class="project-card scroll-reveal" data-hover-expand>
-            <div class="project-img-placeholder" aria-hidden="true">
-              <span class="project-overlay-text">VALO</span>
-            </div>
-            <div class="project-info">
-              <span class="project-category">E-commerce & Brand Experience</span>
-              <h3 class="project-title">Valo Intelligent Wear</h3>
-              <p class="project-desc">Modern e-commerce platform incorporating fluid scroll-driven page elements and immersive image zoom features.</p>
-              <a href="#" class="project-link" data-hover-expand>Explore Case Study <span>→</span></a>
-            </div>
-          </article>
+          </div>
         </div>
       </div>
     </section>
+
+    <!-- Projects Grid Section -->
+    <section id="portfolio-grid-section" class="portfolio-grid-section light-section" data-bg="light">
+      <div class="container">
+        <div class="projects-page-grid">
+          <!-- Project 1 -->
+          <a href="/project-detail.html?id=1" class="projects-page-card scroll-reveal" data-category="b2c" data-hover-expand>
+            <div class="projects-card-media">
+              <img src="/src/assets/images/Project Card 1.png" alt="Aura Cosmetic System" loading="lazy">
+              <div class="project-chips">
+                <span class="project-chip">UI/UX Design</span>
+                <span class="project-chip">Creative Frontend</span>
+              </div>
+              <div class="split-card-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M7 17L17 7M17 7H7M17 7V17" />
+                </svg>
+              </div>
+            </div>
+            <div class="projects-card-info">
+              <h3 class="projects-card-title">Aura Cosmetic System</h3>
+              <p class="projects-card-desc">An interactive visual campaign website featuring advanced web design layouts and fluid scroll behavior.</p>
+            </div>
+          </a>
+
+          <!-- Project 2 -->
+          <a href="/project-detail.html?id=2" class="projects-page-card scroll-reveal" data-category="b2b" data-hover-expand>
+            <div class="projects-card-media">
+              <img src="/src/assets/images/Project Card 2.png" alt="Krypton Asset Protocol" loading="lazy">
+              <div class="project-chips">
+                <span class="project-chip">Web3 Protocol</span>
+                <span class="project-chip">Performance</span>
+              </div>
+              <div class="split-card-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M7 17L17 7M17 7H7M17 7V17" />
+                </svg>
+              </div>
+            </div>
+            <div class="projects-card-info">
+              <h3 class="projects-card-title">Krypton Asset Protocol</h3>
+              <p class="projects-card-desc">Real-time asset tracking interface engineered with performant web rendering and micro-interactions.</p>
+            </div>
+          </a>
+
+          <!-- Project 3 -->
+          <a href="/project-detail.html?id=3" class="projects-page-card scroll-reveal" data-category="b2c" data-hover-expand>
+            <div class="projects-card-media">
+              <img src="/src/assets/images/Project Card 3.png" alt="Valo Intelligent Wear" loading="lazy">
+              <div class="project-chips">
+                <span class="project-chip">E-Commerce</span>
+                <span class="project-chip">Motion Design</span>
+              </div>
+              <div class="split-card-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M7 17L17 7M17 7H7M17 7V17" />
+                </svg>
+              </div>
+            </div>
+            <div class="projects-card-info">
+              <h3 class="projects-card-title">Valo Intelligent Wear</h3>
+              <p class="projects-card-desc">Modern e-commerce platform incorporating fluid scroll-driven page elements and image zoom features.</p>
+            </div>
+          </a>
+
+          <!-- Project 4 -->
+          <a href="/project-detail.html?id=4" class="projects-page-card scroll-reveal" data-category="b2c" data-hover-expand>
+            <div class="projects-card-media">
+              <img src="/src/assets/images/Project Card 4.png" alt="Charger App Ecosystem" loading="lazy">
+              <div class="project-chips">
+                <span class="project-chip">Mobile App</span>
+                <span class="project-chip">iOS & Android</span>
+              </div>
+              <div class="split-card-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M7 17L17 7M17 7H7M17 7V17" />
+                </svg>
+              </div>
+            </div>
+            <div class="projects-card-info">
+              <h3 class="projects-card-title">Charger App Ecosystem</h3>
+              <p class="projects-card-desc">Smart charging infrastructure app with real-time station discovery, route planning, and seamless payments.</p>
+            </div>
+          </a>
+
+          <!-- Project 5 -->
+          <a href="/project-detail.html?id=5" class="projects-page-card scroll-reveal" data-category="b2b" data-hover-expand>
+            <div class="projects-card-media">
+              <img src="/src/assets/images/Project Card 5.png" alt="Syntellite Brand Narrative" loading="lazy">
+              <div class="project-chips">
+                <span class="project-chip">Brand Identity</span>
+                <span class="project-chip">Design System</span>
+              </div>
+              <div class="split-card-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M7 17L17 7M17 7H7M17 7V17" />
+                </svg>
+              </div>
+            </div>
+            <div class="projects-card-info">
+              <h3 class="projects-card-title">Syntellite Brand Narrative</h3>
+              <p class="projects-card-desc">Comprehensive brand identity design system built for multi-platform cohesion and visual storytelling.</p>
+            </div>
+          </a>
+
+          <!-- Project 6 -->
+          <a href="/project-detail.html?id=6" class="projects-page-card scroll-reveal" data-category="b2b" data-hover-expand>
+            <div class="projects-card-media">
+              <img src="/src/assets/images/Project Card 6.png" alt="Nexus 3D Concept Space" loading="lazy">
+              <div class="project-chips">
+                <span class="project-chip">3D WebGL</span>
+                <span class="project-chip">Interactive Concept</span>
+              </div>
+              <div class="split-card-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M7 17L17 7M17 7H7M17 7V17" />
+                </svg>
+              </div>
+            </div>
+            <div class="projects-card-info">
+              <h3 class="projects-card-title">Nexus 3D Concept Space</h3>
+              <p class="projects-card-desc">Experimental WebGL 3D environment designed for spatial web interactions and immersive exploration.</p>
+            </div>
+          </a>
+
+          <!-- Project 7 (Duplicated expanded showcase) -->
+          <a href="/project-detail.html?id=7" class="projects-page-card scroll-reveal" data-category="b2b" data-hover-expand>
+            <div class="projects-card-media">
+              <img src="/src/assets/images/Project Card 1.png" alt="Apex AI Assistant Platform" loading="lazy">
+              <div class="project-chips">
+                <span class="project-chip">AI Logic</span>
+                <span class="project-chip">Agentic UX</span>
+              </div>
+              <div class="split-card-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M7 17L17 7M17 7H7M17 7V17" />
+                </svg>
+              </div>
+            </div>
+            <div class="projects-card-info">
+              <h3 class="projects-card-title">Apex AI Assistant Platform</h3>
+              <p class="projects-card-desc">Next-generation enterprise AI workbench featuring autonomous workflows and structured model orchestration.</p>
+            </div>
+          </a>
+
+          <!-- Project 8 -->
+          <a href="/project-detail.html?id=8" class="projects-page-card scroll-reveal" data-category="b2b" data-hover-expand>
+            <div class="projects-card-media">
+              <img src="/src/assets/images/Project Card 2.png" alt="Starlight Quantum Exchange" loading="lazy">
+              <div class="project-chips">
+                <span class="project-chip">Fintech</span>
+                <span class="project-chip">Real-Time Analytics</span>
+              </div>
+              <div class="split-card-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M7 17L17 7M17 7H7M17 7V17" />
+                </svg>
+              </div>
+            </div>
+            <div class="projects-card-info">
+              <h3 class="projects-card-title">Starlight Quantum Exchange</h3>
+              <p class="projects-card-desc">Ultra-low-latency financial dashboard delivering high-frequency data streams with sleek dark aesthetic.</p>
+            </div>
+          </a>
+
+          <!-- Project 9 -->
+          <a href="/project-detail.html?id=9" class="projects-page-card scroll-reveal" data-category="b2c" data-hover-expand>
+            <div class="projects-card-media">
+              <img src="/src/assets/images/Project Card 3.png" alt="Vortex Spatial Studio" loading="lazy">
+              <div class="project-chips">
+                <span class="project-chip">Spatial Computing</span>
+                <span class="project-chip">WebVR</span>
+              </div>
+              <div class="split-card-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M7 17L17 7M17 7H7M17 7V17" />
+                </svg>
+              </div>
+            </div>
+            <div class="projects-card-info">
+              <h3 class="projects-card-title">Vortex Spatial Studio</h3>
+              <p class="projects-card-desc">Immersive web studio enabling 3D product previews and spatial design collaboration directly in browser.</p>
+            </div>
+          </a>
+
+          <!-- Project 10 -->
+          <a href="/project-detail.html?id=10" class="projects-page-card scroll-reveal" data-category="b2b" data-hover-expand>
+            <div class="projects-card-media">
+              <img src="/src/assets/images/Project Card 4.png" alt="Hyperion Mobility Dashboard" loading="lazy">
+              <div class="project-chips">
+                <span class="project-chip">Automotive UI</span>
+                <span class="project-chip">Embedded System</span>
+              </div>
+              <div class="split-card-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M7 17L17 7M17 7H7M17 7V17" />
+                </svg>
+              </div>
+            </div>
+            <div class="projects-card-info">
+              <h3 class="projects-card-title">Hyperion Mobility Dashboard</h3>
+              <p class="projects-card-desc">Next-gen vehicle cockpit interface designed for touch and gesture control with real-time telemetry.</p>
+            </div>
+          </a>
+
+          <!-- Project 11 -->
+          <a href="/project-detail.html?id=11" class="projects-page-card scroll-reveal" data-category="b2b" data-hover-expand>
+            <div class="projects-card-media">
+              <img src="/src/assets/images/Project Card 5.png" alt="Pulse Healthcare Portal" loading="lazy">
+              <div class="project-chips">
+                <span class="project-chip">Healthcare</span>
+                <span class="project-chip">Cloud Infrastructure</span>
+              </div>
+              <div class="split-card-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M7 17L17 7M17 7H7M17 7V17" />
+                </svg>
+              </div>
+            </div>
+            <div class="projects-card-info">
+              <h3 class="projects-card-title">Pulse Healthcare Portal</h3>
+              <p class="projects-card-desc">HIPAA-compliant telemedicine platform connecting patients and specialists with secure video workflows.</p>
+            </div>
+          </a>
+
+          <!-- Project 12 -->
+          <a href="/project-detail.html?id=12" class="projects-page-card scroll-reveal" data-category="b2b" data-hover-expand>
+            <div class="projects-card-media">
+              <img src="/src/assets/images/Project Card 6.png" alt="Cipher Security Command" loading="lazy">
+              <div class="project-chips">
+                <span class="project-chip">Cybersecurity</span>
+                <span class="project-chip">Data Visualization</span>
+              </div>
+              <div class="split-card-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M7 17L17 7M17 7H7M17 7V17" />
+                </svg>
+              </div>
+            </div>
+            <div class="projects-card-info">
+              <h3 class="projects-card-title">Cipher Security Command</h3>
+              <p class="projects-card-desc">Unified threat monitoring console delivering instant anomaly detection and automated security responses.</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Banner Section -->
+    <section id="cta-banner" class="cta-banner-section light-section" data-bg="light">
+      <div class="container cta-banner-container">
+        <h2 class="cta-banner-title scroll-reveal">
+          Let's Build Something <br>
+          Amazing Together
+        </h2>
+        <div class="cta-banner-buttons scroll-reveal">
+          <a href="/contact.html" class="cta-pill-btn" data-hover-expand>
+            <span>Request a call back</span>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+          <a href="https://calendly.com" target="_blank" rel="noopener" class="cta-pill-btn" data-hover-expand>
+            <span>Book a meeting</span>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <!-- Footer -->
@@ -130,18 +368,23 @@
         </div>
 
         <div class="footer-socials">
-          <a href="https://linkedin.com" target="_blank" rel="noopener" class="social-circle" aria-label="LinkedIn" data-hover-expand>
+          <a href="https://linkedin.com" target="_blank" rel="noopener" class="social-circle" aria-label="LinkedIn"
+            data-hover-expand>
             <span>in</span>
           </a>
-          <a href="https://instagram.com" target="_blank" rel="noopener" class="social-circle" aria-label="Instagram" data-hover-expand>
+          <a href="https://instagram.com" target="_blank" rel="noopener" class="social-circle" aria-label="Instagram"
+            data-hover-expand>
             <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+              <path
+                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
             </svg>
           </a>
-          <a href="https://x.com" target="_blank" rel="noopener" class="social-circle" aria-label="X (Twitter)" data-hover-expand>
+          <a href="https://x.com" target="_blank" rel="noopener" class="social-circle" aria-label="X (Twitter)"
+            data-hover-expand>
             <span>X</span>
           </a>
-          <a href="https://behance.net" target="_blank" rel="noopener" class="social-circle" aria-label="Behance" data-hover-expand>
+          <a href="https://behance.net" target="_blank" rel="noopener" class="social-circle" aria-label="Behance"
+            data-hover-expand>
             <span>Bē</span>
           </a>
         </div>
@@ -152,4 +395,5 @@
   <!-- Scripts -->
   <script type="module" src="/src/js/main.js"></script>
 </body>
+
 </html>

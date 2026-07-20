@@ -1,0 +1,80 @@
+/* ==========================================
+   CTA BANNER SECTION STYLES
+   ========================================== */
+.cta-banner-section {
+  background: #ffffff;
+  color: #000000;
+  padding: clamp(90px, 11vw, 150px) 0;
+  position: relative;
+  overflow: hidden;
+  z-index: 10;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.cta-banner-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 clamp(24px, 4vw, 48px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.cta-banner-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(2.6rem, 6.2vw, 5.2rem);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -2px;
+  color: #000000;
+  margin: 0 0 clamp(36px, 5vw, 54px) 0;
+  max-width: 900px;
+}
+
+.cta-banner-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(14px, 2vw, 24px);
+}
+
+.cta-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 1rem 2.4rem;
+  border-radius: 100px;
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(0.95rem, 1.3vw, 1.1rem);
+  font-weight: 500;
+  color: #000000;
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  transition:
+    transform 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+    background 0.3s ease,
+    color 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+  white-space: nowrap;
+}
+
+.cta-pill-btn:hover,
+.cta-pill-btn:focus {
+  background: #000000;
+  color: #ffffff;
+  border-color: #000000;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.cta-pill-btn svg {
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.cta-pill-btn:hover svg {
+  transform: translateX(4px);
+}

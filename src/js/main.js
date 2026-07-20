@@ -14,16 +14,22 @@ import {
   initProcessSection,
   initClientsMarquee,
   initTestimonialsSection,
-  initFooterAnimation
+  initFooterAnimation,
+  initProjectsHeroAnimation,
+  initProjectFilters
 } from './modules/animations.js';
 
 import { initSmoothScroll } from './modules/smoothScroll.js';
+import { initProjectDetail } from './modules/projectDetail.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   console.log('Syntellite Agency Site Initialized.');
 
   // Initialize Lenis smooth scroll (must run first to intercept all scroll events)
   initSmoothScroll();
+
+  // Initialize Project Detail Dynamic Page Data (if on project-detail.html)
+  initProjectDetail();
 
   // Initialize Scroll Reveals (IntersectionObserver)
   initScrollReveal();
@@ -51,6 +57,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initialize Footer Scroll Rise-in Animation
   initFooterAnimation();
+
+  // Initialize Projects Hero Banner Scroll Text Reveal
+  initProjectsHeroAnimation();
+
+  // Initialize Projects Filter Tabs (ALL, B2B, B2C)
+  initProjectFilters();
 
   // Initialize Hamburger Menu
   initMobileMenu();
