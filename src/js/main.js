@@ -18,7 +18,10 @@ import {
   initProjectsHeroAnimation,
   initProjectFilters,
   initAboutHeroAnimation,
-  initOurStoryAnimation
+  initHeroStatTicker,
+  initOurStoryAnimation,
+  initAboutSkillsetAnimation,
+  initAboutExpertsAnimation
 } from './modules/animations.js';
 
 import { initSmoothScroll } from './modules/smoothScroll.js';
@@ -66,8 +69,17 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize About Page Hero Banner Entrance & Mask Reveal
   initAboutHeroAnimation();
 
+  // Initialize About Page Top Banner Auto-Rotating Stat Ticker
+  initHeroStatTicker();
+
   // Initialize Our Story Section Timeline Animation
   initOurStoryAnimation();
+
+  // Initialize About Page Skillset Mask Reveal & Counter Countdown Animation
+  initAboutSkillsetAnimation();
+
+  // Initialize Engineered by Experts Section Mask Reveal Animation
+  initAboutExpertsAnimation();
 
   // Initialize Projects Filter Tabs (ALL, B2B, B2C)
   initProjectFilters();

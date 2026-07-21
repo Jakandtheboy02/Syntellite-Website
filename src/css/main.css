@@ -2275,7 +2275,6 @@ main {
   padding: clamp(60px, 8vw, 100px) 0;
   width: 100%;
   overflow: hidden;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .testimonials-title {

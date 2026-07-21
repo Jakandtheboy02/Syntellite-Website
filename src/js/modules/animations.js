@@ -129,7 +129,7 @@ export function initMobileMenu() {
   let lastScrollY = window.scrollY;
   const onScroll = () => {
     const currentScrollY = window.scrollY;
-    
+
     // If the mobile menu toggle is active, keep header expanded
     if (menuToggle.classList.contains('active') || headerNav.classList.contains('nav-open')) {
       lastScrollY = currentScrollY;
@@ -630,7 +630,7 @@ export function initServicesSection() {
     e.preventDefault();
     const x = e.pageX - carousel.offsetLeft;
     const walk = (x - startX) * 1.5;
-    
+
     let targetScroll = startScrollLeft - walk;
     const singleWidth = getSingleSetWidth();
 
@@ -668,7 +668,7 @@ export function initServicesSection() {
     if (!isDragging) return;
     const x = e.touches[0].pageX - carousel.offsetLeft;
     const walk = (x - startX) * 1.5;
-    
+
     let targetScroll = startScrollLeft - walk;
     const singleWidth = getSingleSetWidth();
 
@@ -703,7 +703,7 @@ export function initServicesSection() {
         if (autoScrollX >= singleWidth) {
           autoScrollX -= singleWidth;
         }
-        
+
         // Add scroll-linked page scroll parallax offset
         const pageScrollOffset = parseFloat(carousel.dataset.scrollOffset || 0);
         carousel.scrollLeft = autoScrollX + pageScrollOffset;
@@ -767,7 +767,7 @@ export function initProcessSection() {
 
     card.setAttribute('data-rot-axis', axis);
     card.setAttribute('data-rot-dir', dir);
-    
+
     const frontFace = card.querySelector('.split-card-front');
     if (frontFace) {
       frontFace.style.transform = `rotate${axis}(${dir * 180}deg)`;
@@ -792,7 +792,7 @@ export function initProcessSection() {
       // Show zoom wrapper, hide split container
       zoomWrapper.style.opacity = '1';
       zoomWrapper.style.pointerEvents = 'auto';
-      
+
       splitContainer.style.opacity = '0';
       splitContainer.style.pointerEvents = 'none';
       splitContainer.classList.remove('active');
@@ -814,7 +814,7 @@ export function initProcessSection() {
       const sy = startSy + (1 - startSy) * easedZ;
 
       zoomPill.style.transform = `scale3d(${sx}, ${sy}, 1)`;
-      
+
       // Keep visual border radius constant at exactly 12px throughout the transition
       const borderRadiusVal = 12 / sy;
       zoomPill.style.borderRadius = `${borderRadiusVal}px`;
@@ -835,7 +835,7 @@ export function initProcessSection() {
       // Hide zoom wrapper, show split container
       zoomWrapper.style.opacity = '0';
       zoomWrapper.style.pointerEvents = 'none';
-      
+
       splitContainer.style.opacity = '1';
       splitContainer.style.pointerEvents = 'auto';
 
@@ -891,7 +891,7 @@ export function initClientsMarquee() {
   // Duplicate elements inside the marquee to create a seamless infinite loop
   const logos = Array.from(marquee.children);
   if (!logos.length) return;
-  
+
   // Clone twice to make sure we always have enough overflow width on all resolutions
   logos.forEach(logo => {
     marquee.appendChild(logo.cloneNode(true));
@@ -957,11 +957,11 @@ export function initClientsMarquee() {
   // Autoplay requestAnimationFrame loop
   const step = () => {
     const now = Date.now();
-    
+
     // Auto scroll only if the user is not actively interacting and 1.5s passed since last interaction
     if (!isInteracting && !isDown && (now - lastInteractionTime > 1500)) {
       marquee.scrollLeft += speed;
-      
+
       // Infinite loop wrap calculation:
       // Since we duplicated the logos twice, the true width of the single loop set is scrollWidth / 3.
       // Reset when scrollLeft reaches this boundary.
@@ -1086,7 +1086,7 @@ export function initFooterAnimation() {
 
       // Distance from viewport bottom to vertical center of .footer-bottom-flex
       const flexCenterYFromBottom = windowHeight - (flexRect.top + flexRect.height / 2);
-      
+
       // Target bottom px so bottomNav vertical center matches flexCenterYFromBottom
       const targetNavBottom = flexCenterYFromBottom - navRect.height / 2;
       const defaultNavBottom = 30;
@@ -1274,38 +1274,231 @@ export function initAboutHeroAnimation() {
 }
 
 /**
- * Our Story Section Scroll Mask Reveal & Timeline 3-Dot Animation
+ * About Page Top Banner Auto-Rotating Stat Ticker (Every 3 seconds)
+ */
+export function initHeroStatTicker() {
+  const tickerContainer = document.getElementById('about-hero-ticker');
+  const statNum = document.getElementById('hero-stat-num');
+  const statLabel = document.getElementById('hero-stat-label');
+
+  if (!tickerContainer || !statNum || !statLabel) return;
+
+  const stats = [
+    { num: '20+', label: 'brands launched' },
+    { num: '2025', label: 'established since' },
+    { num: '30+', label: 'clients served' },
+    { num: '100+', label: 'success score' }
+  ];
+
+  let currentIndex = 0;
+
+  setInterval(() => {
+    // 1. Smoothly slide out to left (staggered num then label)
+    tickerContainer.classList.add('is-changing');
+
+    setTimeout(() => {
+      // 2. Change text
+      currentIndex = (currentIndex + 1) % stats.length;
+      statNum.textContent = stats[currentIndex].num;
+      statLabel.textContent = stats[currentIndex].label;
+
+      // 3. Position at right entrance instantly
+      tickerContainer.classList.remove('is-changing');
+      tickerContainer.classList.add('is-entering');
+
+      // Force browser reflow frame
+      void tickerContainer.offsetWidth;
+
+      // 4. Smoothly slide in from right (staggered num then label)
+      requestAnimationFrame(() => {
+        tickerContainer.classList.remove('is-entering');
+      });
+    }, 650);
+  }, 3000);
+}
+
+/**
+ * Our Story Section Scroll Mask Reveal & Timeline 3-Dot Animation (Forward & Backward Scroll Scrubbing)
  */
 export function initOurStoryAnimation() {
+  const section = document.getElementById('our-story');
+  if (!section) return;
+
   const title = document.getElementById('our-story-title');
   const timeline = document.getElementById('story-timeline');
   if (!title && !timeline) return;
 
-  const onScroll = () => {
-    const section = document.getElementById('our-story');
-    if (!section) return;
+  let targetP = 0;
+  let currentP = 0;
 
+  const onScroll = () => {
     const rect = section.getBoundingClientRect();
     const windowHeight = window.innerHeight;
 
-    // Progress p when section enters viewport
-    const startY = windowHeight * 0.88;
-    const endY = windowHeight * 0.25;
+    // Progress p goes from 0 (entering from bottom) to 1 (scrolled up)
+    const startY = windowHeight * 0.92;
+    const endY = windowHeight * 0.15;
     let p = (startY - rect.top) / (startY - endY);
-    p = Math.min(1, Math.max(0, p));
+    targetP = Math.min(1, Math.max(0, p));
+  };
 
+  subscribeScroll(onScroll);
+  window.addEventListener('resize', onScroll, { passive: true });
+  onScroll();
+
+  // 120fps rAF lerp loop for bidirectional continuous scroll scrubbing
+  const render = () => {
+    // Silky smooth cubic lerp tracking scroll position in both directions
+    currentP += (targetP - currentP) * 0.08;
+
+    // Title reveal progress
     if (title) {
-      const easedTitle = p * p * (3 - 2 * p);
+      const title_p = Math.min(1, Math.max(0, currentP * 1.25));
+      const easedTitle = title_p * title_p * (3 - 2 * title_p);
       title.style.setProperty('--reveal-progress', easedTitle.toFixed(3));
     }
 
+    // Timeline Line & 3 Dots scroll-driven sequence
     if (timeline) {
-      if (rect.top <= windowHeight * 0.75) {
-        timeline.classList.add('is-active');
+      // 1. Center dot: scale from p = 0.0 to 0.15
+      const center_p = Math.min(1, Math.max(0, currentP / 0.15));
+      const centerScale = center_p * center_p * (3 - 2 * center_p);
+
+      // 2. Timeline Line: scaleX from p = 0.10 to 0.70
+      const line_p = Math.min(1, Math.max(0, (currentP - 0.10) / 0.60));
+      const lineScaleX = line_p * line_p * (3 - 2 * line_p);
+
+      // 3. Side Dots (Left & Right): scale from p = 0.65 to 0.90
+      const side_p = Math.min(1, Math.max(0, (currentP - 0.65) / 0.25));
+      const sideScale = side_p * side_p * (3 - 2 * side_p);
+
+      timeline.style.setProperty('--dot-center-scale', centerScale.toFixed(3));
+      timeline.style.setProperty('--line-scale-x', lineScaleX.toFixed(3));
+      timeline.style.setProperty('--dot-side-scale', sideScale.toFixed(3));
+    }
+
+    requestAnimationFrame(render);
+  };
+
+  requestAnimationFrame(render);
+}
+
+/**
+ * About Page Skillset Section Text Mask Reveal & Re-triggerable Counter Countdown
+ */
+export function initAboutSkillsetAnimation() {
+  const section = document.getElementById('about-skillset');
+  if (!section) return;
+
+  const title = document.getElementById('skillset-title-reveal');
+  const desc = document.getElementById('skillset-desc-reveal');
+  const counters = section.querySelectorAll('.stat-counter-num');
+
+  let animated = false;
+  let counterAnimationFrameId = null;
+
+  const runCounterAnimation = () => {
+    const duration = 1500; // ms
+    const startTime = performance.now();
+
+    const animateCounters = (now) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(1, elapsed / duration);
+      // Easing: easeOutCubic
+      const easedProgress = 1 - Math.pow(1 - progress, 3);
+
+      counters.forEach((el) => {
+        const target = parseFloat(el.getAttribute('data-target')) || 0;
+        const suffix = el.getAttribute('data-suffix') || '';
+        const currentVal = Math.round(target * easedProgress);
+        el.textContent = currentVal + suffix;
+      });
+
+      if (progress < 1) {
+        counterAnimationFrameId = requestAnimationFrame(animateCounters);
+      }
+    };
+
+    if (counterAnimationFrameId) cancelAnimationFrame(counterAnimationFrameId);
+    counterAnimationFrameId = requestAnimationFrame(animateCounters);
+  };
+
+  const onScroll = () => {
+    const rect = section.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+
+    // Mask reveal progress for skillset title and description
+    const startY = windowHeight * 0.90;
+    const endY = windowHeight * 0.20;
+    let p = (startY - rect.top) / (startY - endY);
+    p = Math.min(1, Math.max(0, p));
+
+    const easedP = p * p * (3 - 2 * p);
+    if (title) title.style.setProperty('--reveal-progress', easedP.toFixed(3));
+    if (desc) desc.style.setProperty('--reveal-progress', easedP.toFixed(3));
+
+    // Re-triggerable countdown animation when section is in view
+    if (rect.top <= windowHeight * 0.82 && rect.bottom >= windowHeight * 0.18) {
+      if (!animated) {
+        animated = true;
+        runCounterAnimation();
+      }
+    } else {
+      // Reset when user scrolls completely out of view so it re-triggers upon scrolling back
+      if (rect.top > windowHeight || rect.bottom < 0) {
+        if (animated) {
+          animated = false;
+          counters.forEach((el) => {
+            const suffix = el.getAttribute('data-suffix') || '';
+            el.textContent = '0' + suffix;
+          });
+        }
       }
     }
   };
 
   subscribeScroll(onScroll);
+  window.addEventListener('resize', onScroll, { passive: true });
+  onScroll();
+}
+
+/**
+ * About Page "Engineered by Experts" Section Mask Reveal Animation
+ */
+export function initAboutExpertsAnimation() {
+  const section = document.getElementById('about-experts');
+  if (!section) return;
+
+  const title = document.getElementById('experts-title-reveal');
+  const desc = document.getElementById('experts-desc-reveal');
+  const avatarCircles = document.querySelectorAll('#about-experts .avatar-circle');
+
+  const onScroll = () => {
+    const rect = section.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+
+    // Mask reveal progress when section enters viewport (forward & backward scroll)
+    const startY = windowHeight * 0.92;
+    const endY = windowHeight * 0.18;
+    let p = (startY - rect.top) / (startY - endY);
+    p = Math.min(1, Math.max(0, p));
+
+    const easedP = p * p * (3 - 2 * p);
+    if (title) title.style.setProperty('--reveal-progress', easedP.toFixed(3));
+    if (desc) desc.style.setProperty('--reveal-progress', easedP.toFixed(3));
+
+    // Staggered scroll-driven avatar circles reveal
+    if (avatarCircles.length) {
+      avatarCircles.forEach((circle, idx) => {
+        const delay = idx * 0.035;
+        let ap = Math.min(1, Math.max(0, (p - delay) / (1 - delay * 0.5)));
+        const easedAp = ap * ap * (3 - 2 * ap);
+        circle.style.setProperty('--avatar-progress', easedAp.toFixed(3));
+      });
+    }
+  };
+
+  subscribeScroll(onScroll);
+  window.addEventListener('resize', onScroll, { passive: true });
   onScroll();
 }
