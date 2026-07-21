@@ -60,7 +60,7 @@
   width: 100%;
   aspect-ratio: 21 / 9;
   min-height: 280px;
-  border-radius: clamp(18px, 2.5vw, 28px);
+  border-radius: clamp(16px, 2.2vw, 16px);
   overflow: hidden;
   box-shadow: 0 15px 45px rgba(0, 0, 0, 0.08);
   margin-bottom: clamp(40px, 6vw, 64px);
@@ -231,7 +231,7 @@
 
 .gallery-card {
   position: relative;
-  border-radius: clamp(14px, 1.8vw, 22px);
+  border-radius: clamp(16px, 2.2vw, 16px);
   overflow: hidden;
   background: #f4f5f7;
   border: 1px solid rgba(0, 0, 0, 0.06);

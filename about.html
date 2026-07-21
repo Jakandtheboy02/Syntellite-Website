@@ -45,76 +45,50 @@
 
   <!-- Main Content -->
   <main id="main-content">
-    <!-- About Hero Section -->
-    <section id="about-hero" class="about-hero-section">
-      <div class="glow-bg" id="about-glow"></div>
-      <div class="container hero-container">
-        <span class="section-tag reveal-text">Who We Are</span>
-        <h1 class="hero-title reveal-text-delayed">
-          Crafting digital products <br>
-          <span class="text-gradient">with absolute precision</span>
-        </h1>
-        <p class="hero-subtitle reveal-fade">
-          We are a team of visionary designers, creative engineers, and conceptual thinkers dedicated to shaping standard digital interactions.
-        </p>
-      </div>
-    </section>
+    <!-- About Hero Banner Section -->
+    <section id="about-hero-banner" class="about-hero-banner-section light-section" data-bg="light">
+      <div class="container about-hero-container">
+        <!-- Title & Stat Row -->
+        <div class="about-hero-header-row">
+          <h1 id="about-title-reveal" class="about-hero-title">Syntellite</h1>
+          <div class="about-hero-stat">
+            <span class="stat-num">20+</span>
+            <span class="stat-label">brands launched</span>
+          </div>
+        </div>
 
-    <!-- Our Philosophy -->
-    <section id="philosophy" class="philosophy-section light-section" data-bg="light">
-      <div class="container">
-        <div class="philosophy-grid">
-          <div class="philosophy-text scroll-reveal">
-            <h2 class="section-title">Driven by Quality</h2>
-            <p>We reject the cookie-cutter templates that saturate today's web. Every line of code we write, every animation curve we design, and every layout we construct is custom-built to elevate our partners above the noise.</p>
-            <p>Our philosophy combines clean aesthetics, performance optimization, and immersive storytelling to design digital assets that make a lasting impression.</p>
-          </div>
-          <div class="philosophy-metrics scroll-reveal">
-            <div class="metric-card" data-hover-expand>
-              <span class="metric-num">50+</span>
-              <span class="metric-label">Awards & Honors</span>
-            </div>
-            <div class="metric-card" data-hover-expand>
-              <span class="metric-num">100%</span>
-              <span class="metric-label">Bespoke Code</span>
-            </div>
-            <div class="metric-card" data-hover-expand>
-              <span class="metric-num">4.9s</span>
-              <span class="metric-label">Average Speed Index</span>
-            </div>
-          </div>
+        <!-- Team Photo Image Frame -->
+        <div id="about-image-frame" class="about-hero-image-frame">
+          <img src="/src/assets/images/About page team photo.png" alt="Syntellite Team" class="about-hero-team-img">
         </div>
       </div>
     </section>
 
-    <!-- Team Section -->
-    <section id="team" class="team-section">
-      <div class="container">
-        <div class="section-header scroll-reveal">
-          <span class="section-tag">Creators</span>
-          <h2 class="section-title">The Masterminds</h2>
+    <!-- Our Story Section -->
+    <section id="our-story" class="our-story-section light-section" data-bg="light">
+      <div class="container our-story-container">
+        <!-- Main Title -->
+        <h2 id="our-story-title" class="our-story-title">Our story</h2>
+
+        <!-- Animated Timeline with 3 Dots -->
+        <div id="story-timeline" class="story-timeline-container">
+          <div class="timeline-line"></div>
+          <div class="timeline-dot dot-left"></div>
+          <div class="timeline-dot dot-center"></div>
+          <div class="timeline-dot dot-right"></div>
         </div>
-        <div class="team-grid">
-          <div class="team-card scroll-reveal" data-hover-expand>
-            <div class="team-avatar-placeholder" aria-hidden="true">
-              <span>JD</span>
-            </div>
-            <h3 class="team-name">Julian Drake</h3>
-            <p class="team-role">Design Director & Founder</p>
+
+        <!-- 2 Column Text Grid -->
+        <div class="story-text-grid">
+          <div class="story-text-left scroll-reveal">
+            <p class="story-lead">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque tempor tellus neque.
+            </p>
           </div>
-          <div class="team-card scroll-reveal" data-hover-expand>
-            <div class="team-avatar-placeholder" aria-hidden="true">
-              <span>EL</span>
-            </div>
-            <h3 class="team-name">Elena Laine</h3>
-            <p class="team-role">Lead Creative Technologist</p>
-          </div>
-          <div class="team-card scroll-reveal" data-hover-expand>
-            <div class="team-avatar-placeholder" aria-hidden="true">
-              <span>MK</span>
-            </div>
-            <h3 class="team-name">Marcus Kael</h3>
-            <p class="team-role">Senior Frontend Architect</p>
+          <div class="story-text-right scroll-reveal">
+            <p class="story-body">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque tempor tellus neque, vitae interdum eros blandit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque tempor tellus neque, vitae interdum eros blandit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            </p>
           </div>
         </div>
       </div>

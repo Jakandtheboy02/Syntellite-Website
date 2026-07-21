@@ -16,7 +16,9 @@ import {
   initTestimonialsSection,
   initFooterAnimation,
   initProjectsHeroAnimation,
-  initProjectFilters
+  initProjectFilters,
+  initAboutHeroAnimation,
+  initOurStoryAnimation
 } from './modules/animations.js';
 
 import { initSmoothScroll } from './modules/smoothScroll.js';
@@ -60,6 +62,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initialize Projects Hero Banner Scroll Text Reveal
   initProjectsHeroAnimation();
+
+  // Initialize About Page Hero Banner Entrance & Mask Reveal
+  initAboutHeroAnimation();
+
+  // Initialize Our Story Section Timeline Animation
+  initOurStoryAnimation();
 
   // Initialize Projects Filter Tabs (ALL, B2B, B2C)
   initProjectFilters();

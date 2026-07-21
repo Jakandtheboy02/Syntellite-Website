@@ -1225,3 +1225,87 @@ export function initProjectFilters() {
     });
   });
 }
+
+/**
+ * About Page Hero Banner Entrance & Scroll Reveal Animation
+ */
+export function initAboutHeroAnimation() {
+  const title = document.getElementById('about-title-reveal');
+  const imageFrame = document.getElementById('about-image-frame');
+  if (!title && !imageFrame) return;
+
+  let targetP = 0;
+  let currentP = 0;
+
+  // Trigger load reveal animation on page entry
+  setTimeout(() => {
+    targetP = 1;
+    if (imageFrame) {
+      imageFrame.classList.add('is-revealed');
+    }
+  }, 60);
+
+  const onScroll = () => {
+    const scrollY = window.scrollY;
+    const section = document.getElementById('about-hero-banner');
+    if (section && scrollY > 100) {
+      const rect = section.getBoundingClientRect();
+      const exitProgress = (rect.bottom) / (rect.height);
+      targetP = Math.min(1, Math.max(0, exitProgress));
+    }
+  };
+
+  subscribeScroll(onScroll);
+  window.addEventListener('resize', onScroll, { passive: true });
+
+  // 120fps rAF lerp loop for smooth load & scroll mask reveal
+  const render = () => {
+    currentP += (targetP - currentP) * 0.08;
+
+    if (title) {
+      const easedTitle = currentP * currentP * (3 - 2 * currentP);
+      title.style.setProperty('--reveal-progress', easedTitle.toFixed(3));
+    }
+
+    requestAnimationFrame(render);
+  };
+
+  requestAnimationFrame(render);
+}
+
+/**
+ * Our Story Section Scroll Mask Reveal & Timeline 3-Dot Animation
+ */
+export function initOurStoryAnimation() {
+  const title = document.getElementById('our-story-title');
+  const timeline = document.getElementById('story-timeline');
+  if (!title && !timeline) return;
+
+  const onScroll = () => {
+    const section = document.getElementById('our-story');
+    if (!section) return;
+
+    const rect = section.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+
+    // Progress p when section enters viewport
+    const startY = windowHeight * 0.88;
+    const endY = windowHeight * 0.25;
+    let p = (startY - rect.top) / (startY - endY);
+    p = Math.min(1, Math.max(0, p));
+
+    if (title) {
+      const easedTitle = p * p * (3 - 2 * p);
+      title.style.setProperty('--reveal-progress', easedTitle.toFixed(3));
+    }
+
+    if (timeline) {
+      if (rect.top <= windowHeight * 0.75) {
+        timeline.classList.add('is-active');
+      }
+    }
+  };
+
+  subscribeScroll(onScroll);
+  onScroll();
+}
