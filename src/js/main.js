@@ -21,7 +21,8 @@ import {
   initHeroStatTicker,
   initOurStoryAnimation,
   initAboutSkillsetAnimation,
-  initAboutExpertsAnimation
+  initAboutExpertsAnimation,
+  initContactBgCanvas
 } from './modules/animations.js';
 
 import { initSmoothScroll } from './modules/smoothScroll.js';
@@ -83,6 +84,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initialize Projects Filter Tabs (ALL, B2B, B2C)
   initProjectFilters();
+
+  // Initialize Standalone Contact Background Canvas Animation (Center Heartbeat Waves)
+  initContactBgCanvas();
 
   // Initialize Hamburger Menu
   initMobileMenu();

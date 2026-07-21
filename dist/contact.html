@@ -6,20 +6,18 @@
   <title>Contact Us | Syntellite Agency</title>
   <meta name="description" content="Get in touch with Syntellite to discuss custom designs, performant frontend engineering, or branding projects.">
   
-  <!-- Font -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
   <!-- Stylesheets -->
-  <script type="module" crossorigin src="/assets/main-Dkz9uAqK.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/main-DKB7tSBP.css">
+  <script type="module" crossorigin src="/assets/main-BD-BOZC9.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/main-DHMQ9TH4.css">
 </head>
 <body>
   <!-- Scroll Progress Indicator -->
   <div id="scroll-progress" aria-hidden="true"></div>
-
-
 
   <!-- Bottom Navigation Bar -->
   <nav id="bottom-nav" class="bottom-nav-bar">
@@ -46,108 +44,40 @@
 
   <!-- Main Content -->
   <main id="main-content">
-    <!-- Contact Hero -->
-    <section id="contact-hero" class="contact-hero-section">
-      <div class="glow-bg" id="contact-glow"></div>
-      <div class="container hero-container">
-        <span class="section-tag reveal-text">Connection</span>
-        <h1 class="hero-title reveal-text-delayed">
-          Let's build something <br>
-          <span class="text-gradient">remarkable together</span>
-        </h1>
-        <p class="hero-subtitle reveal-fade">
-          Tell us about your brand, your product goals, and your timeline. We'll follow up with ideas.
-        </p>
+    <!-- Contact Hero Section with Interactive Canvas Heartbeat Background -->
+    <section id="contact-hero" class="contact-hero-banner-section dark-section" data-bg="dark">
+      <!-- Interactive Heartbeat Canvas Background -->
+      <div id="contact-bg-component" class="contact-hero-canvas-bg">
+        <canvas id="contact-canvas" class="contact-canvas"></canvas>
       </div>
     </section>
 
-    <!-- Contact Form & Info -->
-    <section id="contact-section" class="contact-content-section">
-      <div class="container">
-        <div class="contact-grid">
-          <!-- Info Details -->
-          <div class="contact-info scroll-reveal">
-            <div class="info-block">
-              <h3>Start a Conversation</h3>
-              <p><a href="mailto:hello@syntellite.com" class="interactive-link" data-hover-expand>hello@syntellite.com</a></p>
-            </div>
-            <div class="info-block">
-              <h3>Our Location</h3>
-              <p>Silicon Valley, California & Zurich, Switzerland</p>
-            </div>
-            <div class="info-block">
-              <h3>Join Our Team</h3>
-              <p><a href="mailto:careers@syntellite.com" class="interactive-link" data-hover-expand>careers@syntellite.com</a></p>
-            </div>
-          </div>
-
-          <!-- Form Panel -->
-          <div class="contact-form-panel scroll-reveal">
-            <form id="agency-contact-form" action="#" method="POST" novalidate>
-              <div class="form-group">
-                <label for="user-name">What's your name? *</label>
-                <input type="text" id="user-name" name="name" required placeholder="John Doe" autocomplete="name" data-hover-expand>
-                <span class="error-msg" aria-live="polite"></span>
-              </div>
-              
-              <div class="form-group">
-                <label for="user-email">Your email address? *</label>
-                <input type="email" id="user-email" name="email" required placeholder="john@example.com" autocomplete="email" data-hover-expand>
-                <span class="error-msg" aria-live="polite"></span>
-              </div>
-              
-              <div class="form-group">
-                <label for="user-project">Project type *</label>
-                <select id="user-project" name="project_type" required data-hover-expand>
-                  <option value="" disabled selected>Select an option</option>
-                  <option value="ui_ux">UI/UX Design</option>
-                  <option value="frontend">Creative Frontend</option>
-                  <option value="branding">Complete Branding</option>
-                  <option value="other">Something Else</option>
-                </select>
-                <span class="error-msg" aria-live="polite"></span>
-              </div>
-              
-              <div class="form-group">
-                <label for="user-message">Tell us about your project *</label>
-                <textarea id="user-message" name="message" required placeholder="Hello Syntellite team, we want to build..." rows="5" data-hover-expand></textarea>
-                <span class="error-msg" aria-live="polite"></span>
-              </div>
-
-              <button type="submit" class="btn btn-primary btn-submit" id="submit-button" data-hover-expand>
-                Send Request
-              </button>
-            </form>
-          </div>
+    <!-- CTA Banner Section -->
+    <section id="cta-banner" class="cta-banner-section light-section" data-bg="light">
+      <div class="container cta-banner-container">
+        <h2 class="cta-banner-title scroll-reveal">
+          Let's Build Something <br>
+          Amazing Together
+        </h2>
+        <div class="cta-banner-buttons scroll-reveal">
+          <a href="/contact.html" class="cta-pill-btn" data-hover-expand>
+            <span>Request a call back</span>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </a>
+          <a href="https://calendly.com" target="_blank" rel="noopener" class="cta-pill-btn" data-hover-expand>
+            <span>Book a meeting</span>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </a>
         </div>
       </div>
+    </section>
   </main>
 
-  <!-- CTA Banner Section -->
-  <section id="cta-banner" class="cta-banner-section light-section" data-bg="light">
-    <div class="container cta-banner-container">
-      <h2 class="cta-banner-title scroll-reveal">
-        Let's Build Something <br>
-        Amazing Together
-      </h2>
-      <div class="cta-banner-buttons scroll-reveal">
-        <a href="/contact.html" class="cta-pill-btn" data-hover-expand>
-          <span>Request a call back</span>
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M5 12h14M12 5l7 7-7 7"/>
-          </svg>
-        </a>
-        <a href="https://calendly.com" target="_blank" rel="noopener" class="cta-pill-btn" data-hover-expand>
-          <span>Book a meeting</span>
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-          </svg>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
+  <!-- Official Site Footer -->
   <footer id="main-footer" class="site-footer">
     <div class="footer-card-container">
       <!-- Top Links Bar -->
@@ -170,18 +100,23 @@
         </div>
 
         <div class="footer-socials">
-          <a href="https://linkedin.com" target="_blank" rel="noopener" class="social-circle" aria-label="LinkedIn" data-hover-expand>
+          <a href="https://linkedin.com" target="_blank" rel="noopener" class="social-circle" aria-label="LinkedIn"
+            data-hover-expand>
             <span>in</span>
           </a>
-          <a href="https://instagram.com" target="_blank" rel="noopener" class="social-circle" aria-label="Instagram" data-hover-expand>
+          <a href="https://instagram.com" target="_blank" rel="noopener" class="social-circle" aria-label="Instagram"
+            data-hover-expand>
             <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+              <path
+                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
             </svg>
           </a>
-          <a href="https://x.com" target="_blank" rel="noopener" class="social-circle" aria-label="X (Twitter)" data-hover-expand>
+          <a href="https://x.com" target="_blank" rel="noopener" class="social-circle" aria-label="X (Twitter)"
+            data-hover-expand>
             <span>X</span>
           </a>
-          <a href="https://behance.net" target="_blank" rel="noopener" class="social-circle" aria-label="Behance" data-hover-expand>
+          <a href="https://behance.net" target="_blank" rel="noopener" class="social-circle" aria-label="Behance"
+            data-hover-expand>
             <span>Bē</span>
           </a>
         </div>
@@ -189,6 +124,5 @@
     </div>
   </footer>
 
-  <!-- Scripts -->
 </body>
 </html>

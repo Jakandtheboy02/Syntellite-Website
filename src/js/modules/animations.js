@@ -1502,3 +1502,116 @@ export function initAboutExpertsAnimation() {
   window.addEventListener('resize', onScroll, { passive: true });
   onScroll();
 }
+
+/**
+ * Standalone Interactive Background Canvas (Center Heartbeat Waves & Halftone Grid)
+ */
+export function initContactBgCanvas() {
+  const canvas = document.getElementById('contact-canvas');
+  if (!canvas) return;
+
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  let width = 0;
+  let height = 0;
+
+  const resize = () => {
+    const parent = canvas.parentElement;
+    const rect = parent ? parent.getBoundingClientRect() : { width: window.innerWidth, height: window.innerHeight };
+    width = canvas.width = rect.width || window.innerWidth;
+    height = canvas.height = rect.height || window.innerHeight;
+  };
+  window.addEventListener('resize', resize, { passive: true });
+  resize();
+
+  const startTime = performance.now();
+
+  // Slow, calm resting heartbeat rhythm (4.0 second cycle)
+  function getHeartbeatPulse(t) {
+    const cycle = (t % 4.0) / 4.0;
+    if (cycle < 0.10) {
+      const p = cycle / 0.10;
+      return Math.sin(p * Math.PI) * 0.40;
+    } else if (cycle > 0.15 && cycle < 0.27) {
+      const p = (cycle - 0.15) / 0.12;
+      return Math.sin(p * Math.PI) * 0.55;
+    }
+    return 0;
+  }
+
+  function render(now) {
+    const elapsed = (now - startTime) / 1000;
+    ctx.clearRect(0, 0, width, height);
+
+    // 1. Base vertical gradient (Black to White)
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, height);
+    bgGrad.addColorStop(0.0, '#000000');
+    bgGrad.addColorStop(0.35, '#131313ff');
+    bgGrad.addColorStop(0.70, '#666666');
+    bgGrad.addColorStop(1.0, '#ffffff');
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, width, height);
+
+    // 2. Heartbeat pulse & center variables
+    const cx = width / 2;
+    const cy = height / 2;
+    const beat = getHeartbeatPulse(elapsed);
+    const waveSpeed = elapsed * 1.8;
+
+    // Grid spacing matching reference image halftone grid
+    const spacing = 18;
+    const cols = Math.ceil(width / spacing) + 2;
+    const rows = Math.ceil(height / spacing) + 2;
+    const startX = (width - cols * spacing) / 2;
+    const startY = (height - rows * spacing) / 2;
+
+    for (let r = 0; r < rows; r++) {
+      const y = startY + r * spacing;
+      for (let c = 0; c < cols; c++) {
+        const x = startX + c * spacing;
+
+        const dx = x - cx;
+        const dy = y - cy;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        // Concentric expanding waves radiating from center
+        const wave = Math.sin(dist * 0.024 - waveSpeed);
+
+        const maxRadius = Math.min(width, height) * 0.48;
+        const radialFactor = Math.max(0, 1 - dist / (maxRadius * (1.1 + beat * 0.4)));
+
+        // Combine wave, radial distance, and heartbeat pulse
+        let sizeFactor = 0.5 + 0.5 * wave;
+        sizeFactor = sizeFactor * (0.6 + radialFactor * 0.8) + beat * radialFactor * 0.8;
+
+        // Enhance glowing center circle field matching reference image
+        const centerGlowRadius = 220 + beat * 70;
+        let centerGlow = 0;
+        if (dist < centerGlowRadius) {
+          centerGlow = 1 - (dist / centerGlowRadius);
+          sizeFactor += centerGlow * 0.7;
+        }
+
+        const normalizedY = y / height;
+        let baseAlpha = 0.32 + (1 - normalizedY) * 0.28;
+        if (centerGlow > 0) {
+          baseAlpha += centerGlow * 0.45;
+        }
+
+        const alpha = Math.min(0.92, Math.max(0.06, baseAlpha * (0.55 + sizeFactor * 0.45)));
+        const dotRadius = Math.min(5.2, Math.max(1.1, 2.2 * sizeFactor));
+
+        // Draw halftone vector dot grid
+        ctx.fillStyle = `rgba(255, 255, 255, ${alpha.toFixed(2)})`;
+        ctx.beginPath();
+        ctx.arc(x, y, dotRadius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    requestAnimationFrame(render);
+  }
+
+  requestAnimationFrame(render);
+}
