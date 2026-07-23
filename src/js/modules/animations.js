@@ -151,97 +151,133 @@ export function initMobileMenu() {
 }
 
 /**
- * Premium Form Validation and Micro-Interactions on the Contact page
+ * Premium Form Validation and Auto-Expanding Textarea on the Contact page
  */
 export function initContactForm() {
-  const form = document.getElementById('agency-contact-form');
+  const form = document.getElementById('contact-new-form') || document.getElementById('agency-contact-form');
+  
+  // Auto-expanding textarea logic with max-height and scrolling
+  const textareas = document.querySelectorAll('textarea');
+  textareas.forEach((textarea) => {
+    const adjustHeight = () => {
+      textarea.style.height = 'auto';
+      const maxHeight = 180;
+      const newHeight = Math.min(textarea.scrollHeight, maxHeight);
+      textarea.style.height = `${newHeight}px`;
+      if (textarea.scrollHeight > maxHeight) {
+        textarea.style.overflowY = 'auto';
+      } else {
+        textarea.style.overflowY = 'hidden';
+      }
+    };
+
+    textarea.addEventListener('input', adjustHeight);
+    textarea.addEventListener('wheel', (e) => {
+      if (textarea.scrollHeight > textarea.clientHeight) {
+        e.stopPropagation();
+      }
+    }, { passive: true });
+    adjustHeight();
+  });
+
   if (!form) return;
 
-  const inputs = form.querySelectorAll('input, select, textarea');
-
-  const validateInput = (input) => {
-    const formGroup = input.closest('.form-group');
-    const errorMsg = formGroup.querySelector('.error-msg');
-    let isValid = true;
-    let message = '';
-
-    // Custom validity checks
-    if (input.hasAttribute('required') && !input.value.trim()) {
-      isValid = false;
-      message = 'This field is required.';
-    } else if (input.type === 'email' && input.value) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(input.value)) {
-        isValid = false;
-        message = 'Please enter a valid email address.';
-      }
-    }
-
-    if (errorMsg) {
-      errorMsg.textContent = message;
-    }
-
-    if (isValid) {
-      formGroup.classList.remove('has-error');
-      formGroup.classList.add('is-valid');
-    } else {
-      formGroup.classList.add('has-error');
-      formGroup.classList.remove('is-valid');
-    }
-
-    return isValid;
-  };
-
-  // Live input validations
-  inputs.forEach((input) => {
-    input.addEventListener('blur', () => validateInput(input));
-    input.addEventListener('input', () => {
-      // If previously had error, revalidate live on typing
-      const formGroup = input.closest('.form-group');
-      if (formGroup.classList.contains('has-error')) {
-        validateInput(input);
-      }
-    });
-  });
-
-  // Handle Form Submission
-  form.addEventListener('submit', (e) => {
+  // Handle Form Submission to Info@syntellite.com
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    let isFormValid = true;
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (!submitBtn) return;
 
-    inputs.forEach((input) => {
-      const isValid = validateInput(input);
-      if (!isValid) isFormValid = false;
+    const nameInput = form.querySelector('#contact-name') || form.querySelector('[name="name"]');
+    const emailInput = form.querySelector('#contact-email') || form.querySelector('[name="email"]');
+    const messageInput = form.querySelector('#contact-message') || form.querySelector('[name="message"]');
+
+    const name = nameInput?.value.trim() || 'Website Visitor';
+    const email = emailInput?.value.trim() || '';
+    const message = messageInput?.value.trim() || '';
+
+    const originalText = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.style.opacity = '0.7';
+
+    const span = submitBtn.querySelector('span');
+    if (span) span.textContent = 'Sending Message...';
+
+    const mailtoSubject = encodeURIComponent(`New Website Inquiry from ${name}`);
+    const mailtoBody = encodeURIComponent(
+      `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
+    );
+    const mailtoUrl = `mailto:Info@syntellite.com?subject=${mailtoSubject}&body=${mailtoBody}`;
+
+    try {
+      // 1. Post to FormSubmit AJAX endpoint for direct email delivery to Info@syntellite.com
+      const response = await fetch('https://formsubmit.co/ajax/Info@syntellite.com', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          name: name,
+          email: email,
+          message: message,
+          _subject: `New Contact Submission from ${name}`
+        })
+      });
+
+      if (!response.ok) {
+        // Fallback to mailto link
+        window.location.href = mailtoUrl;
+      }
+    } catch (err) {
+      // Fallback to mailto link
+      window.location.href = mailtoUrl;
+    }
+
+    // Success UI Feedback & Toast Popup Trigger
+    if (span) span.textContent = 'Message Sent! ✓';
+    submitBtn.style.opacity = '1';
+    form.reset();
+
+    // Show professional success notification popup
+    showSuccessToast();
+
+    // Reset textarea height after form reset
+    textareas.forEach((ta) => {
+      ta.style.height = 'auto';
+      ta.style.overflowY = 'hidden';
     });
 
-    if (isFormValid) {
-      // Premium submit micro-interaction success
-      const submitBtn = document.getElementById('submit-button');
-      const originalText = submitBtn.textContent;
-
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Sending Message...';
-
-      // Simulate API post
-      setTimeout(() => {
-        submitBtn.textContent = 'Message Sent! ✓';
-        submitBtn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
-        form.reset();
-
-        // Clear validity highlights
-        form.querySelectorAll('.form-group').forEach((group) => {
-          group.classList.remove('is-valid');
-        });
-
-        setTimeout(() => {
-          submitBtn.disabled = false;
-          submitBtn.textContent = originalText;
-          submitBtn.style.background = '';
-        }, 3000);
-      }, 1500);
-    }
+    setTimeout(() => {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalText;
+    }, 3500);
   });
 }
+
+/**
+ * Triggers the floating success toast popup notification
+ */
+function showSuccessToast() {
+  const toast = document.getElementById('contact-success-toast');
+  if (!toast) return;
+
+  toast.classList.add('active');
+  toast.setAttribute('aria-hidden', 'false');
+
+  const closeBtn = toast.querySelector('.toast-close-btn');
+  const dismiss = () => {
+    toast.classList.remove('active');
+    toast.setAttribute('aria-hidden', 'true');
+  };
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', dismiss, { once: true });
+  }
+
+  setTimeout(dismiss, 5500);
+}
+
 
 /**
  * Tracks which section overlaps the bottom floating nav bar and adapts CSS variables accordingly.

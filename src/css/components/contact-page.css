@@ -1,26 +1,388 @@
 /* ==========================================================================
-   CONTACT PAGE & HERO BANNER WITH CANVAS HEARTBEAT BACKGROUND
+   CONTACT PAGE: MINIMALIST TWO-COLUMN LAYOUT
    ========================================================================== */
 
-.contact-hero-banner-section {
+.contact-new-hero-section {
   position: relative;
   width: 100%;
   min-height: 100vh;
   min-height: 100dvh;
-  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
   box-sizing: border-box;
+  padding: clamp(90px, 10vh, 140px) 0 clamp(120px, 14vh, 180px) 0;
+  z-index: 10;
 }
 
-.contact-hero-canvas-bg {
-  position: absolute;
-  inset: 0;
+.contact-new-hero-container {
+  display: grid;
+  grid-template-columns: 1fr 512.009px;
+  gap: clamp(60px, 8vw, 150px);
   width: 100%;
-  height: 100%;
-  z-index: 1;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 clamp(24px, 4vw, 48px);
+  box-sizing: border-box;
+  align-items: stretch;
 }
 
-.contact-hero-canvas-bg .contact-canvas {
+/* Left Column */
+.contact-new-left-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 400px;
+}
+
+.contact-new-header-group {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;
+  align-self: flex-start;
+  gap: 4px;
+}
+
+.contact-new-title {
+  color: #000000;
+  font-family: 'Outfit', sans-serif;
+  font-size: 128px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  text-align: left;
+  margin: -24px 0 0 0;
+  letter-spacing: -3px;
+}
+
+.contact-new-logo-wrap {
+  margin-top: 0;
+}
+
+.contact-new-logo-img {
+  height: clamp(36px, 4.2vw, 54px);
+  width: auto;
+  object-fit: contain;
   display: block;
+}
+
+.contact-new-subtext {
+  color: #A0A0A0;
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 1.5;
+  max-width: 440px;
+  margin: 0;
+  margin-top: auto;
+  text-align: left;
+}
+
+/* Right Column */
+.contact-new-right-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-top: 120px;
+}
+
+.contact-new-heading {
+  color: #000000;
+  font-family: 'Outfit', sans-serif;
+  font-size: 40px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.25;
+  margin: 0 0 45px 0;
+  max-width: 520px;
+  letter-spacing: -1px;
+}
+
+/* Minimalist Form Layout */
+.contact-new-minimal-form {
+  display: flex;
+  width: 512.009px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+}
+
+.contact-new-form-group {
   width: 100%;
-  height: 100%;
+  position: relative;
+}
+
+.contact-new-form-group input,
+.contact-new-form-group textarea {
+  width: 100%;
+  padding: 10px 0;
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  font-weight: 300;
+  color: #000000;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #E0E0E0;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+  resize: none;
+}
+
+.contact-new-form-group input::placeholder,
+.contact-new-form-group textarea::placeholder {
+  color: #A0A0A0;
+  opacity: 1;
+}
+
+.contact-new-form-group input:focus,
+.contact-new-form-group textarea:focus {
+  border-bottom-color: #000000;
+}
+
+/* Custom Textarea styling: auto-expand up to 180px with scrollbar when exceeded */
+.contact-new-form-group textarea {
+  min-height: 40px;
+  max-height: 180px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+  resize: none;
+}
+
+.contact-new-form-group textarea::-webkit-scrollbar {
+  width: 4px;
+}
+
+.contact-new-form-group textarea::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 4px;
+}
+
+.contact-new-form-group textarea::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Submit Button */
+.contact-new-submit-btn {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #000000;
+  background: transparent;
+  border: none;
+  padding: 10px 0;
+  cursor: pointer;
+  transition: opacity 0.25s ease;
+  margin-top: 10px;
+}
+
+.contact-new-submit-btn:hover {
+  opacity: 0.65;
+}
+
+.contact-new-submit-btn svg {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.contact-new-submit-btn:hover svg {
+  transform: translateX(5px);
+}
+
+/* Responsive Styles */
+@media (max-width: 1100px) {
+  .contact-new-hero-container {
+    gap: clamp(30px, 4vw, 60px);
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .contact-new-minimal-form {
+    width: 100%;
+  }
+}
+
+@media (max-width: 992px) {
+  .contact-new-hero-section {
+    padding: clamp(100px, 12vh, 140px) 0 60px 0;
+  }
+
+  .contact-new-hero-container {
+    grid-template-columns: 1fr;
+    gap: 60px;
+  }
+
+  .contact-new-left-col {
+    min-height: auto;
+    gap: 40px;
+  }
+
+  .contact-new-subtext {
+    margin-top: 0;
+    max-width: 100%;
+  }
+
+  .contact-new-heading {
+    max-width: 100%;
+    margin-bottom: 30px;
+  }
+
+  .contact-new-minimal-form {
+    width: 100%;
+    max-width: 512px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 650px) {
+  .contact-new-title {
+    font-size: clamp(4.5rem, 15vw, 128px);
+    letter-spacing: -1.5px;
+  }
+}
+
+/* ==========================================================================
+   SCROLL REVEAL ANIMATIONS (INTEGRATED WITH SCROLL OBSERVER)
+   ========================================================================== */
+
+.contact-new-hero-section .scroll-reveal {
+  opacity: 0;
+  transform: translateY(35px);
+  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.contact-new-hero-section .scroll-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger transition delays when scrolled into view */
+.contact-new-header-group.scroll-reveal {
+  transition-delay: 0.1s;
+}
+
+.contact-new-subtext.scroll-reveal {
+  transition-delay: 0.35s;
+}
+
+.contact-new-heading.scroll-reveal {
+  transition-delay: 0.2s;
+}
+
+.contact-new-minimal-form .contact-new-form-group:nth-child(1).scroll-reveal {
+  transition-delay: 0.3s;
+}
+
+.contact-new-minimal-form .contact-new-form-group:nth-child(2).scroll-reveal {
+  transition-delay: 0.4s;
+}
+
+.contact-new-minimal-form .contact-new-form-group:nth-child(3).scroll-reveal {
+  transition-delay: 0.5s;
+}
+
+.contact-new-submit-btn.scroll-reveal {
+  transition-delay: 0.6s;
+}
+
+/* ==========================================================================
+   SUCCESS NOTIFICATION TOAST POPUP
+   ========================================================================== */
+
+.contact-success-toast {
+  position: fixed;
+  bottom: 100px;
+  right: 32px;
+  z-index: 9999;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: rgba(18, 18, 18, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: #ffffff;
+  padding: 16px 20px;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  max-width: 380px;
+  transform: translateY(30px) scale(0.95);
+  opacity: 0;
+  visibility: hidden;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.4s;
+}
+
+.contact-success-toast.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+.toast-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.toast-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.toast-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.toast-desc {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+  color: #a0a0a0;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.toast-close-btn {
+  background: transparent;
+  border: none;
+  color: #888888;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 8px;
+  transition: color 0.2s ease;
+}
+
+.toast-close-btn:hover {
+  color: #ffffff;
+}
+
+@media (max-width: 600px) {
+  .contact-success-toast {
+    bottom: 90px;
+    left: 16px;
+    right: 16px;
+    max-width: none;
+  }
 }
