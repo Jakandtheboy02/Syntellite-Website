@@ -1082,21 +1082,20 @@ main {
 
 .showcase-title {
   color: rgba(0, 0, 0, 0.15);
-  /* Light gray base text */
   font-family: 'Outfit', sans-serif;
-  font-size: clamp(2.5rem, 8vw, 96px);
+  font-size: clamp(2rem, 6.5vw, 96px);
   font-style: normal;
   font-weight: 400;
-  line-height: normal;
+  line-height: 1.05;
   letter-spacing: -3.84px;
   margin: 0;
   display: block;
-  /* Stacks vertically */
   width: fit-content;
-  /* Shrinks container to text width for precise gradient mask boundary */
+  max-width: 100%;
   margin-inline: auto;
-  /* Centers the shrink-wrapped block */
   position: relative;
+  text-align: center;
+  white-space: nowrap;
 }
 
 .showcase-title::after {
@@ -1107,9 +1106,10 @@ main {
   width: 100%;
   height: 100%;
   color: #000000;
-  /* Darker copy of text (black) */
   pointer-events: none;
-  white-space: nowrap;
+  white-space: inherit;
+  word-break: keep-all;
+  text-align: center;
 
   /* Feathered soft mask reveal */
   --reveal-pct: calc(var(--reveal-progress, 0) * 125% - 25%);
@@ -1121,30 +1121,29 @@ main {
 .projects-title {
   color: #000000;
   font-family: 'Outfit', sans-serif;
-  font-size: clamp(2.5rem, 8vw, 96px);
+  font-size: clamp(2rem, 6.5vw, 96px);
   font-style: normal;
   font-weight: 400;
-  line-height: normal;
+  line-height: 1.05;
   letter-spacing: -3.84px;
   margin: 0;
 }
 
 .showcase-subtitle {
   color: rgba(0, 0, 0, 0.15);
-  /* Light gray base text */
   font-family: 'Outfit', sans-serif;
-  font-size: clamp(1.1rem, 2.2vw, 24px);
+  font-size: clamp(0.95rem, 2.2vw, 24px);
   font-style: normal;
   font-weight: 400;
-  line-height: normal;
-  margin-top: 20px;
+  line-height: 1.3;
+  margin-top: 16px;
   display: block;
-  /* Stacks vertically */
   width: fit-content;
-  /* Shrinks container to text width for precise gradient mask boundary */
+  max-width: 100%;
   margin-inline: auto;
-  /* Centers the shrink-wrapped block */
   position: relative;
+  text-align: center;
+  white-space: normal;
 }
 
 .showcase-subtitle::after {
@@ -1155,9 +1154,10 @@ main {
   width: 100%;
   height: 100%;
   color: #000000;
-  /* Darker copy of text (black) */
   pointer-events: none;
-  white-space: nowrap;
+  white-space: inherit;
+  word-break: keep-all;
+  text-align: center;
 
   /* Feathered soft mask reveal */
   --reveal-pct: calc(var(--reveal-progress, 0) * 125% - 25%);
