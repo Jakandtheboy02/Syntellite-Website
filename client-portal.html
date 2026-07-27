@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client Portal | Syntellite Agency</title>
+  <meta name="description"
+    content="Access the Syntellite Client Portal for real-time project management, deliverables, analytics, and direct engineering team support.">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="/src/css/main.css">
+</head>
+
+<body>
+  <!-- Scroll Progress Indicator -->
+  <div id="scroll-progress" aria-hidden="true"></div>
+
+  <!-- Bottom Navigation Bar -->
+  <nav id="bottom-nav" class="bottom-nav-bar">
+    <!-- Left Logo Card -->
+    <div class="nav-logo-wrapper">
+      <div id="logo-portal-popup" class="logo-portal-popup" aria-hidden="true" data-hover-expand>
+        <span class="portal-popup-badge">PORTAL</span>
+        <span class="portal-popup-text">tap here to access client portal</span>
+        <span class="portal-popup-arrow"></span>
+      </div>
+      <a href="/" class="nav-logo-card" data-hover-expand aria-label="Syntellite Home">
+        <img src="/src/assets/icons/Logo White.svg" alt="Syntellite Logo" class="nav-logo-img logo-white">
+        <img src="/src/assets/icons/Logo Colored.svg" alt="Syntellite Logo Colored" class="nav-logo-img logo-colored">
+      </a>
+    </div>
+
+    <!-- Center Links Card -->
+    <div class="nav-links-card" id="header-nav">
+      <a href="/" class="nav-item" data-hover-expand>Home</a>
+      <a href="/projects.html" class="nav-item" data-hover-expand>Projects</a>
+      <a href="/about.html" class="nav-item" data-hover-expand>About</a>
+      <a href="/contact.html" class="nav-item" data-hover-expand>Contact</a>
+    </div>
+
+    <!-- Right Menu Toggle Card -->
+    <button id="menu-toggle" class="nav-menu-card" aria-label="Toggle Menu" aria-expanded="false" data-hover-expand>
+      <span class="menu-line line-1"></span>
+      <span class="menu-line line-2"></span>
+    </button>
+  </nav>
+
+  <!-- Main Content -->
+  <main id="main-content">
+    <section class="about-hero-section" style="min-height: 90vh; background: #080a0f;">
+      <div class="glow-bg" id="hero-glow"></div>
+      <div class="container" style="position: relative; z-index: 2; width: 100%; max-width: 1100px;">
+        <div style="text-align: center; margin-bottom: 50px;">
+          <span class="section-tag scroll-reveal" style="background: rgba(99, 102, 241, 0.15); padding: 6px 16px; border-radius: 9999px; border: 1px solid rgba(99, 102, 241, 0.3);">
+            CLIENT PORTAL ACCESS
+          </span>
+          <h1 class="hero-title scroll-reveal" style="font-size: clamp(2.5rem, 5vw, 4rem); margin-top: 16px;">
+            Syntellite Client Workspace
+          </h1>
+          <p class="hero-subtitle scroll-reveal" style="max-width: 680px;">
+            Welcome to your dedicated dashboard. Track active engineering sprints, review design deliverables, and communicate directly with your dedicated project lead.
+          </p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px; align-items: start;">
+          <!-- Sign In Card -->
+          <div class="scroll-reveal" style="background: rgba(15, 18, 29, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; padding: 40px; backdrop-filter: blur(20px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);">
+            <h3 style="font-family: var(--font-title); font-size: 1.5rem; font-weight: 700; margin-bottom: 8px;">Portal Authentication</h3>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 24px;">Enter your client credentials to unlock your workspace.</p>
+            
+            <form id="portal-login-form" onsubmit="event.preventDefault(); alert('Authentication Successful. Redirecting to your workspace dashboard...');">
+              <div style="margin-bottom: 16px;">
+                <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--text-secondary);">Client Workspace Email</label>
+                <input type="email" required placeholder="client@company.com" style="width: 100%; padding: 14px 18px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 12px; color: #fff; outline: none; transition: border-color 0.3s;">
+              </div>
+              <div style="margin-bottom: 24px;">
+                <label style="display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--text-secondary);">Access Token / Password</label>
+                <input type="password" required placeholder="••••••••••••" style="width: 100%; padding: 14px 18px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 12px; color: #fff; outline: none; transition: border-color 0.3s;">
+              </div>
+              <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 16px;">
+                <span>Sign In to Dashboard &rarr;</span>
+              </button>
+            </form>
+          </div>
+
+          <!-- Feature Quick Overview -->
+          <div class="scroll-reveal" style="display: flex; flex-direction: column; gap: 20px;">
+            <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 24px; display: flex; gap: 16px; align-items: flex-start;">
+              <div style="width: 44px; height: 44px; background: rgba(99, 102, 241, 0.15); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--accent-color); font-weight: 700; flex-shrink: 0;">01</div>
+              <div>
+                <h4 style="font-family: var(--font-title); font-size: 1.1rem; font-weight: 600; margin-bottom: 4px;">Real-Time Engineering Sprints</h4>
+                <p style="color: var(--text-secondary); font-size: 0.88rem;">Monitor live build progress, sub-16ms animation budgets, and milestone approvals.</p>
+              </div>
+            </div>
+
+            <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 24px; display: flex; gap: 16px; align-items: flex-start;">
+              <div style="width: 44px; height: 44px; background: rgba(168, 85, 247, 0.15); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #a855f7; font-weight: 700; flex-shrink: 0;">02</div>
+              <div>
+                <h4 style="font-family: var(--font-title); font-size: 1.1rem; font-weight: 600; margin-bottom: 4px;">Figma & Asset Vault</h4>
+                <p style="color: var(--text-secondary); font-size: 0.88rem;">Access design system tokens, high-res prototype exports, and code builds anytime.</p>
+              </div>
+            </div>
+
+            <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 24px; display: flex; gap: 16px; align-items: flex-start;">
+              <div style="width: 44px; height: 44px; background: rgba(236, 72, 153, 0.15); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #ec4899; font-weight: 700; flex-shrink: 0;">03</div>
+              <div>
+                <h4 style="font-family: var(--font-title); font-size: 1.1rem; font-weight: 600; margin-bottom: 4px;">Direct Technical Lead Chat</h4>
+                <p style="color: var(--text-secondary); font-size: 0.88rem;">Connect directly with Syntellite's lead designers and senior engineers via integrated chat.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer id="main-footer" class="main-footer">
+    <div class="footer-card-container">
+      <div class="footer-top-flex">
+        <span class="footer-tag">SYNTELLITE AGENCY</span>
+        <a href="/client-portal.html" class="footer-top-link" data-hover-expand>CLIENT PORTAL</a>
+      </div>
+      <div class="footer-brand-hero">
+        <h2 class="footer-brand-title">Syntellite</h2>
+      </div>
+      <div class="footer-bottom-flex">
+        <div class="footer-copyright">&copy; 2026 Syntellite Inc. All rights reserved.</div>
+        <div class="footer-links-group">
+          <a href="/" class="footer-link" data-hover-expand>Home</a>
+          <a href="/projects.html" class="footer-link" data-hover-expand>Projects</a>
+          <a href="/about.html" class="footer-link" data-hover-expand>About</a>
+          <a href="/contact.html" class="footer-link" data-hover-expand>Contact</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script type="module" src="/src/js/main.js"></script>
+</body>
+
+</html>

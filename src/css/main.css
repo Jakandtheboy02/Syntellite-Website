@@ -1087,7 +1087,7 @@ main {
   font-style: normal;
   font-weight: 400;
   line-height: 1.05;
-  letter-spacing: -3.84px;
+  letter-spacing: -0.04em;
   margin: 0;
   display: block;
   width: fit-content;
@@ -1125,7 +1125,7 @@ main {
   font-style: normal;
   font-weight: 400;
   line-height: 1.05;
-  letter-spacing: -3.84px;
+  letter-spacing: -0.04em;
   margin: 0;
 }
 
@@ -1482,12 +1482,23 @@ main {
     top: 80px;
   }
 
+  .showcase-title,
+  .projects-title {
+    font-size: clamp(1.6rem, 7.5vw, 2.75rem);
+    letter-spacing: -0.025em;
+  }
+
+  .showcase-subtitle {
+    font-size: clamp(0.9rem, 3.2vw, 1.15rem);
+    margin-top: 12px;
+  }
+
   .projects-title-block {
     top: 90px;
   }
 
   .morphing-cards-overlay .showcase-card {
-    --card-size: 120px;
+    --card-size: 110px;
     --grid-w: 300px;
     --grid-h: 950px;
   }
@@ -1508,7 +1519,7 @@ main {
 
   .showcase-card.card-1 {
     --rot: -6deg;
-    --tx: -110px;
+    --tx: -95px;
     --ty: 8px;
     --grid-width: 300px;
     --grid-height: 150px;
@@ -1518,7 +1529,7 @@ main {
 
   .showcase-card.card-2 {
     --rot: 3deg;
-    --tx: -65px;
+    --tx: -57px;
     --ty: -4px;
     --grid-width: 300px;
     --grid-height: 150px;
@@ -1528,7 +1539,7 @@ main {
 
   .showcase-card.card-3 {
     --rot: -2deg;
-    --tx: -20px;
+    --tx: -19px;
     --ty: 10px;
     --grid-width: 300px;
     --grid-height: 150px;
@@ -1538,7 +1549,7 @@ main {
 
   .showcase-card.card-4 {
     --rot: 7deg;
-    --tx: 25px;
+    --tx: 19px;
     --ty: -8px;
     --grid-width: 300px;
     --grid-height: 150px;
@@ -1548,7 +1559,7 @@ main {
 
   .showcase-card.card-5 {
     --rot: -5deg;
-    --tx: 70px;
+    --tx: 57px;
     --ty: 5px;
     --grid-width: 300px;
     --grid-height: 150px;
@@ -1558,12 +1569,97 @@ main {
 
   .showcase-card.card-6 {
     --rot: 4deg;
-    --tx: 115px;
+    --tx: 95px;
     --ty: -3px;
     --grid-width: 300px;
     --grid-height: 150px;
     --grid-x: 0px;
     --grid-y: 800px;
+  }
+}
+
+@media (max-width: 480px) {
+  .showcase-title-block {
+    top: 70px;
+    padding: 0 16px;
+  }
+
+  .showcase-title,
+  .projects-title {
+    font-size: clamp(1.35rem, 6.5vw, 1.85rem);
+    letter-spacing: -0.015em;
+  }
+
+  .showcase-subtitle {
+    font-size: clamp(0.8rem, 3.5vw, 0.95rem);
+    margin-top: 10px;
+    padding: 0 8px;
+  }
+
+  .morphing-cards-overlay .showcase-card {
+    --card-size: 85px;
+    --grid-w: 280px;
+    --grid-h: 900px;
+  }
+
+  .showcase-card.card-1 {
+    --rot: -6deg;
+    --tx: -70px;
+    --ty: 8px;
+    --grid-width: 280px;
+    --grid-height: 140px;
+    --grid-x: 0px;
+    --grid-y: 0px;
+  }
+
+  .showcase-card.card-2 {
+    --rot: 3deg;
+    --tx: -42px;
+    --ty: -4px;
+    --grid-width: 280px;
+    --grid-height: 140px;
+    --grid-x: 0px;
+    --grid-y: 150px;
+  }
+
+  .showcase-card.card-3 {
+    --rot: -2deg;
+    --tx: -14px;
+    --ty: 10px;
+    --grid-width: 280px;
+    --grid-height: 140px;
+    --grid-x: 0px;
+    --grid-y: 300px;
+  }
+
+  .showcase-card.card-4 {
+    --rot: 7deg;
+    --tx: 14px;
+    --ty: -8px;
+    --grid-width: 280px;
+    --grid-height: 140px;
+    --grid-x: 0px;
+    --grid-y: 450px;
+  }
+
+  .showcase-card.card-5 {
+    --rot: -5deg;
+    --tx: 42px;
+    --ty: 5px;
+    --grid-width: 280px;
+    --grid-height: 140px;
+    --grid-x: 0px;
+    --grid-y: 600px;
+  }
+
+  .showcase-card.card-6 {
+    --rot: 4deg;
+    --tx: 70px;
+    --ty: -3px;
+    --grid-width: 280px;
+    --grid-height: 140px;
+    --grid-x: 0px;
+    --grid-y: 750px;
   }
 }
 

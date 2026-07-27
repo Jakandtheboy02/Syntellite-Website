@@ -486,10 +486,21 @@ export function initPortfolioMorph() {
       const gridHeight = parseFloat(style.getPropertyValue('--grid-height') || 230);
       const cardSize = parseFloat(style.getPropertyValue('--card-size') || 230);
 
-      const showcaseLeft = overlayWidth / 2 + tx - cardSize / 2;
+      // Ensure fanned cards stay cleanly within overlayWidth with a minimum margin on mobile
+      let showcaseScale = 1;
+      const maxCardSpanHalf = Math.abs(tx) + cardSize / 2;
+      const maxAllowedSpanHalf = (overlayWidth - 24) / 2;
+      if (maxAllowedSpanHalf > 0 && maxCardSpanHalf > maxAllowedSpanHalf) {
+        showcaseScale = maxAllowedSpanHalf / maxCardSpanHalf;
+      }
+
+      const effectiveCardSize = cardSize * Math.min(1, Math.max(0.65, showcaseScale));
+      const effectiveTx = tx * showcaseScale;
+
+      const showcaseLeft = overlayWidth / 2 + effectiveTx - effectiveCardSize / 2;
       const showcaseTop = showcaseStartY + ty;
 
-      const centerLeft = overlayWidth / 2 - cardSize / 2;
+      const centerLeft = overlayWidth / 2 - effectiveCardSize / 2;
       const centerTop = showcaseStartY + 80;
 
       const projectsLeft = overlayWidth / 2 - scaledGridW / 2 + (gridX * scale);
@@ -503,8 +514,8 @@ export function initPortfolioMorph() {
         const currentScale = 0.9 + 0.1 * p1;
 
         card.style.opacity = 1;
-        card.style.width = `${cardSize}px`;
-        card.style.height = `${cardSize}px`;
+        card.style.width = `${effectiveCardSize}px`;
+        card.style.height = `${effectiveCardSize}px`;
         card.style.left = `${currentLeft}px`;
         card.style.top = `${currentTop}px`;
         card.style.transform = `rotate(${currentRot}deg) scale(${currentScale})`;
@@ -514,8 +525,8 @@ export function initPortfolioMorph() {
         card.style.setProperty('--overlay-op', 0);
       } else if (p < 0.65) {
         card.style.opacity = 1;
-        card.style.width = `${cardSize}px`;
-        card.style.height = `${cardSize}px`;
+        card.style.width = `${effectiveCardSize}px`;
+        card.style.height = `${effectiveCardSize}px`;
         card.style.left = `${showcaseLeft}px`;
         card.style.top = `${showcaseTop}px`;
         card.style.transform = `rotate(${rot}deg) scale(1)`;
@@ -525,8 +536,8 @@ export function initPortfolioMorph() {
         card.style.setProperty('--overlay-op', 0);
       } else {
         const p_morph = Math.min(1, Math.max(0, (p - 0.65) / 0.25));
-        const w = cardSize + ((gridWidth * scale) - cardSize) * p_morph;
-        const h = cardSize + ((gridHeight * scale) - cardSize) * p_morph;
+        const w = effectiveCardSize + ((gridWidth * scale) - effectiveCardSize) * p_morph;
+        const h = effectiveCardSize + ((gridHeight * scale) - effectiveCardSize) * p_morph;
         const currentLeft = showcaseLeft + (projectsLeft - showcaseLeft) * p_morph;
         const currentTop = showcaseTop + (projectsTop - showcaseTop) * p_morph;
         const currentRot = rot * (1 - p_morph);
@@ -1650,4 +1661,75 @@ export function initContactBgCanvas() {
   }
 
   requestAnimationFrame(render);
+}
+
+/**
+ * Dynamic Client Portal Popup & Context-Aware Logo Click Handling
+ * Shows popup when user is at Showcase Cards section on Home Page.
+ * Changes logo click action to open Client Portal ONLY when at Showcase Cards section.
+ */
+export function initClientPortalPopup() {
+  const logoCard = document.querySelector('.nav-logo-card');
+  const popup = document.getElementById('logo-portal-popup');
+  const portfolioWrapper = document.getElementById('portfolio-wrapper');
+
+  if (!logoCard || !popup) return;
+
+  let isPortalActive = false;
+
+  const checkShowcaseSection = () => {
+    // Only check on pages containing #portfolio-wrapper (Home Page)
+    if (portfolioWrapper) {
+      const rect = portfolioWrapper.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      const totalScrollableDistance = rect.height - windowHeight;
+
+      if (totalScrollableDistance > 0) {
+        const scrolled = -rect.top;
+        const PRE_PHASE_DISTANCE = windowHeight;
+        const combinedScrolled = scrolled + PRE_PHASE_DISTANCE;
+        const combinedTotal = totalScrollableDistance + PRE_PHASE_DISTANCE;
+        const p = Math.min(1, Math.max(0, combinedScrolled / combinedTotal));
+
+        // Showcase section is active when wrapper is locked in view and p is in the showcase phase (< 0.52)
+        const isInShowcaseSection = rect.top <= windowHeight * 0.4 && rect.bottom >= windowHeight * 0.35 && p < 0.52;
+
+        if (isInShowcaseSection) {
+          if (!isPortalActive) {
+            isPortalActive = true;
+            popup.classList.add('active');
+            popup.setAttribute('aria-hidden', 'false');
+            logoCard.classList.add('portal-mode');
+          }
+          return;
+        }
+      }
+    }
+
+    // In all other sections or pages: deactivate popup & reset logo behavior
+    if (isPortalActive) {
+      isPortalActive = false;
+      popup.classList.remove('active');
+      popup.setAttribute('aria-hidden', 'true');
+      logoCard.classList.remove('portal-mode');
+    }
+  };
+
+  subscribeScroll(checkShowcaseSection);
+  window.addEventListener('resize', checkShowcaseSection, { passive: true });
+  checkShowcaseSection();
+
+  // Intercept logo card click ONLY when at showcase cards section
+  logoCard.addEventListener('click', (e) => {
+    if (isPortalActive) {
+      e.preventDefault();
+      window.location.href = '/client-portal.html';
+    }
+  });
+
+  // Popup pill click
+  popup.addEventListener('click', (e) => {
+    e.preventDefault();
+    window.location.href = '/client-portal.html';
+  });
 }

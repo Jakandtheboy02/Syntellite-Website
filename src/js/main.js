@@ -22,7 +22,8 @@ import {
   initOurStoryAnimation,
   initAboutSkillsetAnimation,
   initAboutExpertsAnimation,
-  initContactBgCanvas
+  initContactBgCanvas,
+  initClientPortalPopup
 } from './modules/animations.js';
 
 import { initSmoothScroll } from './modules/smoothScroll.js';
@@ -99,4 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initialize Scroll Indicator Pill fading behavior
   initScrollPill();
+
+  // Initialize Client Portal Logo Tooltip & Context-Aware Redirection
+  initClientPortalPopup();
 });

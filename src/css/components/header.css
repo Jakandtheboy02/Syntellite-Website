@@ -63,7 +63,117 @@
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
 }
 
-/* Left Logo Card */
+/* Left Logo Card & Container */
+.nav-logo-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Client Portal Floating Popup Beak */
+.logo-portal-popup {
+  position: absolute;
+  bottom: calc(100% + 14px);
+  left: 50%;
+  transform: translate3d(-50%, 8px, 0) scale(0.92);
+  background: rgba(15, 15, 24, 0.88);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 8px 16px;
+  border-radius: 9999px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), 0 0 22px rgba(120, 80, 255, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.4s var(--ease-out-expo), 
+              transform 0.4s var(--ease-out-expo), 
+              visibility 0.4s var(--ease-out-expo),
+              box-shadow 0.4s var(--ease-out-expo);
+  z-index: 1010;
+  cursor: pointer;
+}
+
+.logo-portal-popup.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translate3d(-50%, 0, 0) scale(1);
+  animation: popupFloating 3s ease-in-out infinite alternate;
+}
+
+.logo-portal-popup:hover {
+  transform: translate3d(-50%, -2px, 0) scale(1.04) !important;
+  border-color: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 30px rgba(168, 85, 247, 0.45);
+}
+
+.logo-portal-popup .portal-popup-arrow {
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 9px;
+  height: 9px;
+  background: rgba(15, 15, 24, 0.88);
+  border-right: 1px solid rgba(255, 255, 255, 0.18);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.portal-popup-badge {
+  display: inline-block;
+  background: var(--accent-gradient-primary);
+  color: #ffffff;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  text-transform: uppercase;
+}
+
+.portal-popup-text {
+  font-family: var(--font-title);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+/* Portal Mode Glow on Logo Card */
+.nav-logo-card.portal-mode {
+  border-color: rgba(168, 85, 247, 0.7);
+  box-shadow: 0 0 25px rgba(168, 85, 247, 0.5), 0 10px 30px rgba(0, 0, 0, 0.35);
+  animation: logoPulseGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes popupFloating {
+  0% {
+    transform: translate3d(-50%, 0, 0) scale(1);
+  }
+  100% {
+    transform: translate3d(-50%, -4px, 0) scale(1.03);
+  }
+}
+
+@keyframes logoPulseGlow {
+  0% {
+    border-color: rgba(99, 102, 241, 0.6);
+    box-shadow: 0 0 18px rgba(99, 102, 241, 0.4), 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+  100% {
+    border-color: rgba(236, 72, 153, 0.85);
+    box-shadow: 0 0 30px rgba(236, 72, 153, 0.6), 0 12px 35px rgba(0, 0, 0, 0.4);
+  }
+}
+
 .nav-logo-card {
   width: var(--nav-size);
   height: var(--nav-size);

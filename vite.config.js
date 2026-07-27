@@ -10,6 +10,7 @@ export default defineConfig({
         projects: resolve(__dirname, 'projects.html'),
         projectDetail: resolve(__dirname, 'project-detail.html'),
         contact: resolve(__dirname, 'contact.html'),
+        clientPortal: resolve(__dirname, 'client-portal.html'),
       },
     },
   },

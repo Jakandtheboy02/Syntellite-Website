@@ -16,8 +16,8 @@
     rel="stylesheet">
 
   <!-- Stylesheets -->
-  <script type="module" crossorigin src="/assets/main-mqggxHf4.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/main-CESOHyQ2.css">
+  <script type="module" crossorigin src="/assets/main-BWNK7yrm.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/main-D1TCKZLx.css">
 </head>
 
 <body>
@@ -27,10 +27,17 @@
   <!-- Bottom Navigation Bar -->
   <nav id="bottom-nav" class="bottom-nav-bar">
     <!-- Left Logo Card -->
-    <a href="/" class="nav-logo-card" data-hover-expand aria-label="Syntellite Home">
-      <img src="/assets/Logo%20White-C8IUPA-_.svg" alt="Syntellite Logo" class="nav-logo-img logo-white">
-      <img src="/assets/Logo%20Colored-BtMfeGBR.svg" alt="Syntellite Logo Colored" class="nav-logo-img logo-colored">
-    </a>
+    <div class="nav-logo-wrapper">
+      <div id="logo-portal-popup" class="logo-portal-popup" aria-hidden="true" data-hover-expand>
+        <span class="portal-popup-badge">PORTAL</span>
+        <span class="portal-popup-text">tap here to access client portal</span>
+        <span class="portal-popup-arrow"></span>
+      </div>
+      <a href="/" class="nav-logo-card" data-hover-expand aria-label="Syntellite Home">
+        <img src="/assets/Logo%20White-C8IUPA-_.svg" alt="Syntellite Logo" class="nav-logo-img logo-white">
+        <img src="/assets/Logo%20Colored-BtMfeGBR.svg" alt="Syntellite Logo Colored" class="nav-logo-img logo-colored">
+      </a>
+    </div>
 
     <!-- Center Links Card -->
     <div class="nav-links-card" id="header-nav">
@@ -57,16 +64,21 @@
             <span class="projects-hero-line line-1" data-text="We don't just think.">We don't just think.</span>
             <span class="projects-hero-line line-2" data-text="We do.">We do.</span>
           </h1>
-          <p class="projects-hero-subtitle" data-text="Deep dives into our most complex challenges, the strategies we applied, and the digital solutions that solved them.">
-            Deep dives into our most complex challenges, the strategies we applied, and the digital solutions that solved them.
+          <p class="projects-hero-subtitle"
+            data-text="Deep dives into our most complex challenges, the strategies we applied, and the digital solutions that solved them.">
+            Deep dives into our most complex challenges, the strategies we applied, and the digital solutions that
+            solved them.
           </p>
 
           <!-- Filter Toggle Tabs -->
           <div class="projects-filter-wrapper">
             <div class="projects-filter-tabs" role="tablist" aria-label="Project Categories">
-              <button class="filter-tab active" data-filter="all" role="tab" aria-selected="true" data-hover-expand>ALL</button>
-              <button class="filter-tab" data-filter="b2b" role="tab" aria-selected="false" data-hover-expand>B2B</button>
-              <button class="filter-tab" data-filter="b2c" role="tab" aria-selected="false" data-hover-expand>B2C</button>
+              <button class="filter-tab active" data-filter="all" role="tab" aria-selected="true"
+                data-hover-expand>ALL</button>
+              <button class="filter-tab" data-filter="b2b" role="tab" aria-selected="false"
+                data-hover-expand>B2B</button>
+              <button class="filter-tab" data-filter="b2c" role="tab" aria-selected="false"
+                data-hover-expand>B2C</button>
             </div>
           </div>
         </div>
@@ -78,7 +90,8 @@
       <div class="container">
         <div class="projects-page-grid">
           <!-- Project 1 -->
-          <a href="/project-detail.html?id=1" class="projects-page-card scroll-reveal" data-category="b2c" data-hover-expand>
+          <a href="/project-detail.html?id=1" class="projects-page-card scroll-reveal" data-category="b2c"
+            data-hover-expand>
             <div class="projects-card-media">
               <img src="/assets/Project%20Card%201-B8ZYRoLm.png" alt="Aura Cosmetic System" loading="lazy">
               <div class="project-chips">
@@ -93,12 +106,14 @@
             </div>
             <div class="projects-card-info">
               <h3 class="projects-card-title">Aura Cosmetic System</h3>
-              <p class="projects-card-desc">An interactive visual campaign website featuring advanced web design layouts and fluid scroll behavior.</p>
+              <p class="projects-card-desc">An interactive visual campaign website featuring advanced web design layouts
+                and fluid scroll behavior.</p>
             </div>
           </a>
 
           <!-- Project 2 -->
-          <a href="/project-detail.html?id=2" class="projects-page-card scroll-reveal" data-category="b2b" data-hover-expand>
+          <a href="/project-detail.html?id=2" class="projects-page-card scroll-reveal" data-category="b2b"
+            data-hover-expand>
             <div class="projects-card-media">
               <img src="/assets/Project%20Card%202-DOHQxIHr.png" alt="Krypton Asset Protocol" loading="lazy">
               <div class="project-chips">
@@ -113,12 +128,14 @@
             </div>
             <div class="projects-card-info">
               <h3 class="projects-card-title">Krypton Asset Protocol</h3>
-              <p class="projects-card-desc">Real-time asset tracking interface engineered with performant web rendering and micro-interactions.</p>
+              <p class="projects-card-desc">Real-time asset tracking interface engineered with performant web rendering
+                and micro-interactions.</p>
             </div>
           </a>
 
           <!-- Project 3 -->
-          <a href="/project-detail.html?id=3" class="projects-page-card scroll-reveal" data-category="b2c" data-hover-expand>
+          <a href="/project-detail.html?id=3" class="projects-page-card scroll-reveal" data-category="b2c"
+            data-hover-expand>
             <div class="projects-card-media">
               <img src="/assets/Project%20Card%203-B1puZmqF.png" alt="Valo Intelligent Wear" loading="lazy">
               <div class="project-chips">
@@ -133,12 +150,14 @@
             </div>
             <div class="projects-card-info">
               <h3 class="projects-card-title">Valo Intelligent Wear</h3>
-              <p class="projects-card-desc">Modern e-commerce platform incorporating fluid scroll-driven page elements and image zoom features.</p>
+              <p class="projects-card-desc">Modern e-commerce platform incorporating fluid scroll-driven page elements
+                and image zoom features.</p>
             </div>
           </a>
 
           <!-- Project 4 -->
-          <a href="/project-detail.html?id=4" class="projects-page-card scroll-reveal" data-category="b2c" data-hover-expand>
+          <a href="/project-detail.html?id=4" class="projects-page-card scroll-reveal" data-category="b2c"
+            data-hover-expand>
             <div class="projects-card-media">
               <img src="/assets/Project%20Card%204-qC5ZW4y8.png" alt="Charger App Ecosystem" loading="lazy">
               <div class="project-chips">
@@ -153,12 +172,14 @@
             </div>
             <div class="projects-card-info">
               <h3 class="projects-card-title">Charger App Ecosystem</h3>
-              <p class="projects-card-desc">Smart charging infrastructure app with real-time station discovery, route planning, and seamless payments.</p>
+              <p class="projects-card-desc">Smart charging infrastructure app with real-time station discovery, route
+                planning, and seamless payments.</p>
             </div>
           </a>
 
           <!-- Project 5 -->
-          <a href="/project-detail.html?id=5" class="projects-page-card scroll-reveal" data-category="b2b" data-hover-expand>
+          <a href="/project-detail.html?id=5" class="projects-page-card scroll-reveal" data-category="b2b"
+            data-hover-expand>
             <div class="projects-card-media">
               <img src="/assets/Project%20Card%205-COCIfkj0.png" alt="Syntellite Brand Narrative" loading="lazy">
               <div class="project-chips">
@@ -173,12 +194,14 @@
             </div>
             <div class="projects-card-info">
               <h3 class="projects-card-title">Syntellite Brand Narrative</h3>
-              <p class="projects-card-desc">Comprehensive brand identity design system built for multi-platform cohesion and visual storytelling.</p>
+              <p class="projects-card-desc">Comprehensive brand identity design system built for multi-platform cohesion
+                and visual storytelling.</p>
             </div>
           </a>
 
           <!-- Project 6 -->
-          <a href="/project-detail.html?id=6" class="projects-page-card scroll-reveal" data-category="b2b" data-hover-expand>
+          <a href="/project-detail.html?id=6" class="projects-page-card scroll-reveal" data-category="b2b"
+            data-hover-expand>
             <div class="projects-card-media">
               <img src="/assets/Project%20Card%206-B3Ox6oHJ.png" alt="Nexus 3D Concept Space" loading="lazy">
               <div class="project-chips">
@@ -193,12 +216,14 @@
             </div>
             <div class="projects-card-info">
               <h3 class="projects-card-title">Nexus 3D Concept Space</h3>
-              <p class="projects-card-desc">Experimental WebGL 3D environment designed for spatial web interactions and immersive exploration.</p>
+              <p class="projects-card-desc">Experimental WebGL 3D environment designed for spatial web interactions and
+                immersive exploration.</p>
             </div>
           </a>
 
           <!-- Project 7 (Duplicated expanded showcase) -->
-          <a href="/project-detail.html?id=7" class="projects-page-card scroll-reveal" data-category="b2b" data-hover-expand>
+          <a href="/project-detail.html?id=7" class="projects-page-card scroll-reveal" data-category="b2b"
+            data-hover-expand>
             <div class="projects-card-media">
               <img src="/assets/Project%20Card%201-B8ZYRoLm.png" alt="Apex AI Assistant Platform" loading="lazy">
               <div class="project-chips">
@@ -213,12 +238,14 @@
             </div>
             <div class="projects-card-info">
               <h3 class="projects-card-title">Apex AI Assistant Platform</h3>
-              <p class="projects-card-desc">Next-generation enterprise AI workbench featuring autonomous workflows and structured model orchestration.</p>
+              <p class="projects-card-desc">Next-generation enterprise AI workbench featuring autonomous workflows and
+                structured model orchestration.</p>
             </div>
           </a>
 
           <!-- Project 8 -->
-          <a href="/project-detail.html?id=8" class="projects-page-card scroll-reveal" data-category="b2b" data-hover-expand>
+          <a href="/project-detail.html?id=8" class="projects-page-card scroll-reveal" data-category="b2b"
+            data-hover-expand>
             <div class="projects-card-media">
               <img src="/assets/Project%20Card%202-DOHQxIHr.png" alt="Starlight Quantum Exchange" loading="lazy">
               <div class="project-chips">
@@ -233,12 +260,14 @@
             </div>
             <div class="projects-card-info">
               <h3 class="projects-card-title">Starlight Quantum Exchange</h3>
-              <p class="projects-card-desc">Ultra-low-latency financial dashboard delivering high-frequency data streams with sleek dark aesthetic.</p>
+              <p class="projects-card-desc">Ultra-low-latency financial dashboard delivering high-frequency data streams
+                with sleek dark aesthetic.</p>
             </div>
           </a>
 
           <!-- Project 9 -->
-          <a href="/project-detail.html?id=9" class="projects-page-card scroll-reveal" data-category="b2c" data-hover-expand>
+          <a href="/project-detail.html?id=9" class="projects-page-card scroll-reveal" data-category="b2c"
+            data-hover-expand>
             <div class="projects-card-media">
               <img src="/assets/Project%20Card%203-B1puZmqF.png" alt="Vortex Spatial Studio" loading="lazy">
               <div class="project-chips">
@@ -253,12 +282,14 @@
             </div>
             <div class="projects-card-info">
               <h3 class="projects-card-title">Vortex Spatial Studio</h3>
-              <p class="projects-card-desc">Immersive web studio enabling 3D product previews and spatial design collaboration directly in browser.</p>
+              <p class="projects-card-desc">Immersive web studio enabling 3D product previews and spatial design
+                collaboration directly in browser.</p>
             </div>
           </a>
 
           <!-- Project 10 -->
-          <a href="/project-detail.html?id=10" class="projects-page-card scroll-reveal" data-category="b2b" data-hover-expand>
+          <a href="/project-detail.html?id=10" class="projects-page-card scroll-reveal" data-category="b2b"
+            data-hover-expand>
             <div class="projects-card-media">
               <img src="/assets/Project%20Card%204-qC5ZW4y8.png" alt="Hyperion Mobility Dashboard" loading="lazy">
               <div class="project-chips">
@@ -273,12 +304,14 @@
             </div>
             <div class="projects-card-info">
               <h3 class="projects-card-title">Hyperion Mobility Dashboard</h3>
-              <p class="projects-card-desc">Next-gen vehicle cockpit interface designed for touch and gesture control with real-time telemetry.</p>
+              <p class="projects-card-desc">Next-gen vehicle cockpit interface designed for touch and gesture control
+                with real-time telemetry.</p>
             </div>
           </a>
 
           <!-- Project 11 -->
-          <a href="/project-detail.html?id=11" class="projects-page-card scroll-reveal" data-category="b2b" data-hover-expand>
+          <a href="/project-detail.html?id=11" class="projects-page-card scroll-reveal" data-category="b2b"
+            data-hover-expand>
             <div class="projects-card-media">
               <img src="/assets/Project%20Card%205-COCIfkj0.png" alt="Pulse Healthcare Portal" loading="lazy">
               <div class="project-chips">
@@ -293,12 +326,14 @@
             </div>
             <div class="projects-card-info">
               <h3 class="projects-card-title">Pulse Healthcare Portal</h3>
-              <p class="projects-card-desc">HIPAA-compliant telemedicine platform connecting patients and specialists with secure video workflows.</p>
+              <p class="projects-card-desc">HIPAA-compliant telemedicine platform connecting patients and specialists
+                with secure video workflows.</p>
             </div>
           </a>
 
           <!-- Project 12 -->
-          <a href="/project-detail.html?id=12" class="projects-page-card scroll-reveal" data-category="b2b" data-hover-expand>
+          <a href="/project-detail.html?id=12" class="projects-page-card scroll-reveal" data-category="b2b"
+            data-hover-expand>
             <div class="projects-card-media">
               <img src="/assets/Project%20Card%206-B3Ox6oHJ.png" alt="Cipher Security Command" loading="lazy">
               <div class="project-chips">
@@ -313,7 +348,8 @@
             </div>
             <div class="projects-card-info">
               <h3 class="projects-card-title">Cipher Security Command</h3>
-              <p class="projects-card-desc">Unified threat monitoring console delivering instant anomaly detection and automated security responses.</p>
+              <p class="projects-card-desc">Unified threat monitoring console delivering instant anomaly detection and
+                automated security responses.</p>
             </div>
           </a>
         </div>
@@ -331,13 +367,13 @@
           <a href="/contact.html" class="cta-pill-btn" data-hover-expand>
             <span>Request a call back</span>
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M5 12h14M12 5l7 7-7 7"/>
+              <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
           </a>
           <a href="https://calendly.com" target="_blank" rel="noopener" class="cta-pill-btn" data-hover-expand>
             <span>Book a meeting</span>
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+              <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
           </a>
         </div>
@@ -369,11 +405,11 @@
         </div>
 
         <div class="footer-socials">
-          <a href="https://linkedin.com" target="_blank" rel="noopener" class="social-circle" aria-label="LinkedIn"
-            data-hover-expand>
+          <a href="https://www.linkedin.com/company/syntellite/" target="_blank" rel="noopener" class="social-circle"
+            aria-label="LinkedIn" data-hover-expand>
             <span>in</span>
           </a>
-          <a href="https://instagram.com" target="_blank" rel="noopener" class="social-circle" aria-label="Instagram"
+          <a href="https://www.instagram.com/syntellite/" target="_blank" rel="noopener" class="social-circle" aria-label="Instagram"
             data-hover-expand>
             <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
               <path

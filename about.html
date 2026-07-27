@@ -28,10 +28,17 @@
   <!-- Bottom Navigation Bar -->
   <nav id="bottom-nav" class="bottom-nav-bar">
     <!-- Left Logo Card -->
-    <a href="/" class="nav-logo-card" data-hover-expand aria-label="Syntellite Home">
-      <img src="/src/assets/icons/Logo White.svg" alt="Syntellite Logo" class="nav-logo-img logo-white">
-      <img src="/src/assets/icons/Logo Colored.svg" alt="Syntellite Logo Colored" class="nav-logo-img logo-colored">
-    </a>
+    <div class="nav-logo-wrapper">
+      <div id="logo-portal-popup" class="logo-portal-popup" aria-hidden="true" data-hover-expand>
+        <span class="portal-popup-badge">PORTAL</span>
+        <span class="portal-popup-text">tap here to access client portal</span>
+        <span class="portal-popup-arrow"></span>
+      </div>
+      <a href="/" class="nav-logo-card" data-hover-expand aria-label="Syntellite Home">
+        <img src="/src/assets/icons/Logo White.svg" alt="Syntellite Logo" class="nav-logo-img logo-white">
+        <img src="/src/assets/icons/Logo Colored.svg" alt="Syntellite Logo Colored" class="nav-logo-img logo-colored">
+      </a>
+    </div>
 
     <!-- Center Links Card -->
     <div class="nav-links-card" id="header-nav">
