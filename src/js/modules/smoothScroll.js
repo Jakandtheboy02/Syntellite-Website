@@ -23,7 +23,7 @@ export function initSmoothScroll() {
     easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     smoothWheel: true,
     wheelMultiplier: 0.7,
-    touchMultiplier: 2,
+    touchMultiplier: 1.0,
     infinite: false,
   });
 

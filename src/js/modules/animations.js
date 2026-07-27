@@ -440,36 +440,47 @@ export function initPortfolioMorph() {
     // 2. Animate and Crossfade Title Blocks based on timeline
     if (showcaseTitleBlock && projectsTitleBlock) {
       // Progressive scroll-linked mask color sweeps for Showcase title & subtitle (bidirectional)
-      const showcase_title_p = Math.min(1, Math.max(0, (p - 0.05) / 0.20));
-      const showcase_subtitle_p = Math.min(1, Math.max(0, (p - 0.12) / 0.20));
-      if (showcaseTitle) showcaseTitle.style.setProperty('--reveal-progress', showcase_title_p);
-      if (showcaseSubtitle) showcaseSubtitle.style.setProperty('--reveal-progress', showcase_subtitle_p);
+      // Extended ranges ensure ultra-smooth mask reveals on all device refresh rates
+      const showcase_title_p = Math.min(1, Math.max(0, (p - 0.02) / 0.32));
+      const showcase_subtitle_p = Math.min(1, Math.max(0, (p - 0.08) / 0.30));
+      if (showcaseTitle) showcaseTitle.style.setProperty('--reveal-progress', showcase_title_p.toFixed(4));
+      if (showcaseSubtitle) showcaseSubtitle.style.setProperty('--reveal-progress', showcase_subtitle_p.toFixed(4));
 
       const projectsTitle = projectsTitleBlock.querySelector('.projects-title');
+      const isMobile = window.innerWidth <= 768;
+      const floatDistance = isMobile ? 120 : 220;
+
       if (p < 0.45) {
         // Phase 1: Showcase Title centered, Projects Title hidden below the viewport
-        showcaseTitleBlock.style.opacity = 1;
-        showcaseTitleBlock.style.transform = 'translateY(0)';
-        projectsTitleBlock.style.opacity = 1;
-        projectsTitleBlock.style.transform = `translateY(${windowHeight}px)`;
+        showcaseTitleBlock.style.opacity = '1';
+        showcaseTitleBlock.style.transform = 'translate3d(0, 0px, 0)';
+        projectsTitleBlock.style.opacity = '0';
+        projectsTitleBlock.style.transform = `translate3d(0, ${windowHeight}px, 0)`;
         if (projectsTitle) projectsTitle.style.clipPath = 'inset(0 100% 0 0)';
       } else if (p < 0.70) {
-        // Phase 2/3: Smooth rise-up transition synchronized with Morph progress (starts earlier and finishes faster)
+        // Phase 2/3: Smooth rise-up and crossfade transition synchronized with Morph progress
         const p_morph_title = (p - 0.45) / 0.25;
-        showcaseTitleBlock.style.opacity = 1;
-        showcaseTitleBlock.style.transform = `translateY(${-500 * p_morph_title}px)`;
-        projectsTitleBlock.style.opacity = 1;
-        projectsTitleBlock.style.transform = `translateY(${windowHeight * (1 - p_morph_title) - scrollOffset}px)`;
+        // Cubic ease-out curve for natural physical inertia
+        const easeOutTitle = 1 - Math.pow(1 - p_morph_title, 3);
+        const showcaseOpacity = Math.max(0, 1 - easeOutTitle * 1.1).toFixed(4);
+        const showcaseTranslateY = (-floatDistance * easeOutTitle).toFixed(2);
+        const projectsTranslateY = (windowHeight * (1 - easeOutTitle) - scrollOffset).toFixed(2);
+
+        showcaseTitleBlock.style.opacity = showcaseOpacity;
+        showcaseTitleBlock.style.transform = `translate3d(0, ${showcaseTranslateY}px, 0)`;
+        projectsTitleBlock.style.opacity = easeOutTitle.toFixed(4);
+        projectsTitleBlock.style.transform = `translate3d(0, ${projectsTranslateY}px, 0)`;
+
         if (projectsTitle) {
-          const maskVal = (1 - Math.min(1, p_morph_title * 1.5)) * 100;
+          const maskVal = ((1 - Math.min(1, easeOutTitle * 1.2)) * 100).toFixed(2);
           projectsTitle.style.clipPath = `inset(0 ${maskVal}% 0 0)`;
         }
       } else {
         // Phase 4: Showcase Title completely pushed off-screen, Projects Title settled at header
-        showcaseTitleBlock.style.opacity = 1;
-        showcaseTitleBlock.style.transform = 'translateY(-500px)';
-        projectsTitleBlock.style.opacity = 1;
-        projectsTitleBlock.style.transform = `translateY(${-scrollOffset}px)`;
+        showcaseTitleBlock.style.opacity = '0';
+        showcaseTitleBlock.style.transform = `translate3d(0, ${-floatDistance}px, 0)`;
+        projectsTitleBlock.style.opacity = '1';
+        projectsTitleBlock.style.transform = `translate3d(0, ${-scrollOffset.toFixed(2)}px, 0)`;
         if (projectsTitle) projectsTitle.style.clipPath = 'inset(0 0% 0 0)';
       }
     }

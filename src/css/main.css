@@ -1060,8 +1060,10 @@ main {
   width: 100%;
   text-align: center;
   pointer-events: none;
-  transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1), transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
   will-change: opacity, transform;
+  transform-style: preserve-3d;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
   z-index: 5;
   padding: 0 24px;
   box-sizing: border-box;
@@ -1070,14 +1072,14 @@ main {
 .showcase-title-block {
   top: 140px;
   opacity: 1;
-  transform: translateY(0);
+  transform: translate3d(0, 0, 0);
 }
 
 .projects-title-block {
   top: 160px;
   /* Shifted down to provide top padding */
   opacity: 0;
-  transform: translateY(20px);
+  transform: translate3d(0, 20px, 0);
 }
 
 .showcase-title {
@@ -1110,6 +1112,10 @@ main {
   white-space: inherit;
   word-break: keep-all;
   text-align: center;
+  will-change: -webkit-mask-image, mask-image, transform;
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 
   /* Feathered soft mask reveal */
   --reveal-pct: calc(var(--reveal-progress, 0) * 125% - 25%);
@@ -1158,6 +1164,10 @@ main {
   white-space: inherit;
   word-break: keep-all;
   text-align: center;
+  will-change: -webkit-mask-image, mask-image, transform;
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 
   /* Feathered soft mask reveal */
   --reveal-pct: calc(var(--reveal-progress, 0) * 125% - 25%);
