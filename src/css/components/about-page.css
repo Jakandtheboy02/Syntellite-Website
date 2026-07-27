@@ -642,10 +642,9 @@
 }
 
 @media (max-width: 992px) {
-
   .about-hero-title,
   .our-story-title {
-    font-size: clamp(3rem, 13vw, 140px);
+    font-size: clamp(2.8rem, 11vw, 110px);
   }
 
   .skillset-header-grid {
@@ -667,6 +666,29 @@
 }
 
 @media (max-width: 768px) {
+  .about-hero-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .about-hero-title,
+  .our-story-title {
+    font-size: clamp(2.4rem, 12vw, 76px);
+    white-space: normal;
+  }
+
+  .about-hero-stat {
+    align-items: flex-start;
+    text-align: left;
+    padding-bottom: 0;
+    min-width: auto;
+  }
+
+  .about-hero-stat .stat-label {
+    text-align: left;
+  }
+
   .story-text-grid {
     grid-template-columns: 1fr;
     gap: 32px;
@@ -686,36 +708,28 @@
   }
 }
 
-@media (max-width: 650px) {
-
+@media (max-width: 480px) {
   .about-hero-banner-section,
   .about-skillset-section,
   .about-experts-section {
     min-height: auto;
-    padding-top: 70px;
-    padding-bottom: 70px;
-  }
-
-  .about-hero-header-row {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
+    padding-top: 60px;
+    padding-bottom: 60px;
   }
 
   .about-hero-title,
   .our-story-title {
-    font-size: clamp(2.6rem, 14vw, 76px);
+    font-size: clamp(1.85rem, 10.5vw, 2.8rem);
+    letter-spacing: -0.02em;
     white-space: normal;
   }
 
-  .about-hero-stat {
-    align-items: flex-start;
-    text-align: left;
-    padding-bottom: 0;
+  .about-hero-stat .stat-num {
+    font-size: clamp(18px, 5.5vw, 26px);
   }
 
   .about-hero-stat .stat-label {
-    text-align: left;
+    font-size: clamp(11px, 3.5vw, 15px);
   }
 
   .about-hero-image-frame {

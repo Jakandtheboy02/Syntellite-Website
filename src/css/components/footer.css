@@ -154,6 +154,14 @@
     min-height: auto;
   }
 
+  .footer-hero-title {
+    font-size: clamp(2.4rem, 11vw, 6rem);
+  }
+
+  .footer-hero-sub {
+    font-size: clamp(1rem, 3.8vw, 2rem);
+  }
+
   .footer-hero-brand {
     margin: 30px 0;
   }
@@ -166,5 +174,38 @@
 
   .footer-copy {
     text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .site-footer {
+    padding: 10px 6px 16px 6px;
+  }
+
+  .footer-card-container {
+    border-radius: 16px;
+    padding: 22px 14px 18px 14px;
+  }
+
+  .footer-hero-title {
+    font-size: clamp(1.75rem, 10vw, 2.6rem);
+  }
+
+  .footer-hero-sub {
+    font-size: clamp(0.8rem, 3.8vw, 1.15rem);
+  }
+
+  .footer-top-bar {
+    gap: 6px;
+  }
+
+  .footer-top-link {
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+  }
+
+  .social-circle {
+    width: 34px;
+    height: 34px;
   }
 }

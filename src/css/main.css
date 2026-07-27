@@ -2269,7 +2269,7 @@ main {
   position: relative;
   background: #ffffff;
   padding: clamp(200px, 6vw, 200px) 0;
-  width: 100vw;
+  width: 100%;
   overflow: hidden;
   /* border-bottom: 1px solid rgba(0, 0, 0, 0.05); */
 }

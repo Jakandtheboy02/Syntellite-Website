@@ -358,6 +358,22 @@
   }
 }
 
+@media (max-width: 480px) {
+  .bottom-nav-bar {
+    bottom: 16px;
+    --nav-size: 46px;
+    --nav-gap: 8px;
+    --nav-font-size: 0.8rem;
+  }
+
+  .nav-links-card.nav-open {
+    bottom: 75px;
+    width: calc(100vw - 32px);
+    padding: 24px 18px;
+    gap: 18px;
+  }
+}
+
 @keyframes navDrawerFadeIn {
   from {
     opacity: 0;
