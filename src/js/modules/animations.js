@@ -351,24 +351,32 @@ export function initPortfolioMorph() {
 
   if (!wrapper || !cards.length) return;
 
+  let targetP = 0;
+  let currentP = 0;
+
+  const calculateTargetP = () => {
+    const wrapperRect = wrapper.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+    const scrolled = -wrapperRect.top;
+    const totalScrollableDistance = wrapperRect.height - windowHeight;
+
+    if (totalScrollableDistance <= 0) return 0;
+
+    const PRE_PHASE_DISTANCE = windowHeight * 0.2; // subtle entry buffer (20% of viewport)
+    const combinedScrolled = scrolled + PRE_PHASE_DISTANCE;
+    const combinedTotal = totalScrollableDistance + PRE_PHASE_DISTANCE;
+    return Math.min(1, Math.max(0, combinedScrolled / combinedTotal));
+  };
+
   const onScroll = () => {
+    targetP = calculateTargetP();
+  };
+
+  const render = (p) => {
     const wrapperRect = wrapper.getBoundingClientRect();
     const windowHeight = window.innerHeight;
     const overlayWidth = wrapper.offsetWidth;
     const overlayHeight = windowHeight;
-
-    // 1. Calculate scroll progress through the portfolio-wrapper container
-    //    PRE_PHASE_DISTANCE shifts p so that Phase 1 (fan-out) begins while the
-    //    section is still entering the viewport from below — before it locks sticky.
-    const scrolled = -wrapperRect.top;
-    const totalScrollableDistance = wrapperRect.height - windowHeight;
-
-    if (totalScrollableDistance <= 0) return;
-
-    const PRE_PHASE_DISTANCE = windowHeight; // entry travel = 1 viewport height
-    const combinedScrolled = scrolled + PRE_PHASE_DISTANCE;
-    const combinedTotal = totalScrollableDistance + PRE_PHASE_DISTANCE;
-    const p = Math.min(1, Math.max(0, combinedScrolled / combinedTotal));
 
     // Determine the grid start Y position based on screen width to sit below Projects title (adjusted down for top padding)
     let gridStartY = 320;
@@ -378,10 +386,13 @@ export function initPortfolioMorph() {
       gridStartY = 260;
     }
 
-    // Determine the fanned showcase start Y position based on screen width to sit below title
+    // Determine the fanned showcase start Y position based on screen width/height to center cards vertically
     let showcaseStartY = 380;
     if (window.innerWidth <= 768) {
-      showcaseStartY = 280;
+      const subtitleBottom = showcaseSubtitle ? (showcaseSubtitle.getBoundingClientRect().height + (window.innerWidth <= 480 ? 115 : 130)) : 180;
+      const bottomLimit = overlayHeight - 80;
+      const cardHeight = cards.length > 0 ? parseFloat(getComputedStyle(cards[0]).getPropertyValue('--card-size') || 190) : 190;
+      showcaseStartY = Math.max(subtitleBottom + 30, Math.round((subtitleBottom + bottomLimit) / 2 - cardHeight / 2 + 10));
     } else if (window.innerWidth <= 992) {
       showcaseStartY = 330;
     }
@@ -440,7 +451,6 @@ export function initPortfolioMorph() {
     // 2. Animate and Crossfade Title Blocks based on timeline
     if (showcaseTitleBlock && projectsTitleBlock) {
       // Progressive scroll-linked mask color sweeps for Showcase title & subtitle (bidirectional)
-      // Extended ranges ensure ultra-smooth mask reveals on all device refresh rates
       const showcase_title_p = Math.min(1, Math.max(0, (p - 0.02) / 0.32));
       const showcase_subtitle_p = Math.min(1, Math.max(0, (p - 0.08) / 0.30));
       if (showcaseTitle) showcaseTitle.style.setProperty('--reveal-progress', showcase_title_p.toFixed(4));
@@ -450,38 +460,47 @@ export function initPortfolioMorph() {
       const isMobile = window.innerWidth <= 768;
       const floatDistance = isMobile ? 120 : 220;
 
-      if (p < 0.45) {
-        // Phase 1: Showcase Title centered, Projects Title hidden below the viewport
+      // Calculate initial Y offset placing Projects title directly behind the showcase cards stack
+      const titleSettledTop = isMobile ? 55 : (window.innerWidth <= 992 ? 100 : 140);
+      const startBehindCardsY = Math.max(150, showcaseStartY - titleSettledTop + 30);
+
+      if (p < 0.35) {
+        // Phase 1: Showcase Title centered, Projects Title tucked behind the showcase cards stack
         showcaseTitleBlock.style.opacity = '1';
         showcaseTitleBlock.style.transform = 'translate3d(0, 0px, 0)';
         projectsTitleBlock.style.opacity = '0';
-        projectsTitleBlock.style.transform = `translate3d(0, ${windowHeight}px, 0)`;
-        if (projectsTitle) projectsTitle.style.clipPath = 'inset(0 100% 0 0)';
-      } else if (p < 0.70) {
-        // Phase 2/3: Smooth rise-up and crossfade transition synchronized with Morph progress
-        const p_morph_title = (p - 0.45) / 0.25;
-        // Cubic ease-out curve for natural physical inertia
-        const easeOutTitle = 1 - Math.pow(1 - p_morph_title, 3);
-        const showcaseOpacity = Math.max(0, 1 - easeOutTitle * 1.1).toFixed(4);
-        const showcaseTranslateY = (-floatDistance * easeOutTitle).toFixed(2);
-        const projectsTranslateY = (windowHeight * (1 - easeOutTitle) - scrollOffset).toFixed(2);
+        projectsTitleBlock.style.transform = `translate3d(0, ${startBehindCardsY}px, 0)`;
+        if (projectsTitle) {
+          projectsTitle.style.setProperty('--reveal-progress', '0');
+        }
+      } else if (p < 0.75) {
+        // Phase 2/3: Slow, graceful rise-up from behind the showcase cards stack up to the header area
+        // Spans p from 0.35 to 0.75 (0.40 progress span) for a slow, stately motion matched to scroll speed
+        const p_rise = (p - 0.35) / 0.40;
+        // Smoothstep easing for natural physical inertia
+        const easeRise = p_rise * p_rise * (3 - 2 * p_rise);
+        const showcaseOpacity = Math.max(0, 1 - easeRise * 1.15).toFixed(4);
+        const showcaseTranslateY = (-floatDistance * easeRise).toFixed(2);
+        const projectsTranslateY = (startBehindCardsY * (1 - easeRise) - scrollOffset).toFixed(2);
+        const projectsOpacity = Math.min(1, easeRise * 1.5).toFixed(4);
 
         showcaseTitleBlock.style.opacity = showcaseOpacity;
         showcaseTitleBlock.style.transform = `translate3d(0, ${showcaseTranslateY}px, 0)`;
-        projectsTitleBlock.style.opacity = easeOutTitle.toFixed(4);
+        projectsTitleBlock.style.opacity = projectsOpacity;
         projectsTitleBlock.style.transform = `translate3d(0, ${projectsTranslateY}px, 0)`;
 
         if (projectsTitle) {
-          const maskVal = ((1 - Math.min(1, easeOutTitle * 1.2)) * 100).toFixed(2);
-          projectsTitle.style.clipPath = `inset(0 ${maskVal}% 0 0)`;
+          projectsTitle.style.setProperty('--reveal-progress', easeRise.toFixed(4));
         }
       } else {
-        // Phase 4: Showcase Title completely pushed off-screen, Projects Title settled at header
+        // Phase 4: Showcase Title completely pushed off-screen, Projects Title settled at top header
         showcaseTitleBlock.style.opacity = '0';
         showcaseTitleBlock.style.transform = `translate3d(0, ${-floatDistance}px, 0)`;
         projectsTitleBlock.style.opacity = '1';
         projectsTitleBlock.style.transform = `translate3d(0, ${-scrollOffset.toFixed(2)}px, 0)`;
-        if (projectsTitle) projectsTitle.style.clipPath = 'inset(0 0% 0 0)';
+        if (projectsTitle) {
+          projectsTitle.style.setProperty('--reveal-progress', '1');
+        }
       }
     }
 
@@ -576,11 +595,28 @@ export function initPortfolioMorph() {
     });
   };
 
-  // Subscribe to Lenis smooth-scroll tick so animation stays in sync with the
-  // smoothed position rather than the raw native scroll event.
+  const loop = () => {
+    // Liquid Inertia LERP smoothing (0.075 interpolation factor for 60fps/120fps motion)
+    const diff = targetP - currentP;
+    if (Math.abs(diff) > 0.00005) {
+      currentP += diff * 0.075;
+    } else {
+      currentP = targetP;
+    }
+
+    render(currentP);
+
+    requestAnimationFrame(loop);
+  };
+
+  // Subscribe to Lenis smooth-scroll tick and window events
   subscribeScroll(onScroll);
   window.addEventListener('resize', onScroll, { passive: true });
   onScroll();
+  currentP = targetP;
+
+  // Launch continuous 60fps/120fps physics render loop
+  requestAnimationFrame(loop);
 }
 
 export function initTrustAnimation() {
@@ -607,7 +643,8 @@ export function initTrustAnimation() {
       const translateY = (1 - easedReveal) * 40;
 
       const direction = (index % 2 === 0) ? 1 : -1;
-      const shiftX = direction * (-80 + 160 * p);
+      const maxShift = window.innerWidth <= 480 ? 25 : (window.innerWidth <= 768 ? 45 : 80);
+      const shiftX = direction * (-maxShift + (maxShift * 2) * p);
 
       line.style.opacity = opacity;
       line.style.transform = `translateY(${translateY}px) translateX(${shiftX}px)`;
@@ -946,88 +983,96 @@ export function initClientsMarquee() {
   const marquee = document.getElementById('clients-marquee');
   if (!marquee) return;
 
-  // Duplicate elements inside the marquee to create a seamless infinite loop
-  const logos = Array.from(marquee.children);
-  if (!logos.length) return;
+  const originalLogos = Array.from(marquee.children);
+  if (!originalLogos.length) return;
 
   // Clone twice to make sure we always have enough overflow width on all resolutions
-  logos.forEach(logo => {
-    marquee.appendChild(logo.cloneNode(true));
-  });
-  logos.forEach(logo => {
-    marquee.appendChild(logo.cloneNode(true));
-  });
+  originalLogos.forEach(logo => marquee.appendChild(logo.cloneNode(true)));
+  originalLogos.forEach(logo => marquee.appendChild(logo.cloneNode(true)));
+
+  const allLogos = Array.from(marquee.children);
 
   let isDown = false;
   let startX;
   let scrollLeft;
-  let isInteracting = false;
-  let lastInteractionTime = 0;
-  const speed = 0.65; // Pixels per frame (very slow, smooth and premium!)
+  const speed = 0.65; // Pixels per frame (slow, smooth, premium!)
 
-  // Drag and drop event listeners for desktop
+  // Drag and drop event listeners
   marquee.addEventListener('pointerdown', (e) => {
     isDown = true;
     marquee.classList.add('grabbing');
     startX = e.pageX - marquee.offsetLeft;
     scrollLeft = marquee.scrollLeft;
-    isInteracting = true;
-    lastInteractionTime = Date.now();
   });
 
   marquee.addEventListener('pointerleave', () => {
     isDown = false;
     marquee.classList.remove('grabbing');
-    isInteracting = false;
   });
 
   marquee.addEventListener('pointerup', () => {
     isDown = false;
     marquee.classList.remove('grabbing');
-    isInteracting = false;
-    lastInteractionTime = Date.now();
   });
 
   marquee.addEventListener('pointermove', (e) => {
     if (!isDown) return;
     e.preventDefault();
     const x = e.pageX - marquee.offsetLeft;
-    const walk = (x - startX) * 1.5; // Drag sensitivity
+    const walk = (x - startX) * 1.5;
     marquee.scrollLeft = scrollLeft - walk;
-    lastInteractionTime = Date.now();
   });
 
-  // Track scroll and touch interaction state
-  marquee.addEventListener('touchstart', () => {
-    isInteracting = true;
-    lastInteractionTime = Date.now();
-  }, { passive: true });
-
   marquee.addEventListener('touchend', () => {
-    isInteracting = false;
-    lastInteractionTime = Date.now();
+    isDown = false;
   }, { passive: true });
 
-  marquee.addEventListener('wheel', () => {
-    lastInteractionTime = Date.now();
-  }, { passive: true });
+  // Function to detect center-most logo and activate its full color state
+  const updateCenterHighlight = () => {
+    const marqueeRect = marquee.getBoundingClientRect();
+    const centerPoint = marqueeRect.left + marqueeRect.width / 2;
+    const threshold = Math.min(100, marqueeRect.width * 0.3);
 
-  // Autoplay requestAnimationFrame loop
+    let closestLogo = null;
+    let minDistance = Infinity;
+
+    allLogos.forEach(logo => {
+      const logoRect = logo.getBoundingClientRect();
+      const logoCenter = logoRect.left + logoRect.width / 2;
+      const dist = Math.abs(logoCenter - centerPoint);
+
+      if (dist < minDistance) {
+        minDistance = dist;
+        closestLogo = logo;
+      }
+    });
+
+    allLogos.forEach(logo => {
+      if (logo === closestLogo && minDistance < threshold) {
+        logo.classList.add('is-centered');
+      } else {
+        logo.classList.remove('is-centered');
+      }
+    });
+  };
+
+  // Continuous auto-scroll & center-spotlight loop
   const step = () => {
-    const now = Date.now();
-
-    // Auto scroll only if the user is not actively interacting and 1.5s passed since last interaction
-    if (!isInteracting && !isDown && (now - lastInteractionTime > 1500)) {
+    // Auto scroll ALWAYS unless user is actively holding/dragging with mouse/finger
+    if (!isDown) {
       marquee.scrollLeft += speed;
 
       // Infinite loop wrap calculation:
-      // Since we duplicated the logos twice, the true width of the single loop set is scrollWidth / 3.
-      // Reset when scrollLeft reaches this boundary.
+      // Since we duplicated the logos twice, loop width is scrollWidth / 3.
       const loopWidth = marquee.scrollWidth / 3;
       if (marquee.scrollLeft >= loopWidth) {
-        marquee.scrollLeft = 0;
+        marquee.scrollLeft -= loopWidth;
       }
     }
+
+    // Continuously update center spotlight highlight as the marquee streams past
+    updateCenterHighlight();
+
     requestAnimationFrame(step);
   };
 

@@ -1037,8 +1037,7 @@ main {
 .portfolio-wrapper {
   position: relative;
   width: 100%;
-  height: 200vh;
-  /* Reduced to require only one additional scroll to complete morph and unpin */
+  height: 380vh;
   background: #ffffff;
 }
 
@@ -1083,7 +1082,6 @@ main {
 }
 
 .showcase-title {
-  color: rgba(0, 0, 0, 0.15);
   font-family: 'Outfit', sans-serif;
   font-size: clamp(2rem, 6.5vw, 96px);
   font-style: normal;
@@ -1098,34 +1096,30 @@ main {
   position: relative;
   text-align: center;
   white-space: nowrap;
+
+  /* Feathered Soft Mask Reveal Gradient (Smooth multi-line sweep from rgba(0,0,0,0.15) to solid #000000) */
+  --reveal-pct: calc(var(--reveal-progress, 0) * 140% - 20%);
+  --reveal-fade: calc(var(--reveal-progress, 0) * 140% + 15%);
+
+  background-image: linear-gradient(
+    110deg,
+    #000000 0%,
+    #000000 var(--reveal-pct),
+    rgba(0, 0, 0, 0.15) var(--reveal-fade),
+    rgba(0, 0, 0, 0.15) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  will-change: background-image;
 }
 
-.showcase-title::after {
-  content: attr(data-text);
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  color: #000000;
-  pointer-events: none;
-  white-space: inherit;
-  word-break: keep-all;
-  text-align: center;
-  will-change: -webkit-mask-image, mask-image, transform;
-  transform: translateZ(0);
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-
-  /* Feathered soft mask reveal */
-  --reveal-pct: calc(var(--reveal-progress, 0) * 125% - 25%);
-  --reveal-fade: calc(var(--reveal-progress, 0) * 125%);
-  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 var(--reveal-pct), transparent var(--reveal-fade), transparent 100%);
-  mask-image: linear-gradient(to right, #000 0%, #000 var(--reveal-pct), transparent var(--reveal-fade), transparent 100%);
+.mobile-break {
+  display: none;
 }
 
 .projects-title {
-  color: #000000;
   font-family: 'Outfit', sans-serif;
   font-size: clamp(2rem, 6.5vw, 96px);
   font-style: normal;
@@ -1133,10 +1127,33 @@ main {
   line-height: 1.05;
   letter-spacing: -0.04em;
   margin: 0;
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  margin-inline: auto;
+  position: relative;
+  text-align: center;
+  white-space: nowrap;
+
+  /* Feathered Soft Mask Reveal Gradient */
+  --reveal-pct: calc(var(--reveal-progress, 0) * 140% - 20%);
+  --reveal-fade: calc(var(--reveal-progress, 0) * 140% + 15%);
+
+  background-image: linear-gradient(
+    110deg,
+    #000000 0%,
+    #000000 var(--reveal-pct),
+    rgba(0, 0, 0, 0.15) var(--reveal-fade),
+    rgba(0, 0, 0, 0.15) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  will-change: background-image;
 }
 
 .showcase-subtitle {
-  color: rgba(0, 0, 0, 0.15);
   font-family: 'Outfit', sans-serif;
   font-size: clamp(0.95rem, 2.2vw, 24px);
   font-style: normal;
@@ -1150,31 +1167,26 @@ main {
   position: relative;
   text-align: center;
   white-space: normal;
+
+  /* Feathered Soft Mask Reveal Gradient */
+  --reveal-pct: calc(var(--reveal-progress, 0) * 140% - 20%);
+  --reveal-fade: calc(var(--reveal-progress, 0) * 140% + 15%);
+
+  background-image: linear-gradient(
+    110deg,
+    #000000 0%,
+    #000000 var(--reveal-pct),
+    rgba(0, 0, 0, 0.15) var(--reveal-fade),
+    rgba(0, 0, 0, 0.15) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  will-change: background-image;
 }
 
-.showcase-subtitle::after {
-  content: attr(data-text);
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  color: #000000;
-  pointer-events: none;
-  white-space: inherit;
-  word-break: keep-all;
-  text-align: center;
-  will-change: -webkit-mask-image, mask-image, transform;
-  transform: translateZ(0);
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
 
-  /* Feathered soft mask reveal */
-  --reveal-pct: calc(var(--reveal-progress, 0) * 125% - 25%);
-  --reveal-fade: calc(var(--reveal-progress, 0) * 125%);
-  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 var(--reveal-pct), transparent var(--reveal-fade), transparent 100%);
-  mask-image: linear-gradient(to right, #000 0%, #000 var(--reveal-pct), transparent var(--reveal-fade), transparent 100%);
-}
 
 .morphing-cards-overlay {
   position: absolute;
@@ -1239,20 +1251,18 @@ main {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: clamp(20px, 3.5vw, 32px);
+  padding: clamp(16px, 2.2vw, 24px);
   box-sizing: border-box;
 }
 
 .morphing-cards-overlay .project-info h3 {
   margin: 0;
   font-family: 'Outfit', sans-serif;
-  font-size: clamp(1.4rem, 2.5vw, 2.2rem);
-  /* Larger font size */
+  font-size: clamp(1.15rem, 1.8vw, 1.55rem);
   font-weight: 500;
-  letter-spacing: -0.8px;
-  line-height: 1.1;
-  text-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  /* Readability shadow overlay */
+  letter-spacing: -0.5px;
+  line-height: 1.15;
+  text-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
 }
 
 .project-chips {
@@ -1266,14 +1276,14 @@ main {
 .project-chip {
   display: inline-flex;
   align-items: center;
-  padding: 6px 14px;
+  padding: clamp(4px, 0.8vw, 6px) clamp(10px, 1.2vw, 14px);
   background: rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 100px;
   font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: clamp(0.75rem, 1.2vw, 0.85rem);
+  font-size: clamp(0.7rem, 0.9vw, 0.8rem);
   font-weight: 500;
   color: #ffffff;
   line-height: 1;
@@ -1405,7 +1415,7 @@ main {
 /* Responsive adjustments */
 @media (max-width: 992px) {
   .portfolio-wrapper {
-    height: 180vh;
+    height: 340vh;
   }
 
   .showcase-title-block {
@@ -1485,93 +1495,137 @@ main {
 
 @media (max-width: 768px) {
   .portfolio-wrapper {
-    height: 160vh;
+    height: 320vh;
   }
 
   .showcase-title-block {
-    top: 80px;
+    top: 65px;
   }
 
-  .showcase-title,
-  .projects-title {
-    font-size: clamp(1.6rem, 7.5vw, 2.75rem);
-    letter-spacing: -0.025em;
+  .showcase-title {
+    color: #000000;
+    text-align: center;
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(36px, 9.5vw, 48px) !important;
+    font-style: normal;
+    font-weight: 400;
+    line-height: clamp(40px, 10vw, 50px) !important;
+    letter-spacing: -1.92px !important;
+    white-space: pre-line !important;
   }
 
   .showcase-subtitle {
-    font-size: clamp(0.9rem, 3.2vw, 1.15rem);
-    margin-top: 12px;
+    color: #000000;
+    text-align: center;
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(16px, 4.5vw, 20px) !important;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.3 !important;
+    margin-top: 14px;
+    white-space: pre-line !important;
+  }
+
+  .mobile-break {
+    display: inline !important;
+  }
+
+  .projects-title {
+    color: #000000;
+    text-align: center;
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(36px, 9.5vw, 48px) !important;
+    font-style: normal;
+    font-weight: 400;
+    line-height: clamp(40px, 10vw, 50px) !important;
+    letter-spacing: -1.92px !important;
   }
 
   .projects-title-block {
-    top: 90px;
+    top: 65px;
   }
 
   .morphing-cards-overlay .showcase-card {
-    --card-size: 110px;
-    --grid-w: 300px;
+    --card-size: 195px;
+    --grid-w: 320px;
     --grid-h: 950px;
+    border-radius: 18px;
   }
 
   .morphing-cards-overlay .card-hover-wrapper {
-    border-radius: 12px;
+    border-radius: 16px;
   }
 
   .morphing-cards-overlay .project-info {
-    bottom: 24px;
-    left: 24px;
-    right: 24px;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: clamp(12px, 3.5vw, 16px);
   }
 
-  .morphing-cards-overlay .project-info h3 {
-    font-size: 1.3rem;
+  .projects-cta-overlay {
+    flex-direction: column;
+    gap: 10px;
+    width: auto;
+    max-width: 90vw;
   }
 
+  .projects-cta-btn {
+    padding: 0.7rem 1.6rem;
+    font-size: clamp(0.85rem, 3.8vw, 0.95rem);
+    gap: 8px;
+    width: 100%;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+
+  /* Symmetric 6-card cluster for perfect horizontal centering */
   .showcase-card.card-1 {
-    --rot: -6deg;
-    --tx: -95px;
-    --ty: 8px;
-    --grid-width: 300px;
+    --rot: -10deg;
+    --tx: -88px;
+    --ty: -25px;
+    --grid-width: 320px;
     --grid-height: 150px;
     --grid-x: 0px;
     --grid-y: 0px;
   }
 
   .showcase-card.card-2 {
-    --rot: 3deg;
-    --tx: -57px;
-    --ty: -4px;
-    --grid-width: 300px;
+    --rot: -4deg;
+    --tx: -30px;
+    --ty: -32px;
+    --grid-width: 320px;
     --grid-height: 150px;
     --grid-x: 0px;
     --grid-y: 160px;
   }
 
   .showcase-card.card-3 {
-    --rot: -2deg;
-    --tx: -19px;
-    --ty: 10px;
-    --grid-width: 300px;
+    --rot: 4deg;
+    --tx: 30px;
+    --ty: -32px;
+    --grid-width: 320px;
     --grid-height: 150px;
     --grid-x: 0px;
     --grid-y: 320px;
   }
 
   .showcase-card.card-4 {
-    --rot: 7deg;
-    --tx: 19px;
-    --ty: -8px;
-    --grid-width: 300px;
+    --rot: 10deg;
+    --tx: 88px;
+    --ty: -25px;
+    --grid-width: 320px;
     --grid-height: 150px;
     --grid-x: 0px;
     --grid-y: 480px;
   }
 
   .showcase-card.card-5 {
-    --rot: -5deg;
-    --tx: 57px;
-    --ty: 5px;
-    --grid-width: 300px;
+    --rot: -6deg;
+    --tx: -45px;
+    --ty: 30px;
+    --grid-width: 320px;
     --grid-height: 150px;
     --grid-x: 0px;
     --grid-y: 640px;
@@ -1579,9 +1633,9 @@ main {
 
   .showcase-card.card-6 {
     --rot: 4deg;
-    --tx: 95px;
-    --ty: -3px;
-    --grid-width: 300px;
+    --tx: 45px;
+    --ty: 30px;
+    --grid-width: 320px;
     --grid-height: 150px;
     --grid-x: 0px;
     --grid-y: 800px;
@@ -1590,73 +1644,104 @@ main {
 
 @media (max-width: 480px) {
   .showcase-title-block {
-    top: 70px;
+    top: 55px;
     padding: 0 16px;
   }
 
-  .showcase-title,
-  .projects-title {
-    font-size: clamp(1.35rem, 6.5vw, 1.85rem);
-    letter-spacing: -0.015em;
+  .showcase-title {
+    color: #000000;
+    text-align: center;
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(34px, 11vw, 48px) !important;
+    font-style: normal;
+    font-weight: 400;
+    line-height: clamp(38px, 11.5vw, 50px) !important;
+    letter-spacing: -1.92px !important;
+    white-space: pre-line !important;
   }
 
   .showcase-subtitle {
-    font-size: clamp(0.8rem, 3.5vw, 0.95rem);
-    margin-top: 10px;
+    color: #000000;
+    text-align: center;
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(16px, 5vw, 20px) !important;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.3 !important;
+    margin-top: 14px;
     padding: 0 8px;
+    white-space: pre-line !important;
+  }
+
+  .projects-title {
+    color: #000000;
+    text-align: center;
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(34px, 11vw, 48px) !important;
+    font-style: normal;
+    font-weight: 400;
+    line-height: clamp(38px, 11.5vw, 50px) !important;
+    letter-spacing: -1.92px !important;
+  }
+
+  .projects-title-block {
+    top: 55px;
+    padding: 0 16px;
   }
 
   .morphing-cards-overlay .showcase-card {
-    --card-size: 85px;
-    --grid-w: 280px;
+    --card-size: 190px;
+    --grid-w: 290px;
     --grid-h: 900px;
+    border-radius: 20px;
   }
 
+  /* Symmetric 6-card cluster for perfect horizontal centering */
   .showcase-card.card-1 {
-    --rot: -6deg;
-    --tx: -70px;
-    --ty: 8px;
-    --grid-width: 280px;
+    --rot: -10deg;
+    --tx: -84px;
+    --ty: -25px;
+    --grid-width: 290px;
     --grid-height: 140px;
     --grid-x: 0px;
     --grid-y: 0px;
   }
 
   .showcase-card.card-2 {
-    --rot: 3deg;
-    --tx: -42px;
-    --ty: -4px;
-    --grid-width: 280px;
+    --rot: -4deg;
+    --tx: -28px;
+    --ty: -32px;
+    --grid-width: 290px;
     --grid-height: 140px;
     --grid-x: 0px;
     --grid-y: 150px;
   }
 
   .showcase-card.card-3 {
-    --rot: -2deg;
-    --tx: -14px;
-    --ty: 10px;
-    --grid-width: 280px;
+    --rot: 4deg;
+    --tx: 28px;
+    --ty: -32px;
+    --grid-width: 290px;
     --grid-height: 140px;
     --grid-x: 0px;
     --grid-y: 300px;
   }
 
   .showcase-card.card-4 {
-    --rot: 7deg;
-    --tx: 14px;
-    --ty: -8px;
-    --grid-width: 280px;
+    --rot: 10deg;
+    --tx: 84px;
+    --ty: -25px;
+    --grid-width: 290px;
     --grid-height: 140px;
     --grid-x: 0px;
     --grid-y: 450px;
   }
 
   .showcase-card.card-5 {
-    --rot: -5deg;
-    --tx: 42px;
-    --ty: 5px;
-    --grid-width: 280px;
+    --rot: -6deg;
+    --tx: -42px;
+    --ty: 30px;
+    --grid-width: 290px;
     --grid-height: 140px;
     --grid-x: 0px;
     --grid-y: 600px;
@@ -1664,9 +1749,9 @@ main {
 
   .showcase-card.card-6 {
     --rot: 4deg;
-    --tx: 70px;
-    --ty: -3px;
-    --grid-width: 280px;
+    --tx: 42px;
+    --ty: 30px;
+    --grid-width: 290px;
     --grid-height: 140px;
     --grid-x: 0px;
     --grid-y: 750px;
@@ -1775,15 +1860,75 @@ main {
   /* Fluid typographic stagger under image */
 }
 
-@media (max-width: 768px) {
+@media (max-width: 992px) {
+  .trust-section {
+    padding: clamp(60px, 10vw, 100px) 0;
+  }
+
+  .trust-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 0 clamp(20px, 5vw, 32px);
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(34px, 12vw, 53.41px) !important;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal !important;
+    letter-spacing: -2.136px !important;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .trust-image-wrapper {
+    order: 1;
+    grid-column: auto;
+    grid-row: auto;
+    width: 100%;
+    aspect-ratio: 16 / 9.5;
+    margin-bottom: 8px;
+    align-self: center;
+  }
+
+  .trust-image {
+    border-radius: 20px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
+  }
+
+  .trust-line {
+    width: 100%;
+    box-sizing: border-box;
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(34px, 12vw, 53.41px) !important;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal !important;
+    letter-spacing: -2.136px !important;
+  }
+
   .trust-line.line-1 {
-    margin-left: 0.6em;
-    /* Shorter stagger on mobile viewports */
+    order: 2;
+    grid-column: auto;
+    grid-row: auto;
+    margin-left: 0;
+    text-align: right;
+  }
+
+  .trust-line.line-2 {
+    order: 3;
+    grid-column: auto;
+    grid-row: auto;
+    margin-left: 0;
+    text-align: left;
   }
 
   .trust-line.line-3 {
-    margin-left: 1.2em;
-    /* Shorter stagger on mobile viewports */
+    order: 4;
+    grid-column: auto;
+    grid-row: auto;
+    margin-left: 0;
+    text-align: right;
   }
 }
 
@@ -2351,13 +2496,16 @@ main {
   transition: opacity 0.35s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-/* Hover effect */
-.client-logo-wrapper:hover .logo-mono {
+/* Hover & Center Spotlight effects */
+.client-logo-wrapper:hover .logo-mono,
+.client-logo-wrapper.is-centered .logo-mono {
   opacity: 0;
 }
 
-.client-logo-wrapper:hover .logo-color {
+.client-logo-wrapper:hover .logo-color,
+.client-logo-wrapper.is-centered .logo-color {
   opacity: 1;
+  transform: translateX(-50%) scale(1.08);
 }
 
 /* Responsive adjustments */
