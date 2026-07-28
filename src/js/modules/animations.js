@@ -819,7 +819,8 @@ export function initProcessSection() {
 
   let currentStep = 1; // 1-indexed (1, 2, 3, 4)
   let autoTimer = null;
-  let isManualInteracting = false;
+  let isClickInteracting = false;
+  let clickTimeout = null;
   let rafId = null;
 
   const updateStepUI = (activeStep) => {
@@ -844,8 +845,10 @@ export function initProcessSection() {
   const startAutoTimer = () => {
     clearAutoTimer();
     autoTimer = setInterval(() => {
-      const nextStep = (currentStep % 4) + 1;
-      updateStepUI(nextStep);
+      if (!isClickInteracting) {
+        const nextStep = (currentStep % 4) + 1;
+        updateStepUI(nextStep);
+      }
     }, 5000);
   };
 
@@ -856,16 +859,23 @@ export function initProcessSection() {
     }
   };
 
-  const resetAutoTimerOnUserAction = () => {
-    isManualInteracting = true;
-    clearAutoTimer();
+  const resetIdleTimer = () => {
     startAutoTimer();
-    setTimeout(() => {
-      isManualInteracting = false;
-    }, 2000);
   };
 
-  // 1. Scroll-linked Step Calculation
+  const handleButtonClick = (stepNum) => {
+    isClickInteracting = true;
+    updateStepUI(stepNum);
+
+    if (clickTimeout) clearTimeout(clickTimeout);
+    clickTimeout = setTimeout(() => {
+      isClickInteracting = false;
+    }, 1500);
+
+    resetIdleTimer();
+  };
+
+  // 1. Scroll-linked Step Calculation (Forward & Backward)
   const onScroll = () => {
     const rect = pinSection.getBoundingClientRect();
     const windowHeight = window.innerHeight;
@@ -873,20 +883,19 @@ export function initProcessSection() {
     const isInViewport = rect.top <= windowHeight && rect.bottom >= 0;
 
     if (isInViewport) {
-      if (!autoTimer && !isManualInteracting) {
-        startAutoTimer();
-      }
-
       const totalDist = rect.height - windowHeight;
       if (totalDist > 0 && rect.top <= 0) {
-        const p = Math.min(1, Math.max(0, -rect.top / totalDist));
+        const p = Math.min(0.99, Math.max(0, -rect.top / totalDist));
         const calculatedStep = Math.min(4, Math.floor(p * 4) + 1);
 
-        if (!isManualInteracting && calculatedStep !== currentStep) {
+        // Update step dynamically when scrolling forward or backward
+        if (!isClickInteracting && calculatedStep !== currentStep) {
           updateStepUI(calculatedStep);
-          resetAutoTimerOnUserAction();
         }
       }
+
+      // Reset 5s idle timer whenever scrolling
+      resetIdleTimer();
     } else {
       clearAutoTimer();
     }
@@ -896,8 +905,7 @@ export function initProcessSection() {
   stepItems.forEach((item) => {
     item.addEventListener('click', () => {
       const stepNum = parseInt(item.getAttribute('data-step') || '1', 10);
-      updateStepUI(stepNum);
-      resetAutoTimerOnUserAction();
+      handleButtonClick(stepNum);
     });
   });
 
@@ -905,8 +913,7 @@ export function initProcessSection() {
     prevBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       const prevStep = (currentStep - 2 + 4) % 4 + 1;
-      updateStepUI(prevStep);
-      resetAutoTimerOnUserAction();
+      handleButtonClick(prevStep);
     });
   }
 
@@ -914,8 +921,7 @@ export function initProcessSection() {
     nextBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       const nextStep = (currentStep % 4) + 1;
-      updateStepUI(nextStep);
-      resetAutoTimerOnUserAction();
+      handleButtonClick(nextStep);
     });
   }
 

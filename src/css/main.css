@@ -2102,10 +2102,10 @@ main {
   transform: translate3d(15px, 0, 0) scale(0.96);
   will-change: max-width, margin-left, opacity, transform;
   transition: max-width 0.85s cubic-bezier(0.16, 1, 0.3, 1),
-              margin-left 0.85s cubic-bezier(0.16, 1, 0.3, 1),
-              opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
-              visibility 0.7s ease;
+    margin-left 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0.7s ease;
 }
 
 /* Inner Fixed Width Content Wrapper - keeps text layout rock solid without distortion */
