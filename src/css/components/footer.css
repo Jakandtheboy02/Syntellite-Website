@@ -20,7 +20,7 @@
   flex-direction: column;
   justify-content: space-between;
   min-height: clamp(450px, 55vh, 650px);
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 30px 80px rgb(255, 255, 255);
   overflow: hidden;
 
   /* Rise-in animatable base */
@@ -29,12 +29,53 @@
   will-change: transform, opacity;
 }
 
+/* Rotated Gradient Logo Backdrop */
+.footer-bg-logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: clamp(420px, 62%, 900px);
+  transform: translate(-50%, -50%) rotate(-26.56deg);
+  transform-origin: center center;
+  pointer-events: none;
+  user-select: none;
+  /* Sits above the card's black background but below all in-flow footer content */
+  z-index: -1;
+}
+
+.footer-bg-logo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* Very slow swing layered on the wrapper's -26.56deg base: -26.56deg <-> +26.56deg */
+  animation: footerLogoSwing 70s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes footerLogoSwing {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(53.12deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer-bg-logo img {
+    animation: none;
+  }
+}
+
 /* Top Bar Links inside Black Card */
 .footer-top-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  position: relative;
+  z-index: 1;
 }
 
 .footer-top-link {
@@ -61,6 +102,7 @@
   align-self: center;
   margin: clamp(40px, 6vw, 90px) auto;
   position: relative;
+  z-index: 1;
   width: fit-content;
   max-width: 100%;
 }
@@ -98,6 +140,8 @@
   align-items: center;
   width: 100%;
   margin-top: auto;
+  position: relative;
+  z-index: 1;
 }
 
 .footer-copy {
@@ -154,6 +198,10 @@
     min-height: auto;
   }
 
+  .footer-bg-logo {
+    width: min(115%, 480px);
+  }
+
   .footer-hero-title {
     font-size: clamp(2.4rem, 11vw, 6rem);
   }
@@ -185,6 +233,10 @@
   .footer-card-container {
     border-radius: 16px;
     padding: 22px 14px 18px 14px;
+  }
+
+  .footer-bg-logo {
+    width: min(125%, 360px);
   }
 
   .footer-hero-title {

@@ -280,44 +280,121 @@ function showSuccessToast() {
 
 
 /**
- * Tracks which section overlaps the bottom floating nav bar and adapts CSS variables accordingly.
+ * Tracks what is actually painted behind the bottom floating nav bar and adapts
+ * its CSS variables accordingly.
+ *
+ * Rather than matching the nav's centre against the section list (which misses
+ * overlapping / pinned sections and any section whose visible colour comes from
+ * a parent or a transparent background), this hit-tests the element stack at a
+ * few points behind the nav and resolves the first backdrop that actually paints
+ * something: an explicit data-bg / *-section hint, a photographic background, or
+ * an opaque background colour whose relative luminance decides light vs dark.
  */
 export function initBottomNavThemeTracker() {
   const nav = document.getElementById('bottom-nav');
   if (!nav) return;
 
-  const sections = document.querySelectorAll('section, footer');
+  // Horizontal sample positions across the nav (fractions of its width)
+  const SAMPLE_RATIOS = [0.12, 0.5, 0.88];
+  // Above this backdrop luminance the default translucent-white capsule stops
+  // reading, so the nav flips to its dark capsule.
+  const LIGHT_THRESHOLD = 0.35;
 
-  const checkTheme = () => {
-    const navRect = nav.getBoundingClientRect();
-    const navCenterY = navRect.top + navRect.height / 2;
-
-    let currentSection = null;
-    for (const section of sections) {
-      const rect = section.getBoundingClientRect();
-      if (navCenterY >= rect.top && navCenterY <= rect.bottom) {
-        currentSection = section;
-        break;
-      }
-    }
-
-    if (currentSection) {
-      // Detect light background sections using class name, data attribute or computed style background
-      const isLight = currentSection.classList.contains('light-section') ||
-        currentSection.getAttribute('data-bg') === 'light' ||
-        getComputedStyle(currentSection).backgroundColor === 'rgb(255, 255, 255)';
-
-      if (isLight) {
-        nav.classList.add('nav-light-bg');
-      } else {
-        nav.classList.remove('nav-light-bg');
-      }
-    }
+  const parseColor = (value) => {
+    const match = /rgba?\(([^)]+)\)/.exec(value || '');
+    if (!match) return null;
+    const parts = match[1].split(/[,\s/]+/).filter(Boolean).map(parseFloat);
+    if (parts.length < 3 || parts.some(Number.isNaN)) return null;
+    return { r: parts[0], g: parts[1], b: parts[2], a: parts.length > 3 ? parts[3] : 1 };
   };
 
-  window.addEventListener('scroll', checkTheme, { passive: true });
-  window.addEventListener('resize', checkTheme);
-  checkTheme(); // Run once initially
+  // WCAG relative luminance
+  const relativeLuminance = ({ r, g, b }) => {
+    const [lr, lg, lb] = [r, g, b].map((channel) => {
+      const c = channel / 255;
+      return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+    });
+    return 0.2126 * lr + 0.7152 * lg + 0.0722 * lb;
+  };
+
+  // Resolves light (true) / dark (false) / undecided (null) at one point
+  const sampleAt = (x, y) => {
+    const stack = document.elementsFromPoint(x, y);
+
+    for (const el of stack) {
+      if (el === nav || nav.contains(el)) continue;
+
+      // Explicit author intent always wins over computed colour
+      const hint = el.dataset ? el.dataset.bg : null;
+      if (hint === 'light') return true;
+      if (hint === 'dark') return false;
+      if (el.classList.contains('light-section')) return true;
+      if (el.classList.contains('dark-section')) return false;
+
+      const style = getComputedStyle(el);
+
+      // Photographic backdrop of unknown colour: keep the white capsule
+      if (style.backgroundImage.includes('url(')) return false;
+
+      const bg = parseColor(style.backgroundColor);
+      if (bg && bg.a >= 0.5) return relativeLuminance(bg) > LIGHT_THRESHOLD;
+      // Transparent / near-transparent: keep walking down the stack
+    }
+
+    return null;
+  };
+
+  let appliedLight = null;
+
+  const resolveTheme = () => {
+    const rect = nav.getBoundingClientRect();
+    const y = rect.top + rect.height / 2;
+
+    let lightVotes = 0;
+    let darkVotes = 0;
+
+    for (const ratio of SAMPLE_RATIOS) {
+      const result = sampleAt(rect.left + rect.width * ratio, y);
+      if (result === true) lightVotes++;
+      else if (result === false) darkVotes++;
+    }
+
+    // Nothing resolved (e.g. off-screen during load): fall back to the page background
+    if (!lightVotes && !darkVotes) {
+      const pageBg = parseColor(getComputedStyle(document.body).backgroundColor)
+        || parseColor(getComputedStyle(document.documentElement).backgroundColor);
+      const isLight = pageBg && pageBg.a >= 0.5
+        ? relativeLuminance(pageBg) > LIGHT_THRESHOLD
+        : false;
+      lightVotes = isLight ? 1 : 0;
+      darkVotes = isLight ? 0 : 1;
+    }
+
+    const isLight = lightVotes > darkVotes;
+    if (isLight === appliedLight) return;
+
+    appliedLight = isLight;
+    nav.classList.toggle('nav-light-bg', isLight);
+  };
+
+  // Coalesce every scroll/resize event down to at most one hit-test per frame
+  let frame = 0;
+  const scheduleCheck = () => {
+    if (frame) return;
+    frame = requestAnimationFrame(() => {
+      frame = 0;
+      resolveTheme();
+    });
+  };
+
+  subscribeScroll(scheduleCheck);
+  // Native scroll as a safety net for anything Lenis does not drive (touch
+  // momentum, scroll restoration, programmatic jumps) - the rAF gate above
+  // collapses the duplicate signal, so this costs nothing.
+  window.addEventListener('scroll', scheduleCheck, { passive: true });
+  window.addEventListener('resize', scheduleCheck, { passive: true });
+  window.addEventListener('load', scheduleCheck);
+  resolveTheme(); // Run once immediately so the nav never flashes the wrong theme
 }
 
 /**
