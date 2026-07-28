@@ -840,140 +840,132 @@ export function initServicesSection() {
  * Initializes the Our Process section with dynamic 3D scroll elevation parallax
  * and random shuffled active cards each time the user returns to the section.
  */
+/**
+ * Interactive 4-step Our Process sequence with scroll progress,
+ * 3-second auto-play idle loop, and manual prev/next navigation.
+ */
 export function initProcessSection() {
   const pinSection = document.getElementById('process');
-  const stickyContainer = pinSection ? pinSection.querySelector('.process-sticky-container') : null;
-  const zoomWrapper = pinSection ? pinSection.querySelector('.process-zoom-wrapper') : null;
-  const zoomPill = pinSection ? pinSection.querySelector('.process-zoom-pill') : null;
-  const zoomText = pinSection ? pinSection.querySelector('.process-zoom-text') : null;
-  const zoomVideo = pinSection ? pinSection.querySelector('.process-zoom-video') : null;
-  const splitContainer = pinSection ? pinSection.querySelector('.process-split-container') : null;
-  const splitGrid = pinSection ? pinSection.querySelector('.process-split-grid') : null;
-  const cards = pinSection ? pinSection.querySelectorAll('.split-card') : [];
-  const cardInners = pinSection ? pinSection.querySelectorAll('.split-card-inner') : [];
+  if (!pinSection) return;
 
-  if (!pinSection || !zoomPill || !splitContainer) return;
+  const stepItems = pinSection.querySelectorAll('.process-step-item');
+  const prevBtn = pinSection.querySelector('.process-nav-btn.prev-btn');
+  const nextBtn = pinSection.querySelector('.process-nav-btn.next-btn');
 
-  // Configure symmetrical book-opening flips: left cards (1 & 3) open left, right cards (2 & 4) open right
-  cards.forEach((card, idx) => {
-    const isLeftColumn = (idx === 0 || idx === 2);
-    const axis = 'Y';
-    const dir = isLeftColumn ? -1 : 1;
+  if (!stepItems.length) return;
 
-    card.setAttribute('data-rot-axis', axis);
-    card.setAttribute('data-rot-dir', dir);
+  let currentStep = 1; // 1-indexed (1, 2, 3, 4)
+  let autoTimer = null;
+  let isClickInteracting = false;
+  let clickTimeout = null;
+  let rafId = null;
 
-    const frontFace = card.querySelector('.split-card-front');
-    if (frontFace) {
-      frontFace.style.transform = `rotate${axis}(${dir * 180}deg)`;
-    }
-  });
+  const updateStepUI = (activeStep) => {
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(() => {
+      currentStep = activeStep;
+      stepItems.forEach((item) => {
+        const stepNum = parseInt(item.getAttribute('data-step') || '1', 10);
+        item.classList.remove('is-active', 'is-next', 'is-muted');
 
-  const onScroll = () => {
-    const rect = pinSection.getBoundingClientRect();
-    const windowHeight = window.innerHeight;
-    const windowWidth = window.innerWidth;
-
-    // Calculate scroll progress p of the pinned section (0 to 1)
-    const totalDist = rect.height - windowHeight;
-    let p = 0;
-    if (rect.top <= 0) {
-      p = -rect.top / totalDist;
-    }
-    p = Math.min(1, Math.max(0, p));
-
-    // Phase 1: Zooming Pill (p from 0 to 0.45)
-    if (p <= 0.45) {
-      // Show zoom wrapper, hide split container
-      zoomWrapper.style.opacity = '1';
-      zoomWrapper.style.pointerEvents = 'auto';
-
-      splitContainer.style.opacity = '0';
-      splitContainer.style.pointerEvents = 'none';
-      splitContainer.classList.remove('active');
-
-      const z = p / 0.45;
-      // Smoother easing
-      const easedZ = z * z * (3 - 2 * z);
-
-      // Base element size in the DOM is 80vw x 80vh
-      const targetW = windowWidth * 0.8;
-      const targetH = windowHeight * 0.8;
-
-      // Starting scale factor to shrink 80vw/80vh down to exactly 320x90
-      const startSx = 320 / targetW;
-      const startSy = 90 / targetH;
-
-      // Interpolate scales from the start scale up to 1.0
-      const sx = startSx + (1 - startSx) * easedZ;
-      const sy = startSy + (1 - startSy) * easedZ;
-
-      zoomPill.style.transform = `scale3d(${sx}, ${sy}, 1)`;
-
-      // Keep visual border radius constant at exactly 12px throughout the transition
-      const borderRadiusVal = 12 / sy;
-      zoomPill.style.borderRadius = `${borderRadiusVal}px`;
-
-      // Apply counter-scale to video vertical axis to lock aspect ratio (fit to width)
-      if (zoomVideo) {
-        const videoScaleY = sx / sy;
-        zoomVideo.style.transform = `translate3d(0, -50%, 0) scale3d(1, ${videoScaleY}, 1)`;
-      }
-
-      // Scale text directly since it sits on an independent layer (no compression!)
-      // Grow it from 1.0 (24px) up to 2.8x (67px) on large screens
-      const targetTextScale = 1 + (windowWidth > 768 ? 1.8 : 1.0) * easedZ;
-      zoomText.style.transform = `scale3d(${targetTextScale}, ${targetTextScale}, 1)`;
-
-    } else {
-      // Phase 2: Split & Flip (p from 0.45 to 0.95)
-      // Hide zoom wrapper, show split container
-      zoomWrapper.style.opacity = '0';
-      zoomWrapper.style.pointerEvents = 'none';
-
-      splitContainer.style.opacity = '1';
-      splitContainer.style.pointerEvents = 'auto';
-
-      const s = Math.min(1, Math.max(0, (p - 0.45) / 0.5));
-      const easedS = s * s * (3 - 2 * s);
-
-      // Split open gap and padding
-      const targetGap = Math.min(32, Math.max(16, windowWidth * 0.025)); // clamp(16px, 2.5vw, 32px)
-      const targetPadding = Math.min(60, Math.max(20, windowWidth * 0.04)); // clamp(20px, 4vw, 60px)
-
-      const currentGap = targetGap * easedS;
-      const currentPadding = targetPadding * easedS;
-
-      splitGrid.style.gap = `${currentGap}px`;
-      splitGrid.style.padding = `${currentPadding}px`;
-
-      // Keep card corner radius always 12px
-      cards.forEach(card => {
-        card.style.borderRadius = '12px';
-      });
-
-      // Flip rotation: goes from 0deg (showing back face) to 180deg (showing front face)
-      cardInners.forEach((inner, idx) => {
-        const card = cards[idx];
-        if (card) {
-          const rotAxis = card.getAttribute('data-rot-axis') || 'Y';
-          const rotDir = parseInt(card.getAttribute('data-rot-dir') || '1', 10);
-          const rotationVal = easedS * 180 * rotDir;
-          inner.style.transform = `rotate${rotAxis}(${rotationVal}deg)`;
+        if (stepNum === activeStep) {
+          item.classList.add('is-active');
+        } else if (stepNum === (activeStep % 4) + 1) {
+          item.classList.add('is-next');
+        } else {
+          item.classList.add('is-muted');
         }
       });
+    });
+  };
 
-      // Activate hover interaction state if we are fully split
-      if (s >= 0.98) {
-        splitContainer.classList.add('active');
-      } else {
-        splitContainer.classList.remove('active');
+  const startAutoTimer = () => {
+    clearAutoTimer();
+    autoTimer = setInterval(() => {
+      if (!isClickInteracting) {
+        const nextStep = (currentStep % 4) + 1;
+        updateStepUI(nextStep);
       }
+    }, 5000);
+  };
+
+  const clearAutoTimer = () => {
+    if (autoTimer) {
+      clearInterval(autoTimer);
+      autoTimer = null;
     }
   };
 
+  const resetIdleTimer = () => {
+    startAutoTimer();
+  };
+
+  const handleButtonClick = (stepNum) => {
+    isClickInteracting = true;
+    updateStepUI(stepNum);
+
+    if (clickTimeout) clearTimeout(clickTimeout);
+    clickTimeout = setTimeout(() => {
+      isClickInteracting = false;
+    }, 1500);
+
+    resetIdleTimer();
+  };
+
+  // 1. Scroll-linked Step Calculation (Forward & Backward)
+  const onScroll = () => {
+    const rect = pinSection.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+
+    const isInViewport = rect.top <= windowHeight && rect.bottom >= 0;
+
+    if (isInViewport) {
+      const totalDist = rect.height - windowHeight;
+      if (totalDist > 0 && rect.top <= 0) {
+        const p = Math.min(0.99, Math.max(0, -rect.top / totalDist));
+        const calculatedStep = Math.min(4, Math.floor(p * 4) + 1);
+
+        // Update step dynamically when scrolling forward or backward
+        if (!isClickInteracting && calculatedStep !== currentStep) {
+          updateStepUI(calculatedStep);
+        }
+      }
+
+      // Reset 5s idle timer whenever scrolling
+      resetIdleTimer();
+    } else {
+      clearAutoTimer();
+    }
+  };
+
+  // 2. Click interactions for numbers & nav buttons
+  stepItems.forEach((item) => {
+    item.addEventListener('click', () => {
+      const stepNum = parseInt(item.getAttribute('data-step') || '1', 10);
+      handleButtonClick(stepNum);
+    });
+  });
+
+  if (prevBtn) {
+    prevBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const prevStep = (currentStep - 2 + 4) % 4 + 1;
+      handleButtonClick(prevStep);
+    });
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const nextStep = (currentStep % 4) + 1;
+      handleButtonClick(nextStep);
+    });
+  }
+
   subscribeScroll(onScroll);
   onScroll();
+  updateStepUI(1);
+  startAutoTimer();
 }
 
 /**
