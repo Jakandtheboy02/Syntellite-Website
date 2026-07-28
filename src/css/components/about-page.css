@@ -75,9 +75,9 @@
   opacity: 1;
   transform: translate3d(0, 0, 0);
   filter: blur(0px);
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
-              opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-              filter 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, opacity, filter;
 }
 
@@ -117,15 +117,19 @@
 /* Team Photo Image Frame */
 .about-hero-image-frame {
   width: 100%;
+  height: clamp(400px, 50vh, 720px);
   position: relative;
   overflow: hidden;
-  border-radius: clamp(10px, 1.5vw, 18px);
+  border-radius: clamp(14px, 2vw, 24px);
   box-shadow: 0 15px 45px rgba(0, 0, 0, 0.04);
   background: #f4f5f7;
   opacity: 0;
   transform: translate3d(0, 45px, 0) scale(0.98);
   transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, opacity;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .about-hero-image-frame.is-revealed {
@@ -134,11 +138,27 @@
 }
 
 .about-hero-team-img {
-  width: 100%;
-  height: auto;
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 100% !important;
+  min-height: 100% !important;
+  max-width: none !important;
   display: block;
-  object-fit: contain;
+  object-fit: cover !important;
+  object-position: center;
   transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+
+/* Dark version is visible on load, light version fades in as the user scrolls */
+.about-hero-team-img--light {
+  opacity: var(--img-swap, 0);
+}
+
+.about-hero-team-img--dark {
+  opacity: calc(1 - var(--img-swap, 0));
 }
 
 .about-hero-image-frame:hover .about-hero-team-img {
@@ -586,7 +606,7 @@
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
   flex-shrink: 0;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  
+
   /* Scroll-driven staggered animation (forward and backward) */
   opacity: var(--avatar-progress, 0);
   transform: translate3d(0, calc((1 - var(--avatar-progress, 0)) * 25px), 0) scale(calc(0.7 + var(--avatar-progress, 0) * 0.3));
@@ -642,6 +662,7 @@
 }
 
 @media (max-width: 992px) {
+
   .about-hero-title,
   .our-story-title {
     font-size: clamp(2.8rem, 11vw, 110px);
@@ -666,73 +687,276 @@
 }
 
 @media (max-width: 768px) {
-  .about-hero-header-row {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
+
+  /* General Section Padding & Height */
+  .about-hero-banner-section,
+  .our-story-section,
+  .about-skillset-section,
+  .about-experts-section {
+    min-height: auto;
+    padding: clamp(60px, 12vw, 90px) 0 clamp(40px, 8vw, 60px) 0;
   }
 
-  .about-hero-title,
-  .our-story-title {
-    font-size: clamp(2.4rem, 12vw, 76px);
-    white-space: normal;
+  .about-hero-container,
+  .our-story-container,
+  .about-skillset-container,
+  .about-experts-container {
+    padding: 0 clamp(20px, 5vw, 32px);
+  }
+
+  /* Section 1: Hero Banner (Full 100vh First Screen) */
+  .about-hero-banner-section {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: clamp(80px, 12vh, 95px) 0 clamp(16px, 3vh, 24px) 0;
+    box-sizing: border-box;
+  }
+
+  .about-hero-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    height: 100%;
+    /* Frame no longer stretches, so centre the stack instead of pinning it apart */
+    justify-content: center;
+    gap: clamp(12px, 3vh, 28px);
+  }
+
+  .about-hero-header-row {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: fit-content;
+    max-width: 100%;
+    gap: 2px;
+    margin-bottom: 16px;
+  }
+
+  .about-hero-title {
+    font-size: clamp(44px, 13.5vw, 84px);
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+    white-space: nowrap;
+    margin: 0;
   }
 
   .about-hero-stat {
-    align-items: flex-start;
-    text-align: left;
+    align-self: flex-end;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: right;
     padding-bottom: 0;
     min-width: auto;
+    margin-top: 2px;
+    margin-bottom: 0;
+  }
+
+  .about-hero-stat .stat-num {
+    font-size: clamp(20px, 5.5vw, 28px);
+    font-weight: 500;
+    line-height: 1;
+    text-align: right;
   }
 
   .about-hero-stat .stat-label {
+    text-align: right;
+    font-size: clamp(11px, 3.5vw, 15px);
+    margin-top: 2px;
+    white-space: nowrap;
+  }
+
+  .about-hero-image-frame {
+    /* Always landscape on mobile: height follows the width, never stretches */
+    flex: 0 0 auto;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    height: auto;
+    min-height: 0;
+    max-height: 60vh;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f4f5f7;
+  }
+
+  .about-hero-team-img {
+    position: absolute;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+    min-width: 100% !important;
+    min-height: 100% !important;
+    max-width: none !important;
+    object-fit: cover !important;
+    object-position: center;
+    display: block;
+  }
+
+  /* Section 2: Our Story (Screenshot 2) */
+  .our-story-container {
+    align-items: flex-start;
     text-align: left;
+  }
+
+  .our-story-title {
+    font-size: clamp(44px, 13vw, 76px);
+    line-height: 1.0;
+    text-align: left;
+    margin-bottom: 24px;
+    white-space: normal;
+  }
+
+  .story-timeline-container {
+    height: 24px;
+    margin-bottom: 32px;
+  }
+
+  .timeline-dot.dot-left {
+    left: 4%;
+  }
+
+  .timeline-dot.dot-right {
+    left: 96%;
   }
 
   .story-text-grid {
     grid-template-columns: 1fr;
-    gap: 32px;
+    gap: 24px;
+    text-align: left;
   }
 
-  .timeline-dot.dot-left {
-    left: 5%;
+  .story-lead {
+    font-size: clamp(20px, 5.5vw, 28px);
+    line-height: 1.28;
   }
 
-  .timeline-dot.dot-right {
-    left: 95%;
+  .story-body {
+    font-size: clamp(15px, 4vw, 18px);
+    line-height: 1.5;
+  }
+
+  /* Section 3: CEO Quote (Screenshot 3) */
+  .story-ceo-quote-block {
+    margin-top: clamp(48px, 10vw, 72px);
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .ceo-quote-text {
+    font-size: clamp(16px, 4.2vw, 20px);
+    line-height: 1.5;
+    text-align: left;
+    margin-bottom: 24px;
+  }
+
+  .ceo-author-profile {
+    gap: 14px;
+  }
+
+  .ceo-avatar-frame {
+    width: 48px;
+    height: 48px;
+  }
+
+  .ceo-name {
+    font-size: 18px;
+  }
+
+  .ceo-title {
+    font-size: 13px;
+  }
+
+  /* Section 4: Skillset (Screenshot 4) */
+  .skillset-header-grid {
+    margin-bottom: 36px;
+  }
+
+  .skillset-title {
+    font-size: clamp(42px, 13vw, 72px);
+    line-height: 1.0;
+  }
+
+  .skillset-desc {
+    font-size: clamp(18px, 4.8vw, 24px);
+    line-height: 1.35;
   }
 
   .skillset-stats-grid {
     grid-template-columns: 1fr;
-    gap: 40px;
+    gap: 36px;
+  }
+
+  .stat-card .stat-counter-num {
+    font-size: clamp(46px, 14vw, 68px);
+    margin-bottom: 4px;
+  }
+
+  .stat-card .stat-card-title {
+    font-size: clamp(17px, 4.8vw, 22px);
+    margin-bottom: 4px;
+  }
+
+  .stat-card .stat-card-subtext {
+    font-size: clamp(14px, 3.8vw, 16px);
+    line-height: 1.45;
+  }
+
+  /* Section 5: Engineered by Experts (Screenshot 5) */
+  .experts-title {
+    font-size: clamp(40px, 12vw, 64px);
+    line-height: 1.05;
+    margin-bottom: 16px;
+  }
+
+  .experts-desc {
+    font-size: clamp(16px, 4.2vw, 20px);
+    line-height: 1.45;
+    margin-bottom: 32px;
+  }
+
+  .experts-avatars-wrap {
+    margin-bottom: 28px;
+  }
+
+  .avatar-circle {
+    width: 44px;
+    height: 44px;
+  }
+
+  .avatar-circle.avatar-more {
+    width: 44px;
+    height: 44px;
+    font-size: 15px;
+  }
+
+  .experts-info-line {
+    font-size: clamp(14px, 3.8vw, 17px);
   }
 }
 
 @media (max-width: 480px) {
-  .about-hero-banner-section,
-  .about-skillset-section,
-  .about-experts-section {
-    min-height: auto;
-    padding-top: 60px;
-    padding-bottom: 60px;
+  .about-hero-title {
+    font-size: clamp(42px, 14vw, 56px);
   }
 
-  .about-hero-title,
   .our-story-title {
-    font-size: clamp(1.85rem, 10.5vw, 2.8rem);
-    letter-spacing: -0.02em;
-    white-space: normal;
+    font-size: clamp(38px, 12vw, 52px);
   }
 
-  .about-hero-stat .stat-num {
-    font-size: clamp(18px, 5.5vw, 26px);
+  .skillset-title {
+    font-size: clamp(38px, 12vw, 52px);
   }
 
-  .about-hero-stat .stat-label {
-    font-size: clamp(11px, 3.5vw, 15px);
-  }
-
-  .about-hero-image-frame {
-    border-radius: 12px;
+  .experts-title {
+    font-size: clamp(36px, 11vw, 48px);
   }
 }

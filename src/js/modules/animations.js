@@ -1332,6 +1332,14 @@ export function initAboutHeroAnimation() {
   let targetP = 0;
   let currentP = 0;
 
+  // Dark -> Light hero image crossfade progress (0 = dark, 1 = light)
+  let targetSwap = 0;
+  let currentSwap = 0;
+
+  if (imageFrame) {
+    imageFrame.style.setProperty('--img-swap', '0');
+  }
+
   // Trigger load reveal animation on page entry
   setTimeout(() => {
     targetP = 1;
@@ -1343,23 +1351,38 @@ export function initAboutHeroAnimation() {
   const onScroll = () => {
     const scrollY = window.scrollY;
     const section = document.getElementById('about-hero-banner');
-    if (section && scrollY > 100) {
-      const rect = section.getBoundingClientRect();
+    if (!section) return;
+
+    const rect = section.getBoundingClientRect();
+
+    if (scrollY > 100) {
       const exitProgress = (rect.bottom) / (rect.height);
       targetP = Math.min(1, Math.max(0, exitProgress));
     }
+
+    // Fully swapped to the light image after scrolling half the hero height
+    const swapDistance = Math.max(1, rect.height * 0.5);
+    targetSwap = Math.min(1, Math.max(0, -rect.top / swapDistance));
   };
 
   subscribeScroll(onScroll);
   window.addEventListener('resize', onScroll, { passive: true });
+  onScroll();
 
   // 120fps rAF lerp loop for smooth load & scroll mask reveal
   const render = () => {
     currentP += (targetP - currentP) * 0.08;
 
+    currentSwap += (targetSwap - currentSwap) * 0.12;
+
     if (title) {
       const easedTitle = currentP * currentP * (3 - 2 * currentP);
       title.style.setProperty('--reveal-progress', easedTitle.toFixed(3));
+    }
+
+    if (imageFrame) {
+      const easedSwap = currentSwap * currentSwap * (3 - 2 * currentSwap);
+      imageFrame.style.setProperty('--img-swap', easedSwap.toFixed(3));
     }
 
     requestAnimationFrame(render);
