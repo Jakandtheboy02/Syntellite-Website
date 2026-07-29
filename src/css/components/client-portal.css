@@ -1,0 +1,58 @@
+/* ==========================================
+   CLIENT PORTAL - PLACEHOLDER
+   Temporary "Coming soon" state. Fills the first viewport so the footer
+   sits below the fold.
+   ========================================== */
+
+.portal-soon-section {
+  background: #ffffff;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(90px, 12vh, 140px) clamp(20px, 5vw, 56px) clamp(110px, 16vh, 150px);
+  position: relative;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.portal-soon-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(44px, 10vw, 128px);
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  text-align: center;
+  margin: 0;
+  white-space: nowrap;
+  -webkit-user-select: none;
+  user-select: none;
+
+  /* Grey wordmark fading out towards the baseline */
+  background-image: linear-gradient(180deg,
+      #c9c9c9 0%,
+      #d8d8d8 42%,
+      #ebebeb 74%,
+      #fafafa 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+
+  /* `background-clip: text` only paints inside the background box, so the "g"
+     descender would be cut off. Padding grows the box, the negative margin
+     cancels the layout effect. See the fix block at the end of main.css. */
+  padding-inline: 0.06em;
+  padding-bottom: 0.24em;
+  margin-bottom: -0.24em;
+}
+
+@media (max-width: 480px) {
+  .portal-soon-title {
+    /* Wraps to two lines rather than shrinking to an unreadable size */
+    white-space: normal;
+    font-size: clamp(40px, 13vw, 60px);
+  }
+}

@@ -18,6 +18,7 @@ import {
   initProjectsHeroAnimation,
   initProjectFilters,
   initAboutHeroAnimation,
+  initSolutionsRise,
   initHeroStatTicker,
   initOurStoryAnimation,
   initAboutSkillsetAnimation,
@@ -70,6 +71,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initialize About Page Hero Banner Entrance & Mask Reveal
   initAboutHeroAnimation();
+
+  // Initialize Solutions Page per-row scroll rise-in animation
+  initSolutionsRise();
 
   // Initialize About Page Top Banner Auto-Rotating Stat Ticker
   initHeroStatTicker();

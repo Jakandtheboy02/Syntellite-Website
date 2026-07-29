@@ -918,131 +918,112 @@ export function initServicesSection() {
  * and random shuffled active cards each time the user returns to the section.
  */
 /**
- * Interactive 4-step Our Process sequence with scroll progress,
- * 3-second auto-play idle loop, and manual prev/next navigation.
+ * Our Process: pinned scroll sequence.
+ *
+ *   1. the headline sits centred
+ *   2. it splits left/right, opening a slot in the middle
+ *   3. the four cards rise up through that slot, one per scroll step
+ *
+ * This writes only three custom properties and lets CSS derive the rest, so a
+ * media query can switch the split off (by pinning --slot) without this code
+ * needing to know about the breakpoint:
+ *   --split     0 -> 1  how far the headline has opened
+ *   --slot-max  px      width the middle slot opens to
+ *   --track-y   px      how far the card column has travelled up
  */
 export function initProcessSection() {
   const pinSection = document.getElementById('process');
   if (!pinSection) return;
 
-  const stepItems = pinSection.querySelectorAll('.process-step-item');
-  const prevBtn = pinSection.querySelector('.process-nav-btn.prev-btn');
-  const nextBtn = pinSection.querySelector('.process-nav-btn.next-btn');
+  const wrapper = pinSection.querySelector('.process-wrapper');
+  const headline = document.getElementById('process-headline');
+  const track = document.getElementById('process-card-track');
+  const cards = track ? Array.from(track.querySelectorAll('.process-card')) : [];
+  const left = headline ? headline.querySelector('.ph-left') : null;
+  const right = headline ? headline.querySelector('.ph-right') : null;
 
-  if (!stepItems.length) return;
+  if (!wrapper || !headline || !track || !cards.length || !left || !right) return;
 
-  let currentStep = 1; // 1-indexed (1, 2, 3, 4)
-  let autoTimer = null;
-  let isClickInteracting = false;
-  let clickTimeout = null;
-  let rafId = null;
+  // Scroll phase boundaries as a fraction of the pinned scroll distance
+  const SPLIT_START = 0.05;
+  const SPLIT_END = 0.22;
+  const CARDS_START = 0.24;
+  const CARDS_END = 0.95;
 
-  const updateStepUI = (activeStep) => {
-    if (rafId) cancelAnimationFrame(rafId);
-    rafId = requestAnimationFrame(() => {
-      currentStep = activeStep;
-      stepItems.forEach((item) => {
-        const stepNum = parseInt(item.getAttribute('data-step') || '1', 10);
-        item.classList.remove('is-active', 'is-next', 'is-muted');
+  let slotMax = 0;
+  let pitch = 0; // vertical distance between consecutive cards, in px
 
-        if (stepNum === activeStep) {
-          item.classList.add('is-active');
-        } else if (stepNum === (activeStep % 4) + 1) {
-          item.classList.add('is-next');
-        } else {
-          item.classList.add('is-muted');
-        }
-      });
-    });
+  const clamp01 = (v) => Math.min(1, Math.max(0, v));
+  const smoothstep = (v) => v * v * (3 - 2 * v);
+
+  // Re-measured on resize and after webfonts land, since both change the
+  // headline halves' widths and therefore how far the slot can open
+  const measure = () => {
+    const wrapperStyle = getComputedStyle(wrapper);
+    const inner = wrapper.clientWidth
+      - parseFloat(wrapperStyle.paddingLeft)
+      - parseFloat(wrapperStyle.paddingRight);
+
+    slotMax = Math.max(0, inner - left.offsetWidth - right.offsetWidth);
+    headline.style.setProperty('--slot-max', `${slotMax.toFixed(1)}px`);
+
+    // Read the real gap rather than recomputing it from the CSS variable
+    pitch = cards.length > 1 ? cards[1].offsetTop - cards[0].offsetTop : 0;
+    if (!pitch) pitch = cards[0].offsetHeight;
   };
 
-  const startAutoTimer = () => {
-    clearAutoTimer();
-    autoTimer = setInterval(() => {
-      if (!isClickInteracting) {
-        const nextStep = (currentStep % 4) + 1;
-        updateStepUI(nextStep);
-      }
-    }, 5000);
-  };
+  let targetP = 0;
+  let currentP = 0;
 
-  const clearAutoTimer = () => {
-    if (autoTimer) {
-      clearInterval(autoTimer);
-      autoTimer = null;
-    }
-  };
-
-  const resetIdleTimer = () => {
-    startAutoTimer();
-  };
-
-  const handleButtonClick = (stepNum) => {
-    isClickInteracting = true;
-    updateStepUI(stepNum);
-
-    if (clickTimeout) clearTimeout(clickTimeout);
-    clickTimeout = setTimeout(() => {
-      isClickInteracting = false;
-    }, 1500);
-
-    resetIdleTimer();
-  };
-
-  // 1. Scroll-linked Step Calculation (Forward & Backward)
   const onScroll = () => {
     const rect = pinSection.getBoundingClientRect();
-    const windowHeight = window.innerHeight;
-
-    const isInViewport = rect.top <= windowHeight && rect.bottom >= 0;
-
-    if (isInViewport) {
-      const totalDist = rect.height - windowHeight;
-      if (totalDist > 0 && rect.top <= 0) {
-        const p = Math.min(0.99, Math.max(0, -rect.top / totalDist));
-        const calculatedStep = Math.min(4, Math.floor(p * 4) + 1);
-
-        // Update step dynamically when scrolling forward or backward
-        if (!isClickInteracting && calculatedStep !== currentStep) {
-          updateStepUI(calculatedStep);
-        }
-      }
-
-      // Reset 5s idle timer whenever scrolling
-      resetIdleTimer();
-    } else {
-      clearAutoTimer();
-    }
+    const scrollable = rect.height - window.innerHeight;
+    targetP = scrollable > 0 ? clamp01(-rect.top / scrollable) : 0;
   };
 
-  // 2. Click interactions for numbers & nav buttons
-  stepItems.forEach((item) => {
-    item.addEventListener('click', () => {
-      const stepNum = parseInt(item.getAttribute('data-step') || '1', 10);
-      handleButtonClick(stepNum);
-    });
-  });
+  let appliedSplit = -1;
+  let appliedTrackY = null;
 
-  if (prevBtn) {
-    prevBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const prevStep = (currentStep - 2 + 4) % 4 + 1;
-      handleButtonClick(prevStep);
-    });
-  }
+  const render = () => {
+    currentP += (targetP - currentP) * 0.09;
 
-  if (nextBtn) {
-    nextBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const nextStep = (currentStep % 4) + 1;
-      handleButtonClick(nextStep);
-    });
-  }
+    const split = smoothstep(clamp01((currentP - SPLIT_START) / (SPLIT_END - SPLIT_START)));
+
+    // Card column position, in card slots: -1 parks card 1 fully below the
+    // viewport, 0 centres it, cards.length - 1 centres the last one
+    const cardsP = clamp01((currentP - CARDS_START) / (CARDS_END - CARDS_START));
+    const slot = -1 + smoothstep(cardsP) * cards.length;
+    const trackY = (slot * pitch).toFixed(2);
+
+    if (split.toFixed(4) !== appliedSplit) {
+      appliedSplit = split.toFixed(4);
+      headline.style.setProperty('--split', appliedSplit);
+    }
+
+    if (trackY !== appliedTrackY) {
+      appliedTrackY = trackY;
+      track.style.setProperty('--track-y', `${trackY}px`);
+    }
+
+    requestAnimationFrame(render);
+  };
+
+  measure();
+  onScroll();
 
   subscribeScroll(onScroll);
-  onScroll();
-  updateStepUI(1);
-  startAutoTimer();
+  window.addEventListener('resize', () => {
+    measure();
+    onScroll();
+  }, { passive: true });
+
+  // Webfonts (including the italic serif used for "Brand") shift the headline
+  // widths once they load, which changes how far the slot may open
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(measure);
+  }
+
+  requestAnimationFrame(render);
 }
 
 /**
@@ -1219,8 +1200,13 @@ export function initFooterAnimation() {
   const bottomNav = document.getElementById('bottom-nav');
   if (!cardContainer) return;
 
+  // Matches the max-width: 768px block in footer.css that turns the footer into
+  // a full-screen, stacked layout
+  const FOOTER_MOBILE_BREAKPOINT = 768;
+
   let targetP = 0;
   let currentP = 0;
+  let appliedNavBottom = null;
 
   const onScroll = () => {
     const rect = footer.getBoundingClientRect();
@@ -1250,23 +1236,36 @@ export function initFooterAnimation() {
     cardContainer.style.setProperty('--footer-opacity', opacity.toFixed(3));
     cardContainer.style.setProperty('--footer-scale', scale.toFixed(3));
 
-    // Dynamic vertical alignment of #bottom-nav with .footer-bottom-flex
-    if (bottomNav && footerBottomFlex) {
-      const flexRect = footerBottomFlex.getBoundingClientRect();
-      const navRect = bottomNav.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
+    // Dynamic vertical alignment of #bottom-nav with .footer-bottom-flex.
+    // Only on desktop: there .footer-bottom-flex is a single horizontal row, so
+    // centring the nav on it seats the nav inside that row as designed. Below
+    // the mobile breakpoint the footer goes full-screen and that row becomes a
+    // tall stacked column, so the same maths drops the nav straight onto the
+    // social icons - the mobile footer reserves bottom padding for the nav in
+    // its default position instead.
+    if (bottomNav) {
+      let navBottom = '';
 
-      // Distance from viewport bottom to vertical center of .footer-bottom-flex
-      const flexCenterYFromBottom = windowHeight - (flexRect.top + flexRect.height / 2);
+      if (footerBottomFlex && window.innerWidth > FOOTER_MOBILE_BREAKPOINT) {
+        const flexRect = footerBottomFlex.getBoundingClientRect();
+        const navRect = bottomNav.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
 
-      // Target bottom px so bottomNav vertical center matches flexCenterYFromBottom
-      const targetNavBottom = flexCenterYFromBottom - navRect.height / 2;
-      const defaultNavBottom = 30;
+        // Distance from viewport bottom to vertical center of .footer-bottom-flex
+        const flexCenterYFromBottom = windowHeight - (flexRect.top + flexRect.height / 2);
 
-      if (targetNavBottom > defaultNavBottom && flexRect.top < windowHeight) {
-        bottomNav.style.bottom = `${targetNavBottom.toFixed(1)}px`;
-      } else {
-        bottomNav.style.bottom = '';
+        // Target bottom px so bottomNav vertical center matches flexCenterYFromBottom
+        const targetNavBottom = flexCenterYFromBottom - navRect.height / 2;
+        const defaultNavBottom = 30;
+
+        if (targetNavBottom > defaultNavBottom && flexRect.top < windowHeight) {
+          navBottom = `${targetNavBottom.toFixed(1)}px`;
+        }
+      }
+
+      if (navBottom !== appliedNavBottom) {
+        appliedNavBottom = navBottom;
+        bottomNav.style.bottom = navBottom;
       }
     }
 
@@ -1396,6 +1395,43 @@ export function initProjectFilters() {
       });
     });
   });
+}
+
+/**
+ * Solutions Page: scroll-driven rise-in for each solution row.
+ *
+ * The row is the observed unit; the parts inside it stagger via the
+ * --rise-delay values set in solutions-page.css. Rows stay observed so the
+ * animation replays every time they enter the viewport, in either scroll
+ * direction, and 'is-above' flips the offset for rows parked above the
+ * viewport so they always travel with the scroll rather than against it.
+ */
+export function initSolutionsRise() {
+  const items = document.querySelectorAll('.solution-item');
+  if (!items.length) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      const target = entry.target;
+
+      if (entry.isIntersecting) {
+        target.classList.add('is-risen');
+        return;
+      }
+
+      // Left the viewport: park it on the side it exited towards, then reset
+      target.classList.toggle('is-above', entry.boundingClientRect.top < 0);
+      target.classList.remove('is-risen');
+    });
+  }, {
+    root: null,
+    // Low threshold so tall mobile rows still trigger, pulled up from the
+    // bottom edge so the rise reads as a response to scrolling
+    threshold: 0.1,
+    rootMargin: '0px 0px -10% 0px'
+  });
+
+  items.forEach((item) => observer.observe(item));
 }
 
 /**

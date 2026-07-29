@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
     rel="stylesheet">
 
   <!-- Stylesheets -->
@@ -78,8 +78,8 @@
 
         <!-- Showcase Title Block -->
         <div class="portfolio-title-block showcase-title-block">
-          <h2 class="showcase-title" data-text="Bold Ideas&#10;Engineered">Bold Ideas<br class="mobile-break">Engineered</h2>
-          <p class="showcase-subtitle" data-text="We design, build, and scale&#10;flagship digital products">We design, build, and scale<br class="mobile-break">flagship digital products</p>
+          <h2 class="showcase-title" data-text="Bold Ideas&#10;Engineered">Bold Ideas <br class="mobile-break">Engineered</h2>
+          <p class="showcase-subtitle" data-text="We design, build, and scale&#10;flagship digital products">We design, build, and scale <br class="mobile-break">flagship digital products</p>
         </div>
 
         <!-- Projects Title Block -->
@@ -251,7 +251,7 @@
 
         <!-- Services CTA -->
         <div class="services-cta-wrapper">
-          <a href="#" class="services-cta-btn" data-hover-expand>know more &rarr;</a>
+          <a href="/solutions.html" class="services-cta-btn" data-hover-expand>know more &rarr;</a>
         </div>
       </div>
     </section>
@@ -261,111 +261,42 @@
       <div class="process-sticky-container">
         <div class="process-wrapper">
 
-          <!-- Top Header Group -->
-          <div class="process-header-block">
-            <h2 class="process-title">Our Process</h2>
-            <p class="process-subtitle">We follow a proven 4-step framework to design, build, and scale flagship digital products seamlessly.</p>
-          </div>
+          <!-- Headline. Splits left/right on scroll to open a slot for the cards.
+               The visual halves are hidden from assistive tech because their DOM
+               order ("Your ideas / into Brand / transform / stories") does not
+               match the reading order - aria-label carries the real sentence. -->
+          <h2 class="process-headline" id="process-headline"
+            aria-label="Your ideas transform into Brand stories">
+            <span class="process-headline-inner" aria-hidden="true">
+              <span class="ph-side ph-left">
+                <span class="ph-line">Your ideas</span>
+                <span class="ph-line">into <em>Brand</em></span>
+              </span>
+              <span class="ph-slot"></span>
+              <span class="ph-side ph-right">
+                <span class="ph-line">transform</span>
+                <span class="ph-line">stories</span>
+              </span>
+            </span>
+          </h2>
 
-          <!-- Process Interactive Sequence Container -->
-          <div class="process-sequence-container">
-
-            <!-- Step 1 -->
-            <div class="process-step-item is-active" data-step="1">
-              <div class="process-step-num">1</div>
-              <div class="process-step-content">
-                <div class="process-step-inner">
-                  <div class="process-step-header">
-                    <h3>Discovery & Feasibility</h3>
-                    <a href="/contact.html" class="process-step-arrow-btn" aria-label="Learn more about Discovery">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                        <polyline points="12 5 19 12 12 19"></polyline>
-                      </svg>
-                    </a>
-                  </div>
-                  <p>We start with a deep discovery session to evaluate feasibility, align on product goals, and outline technical architecture.</p>
-                </div>
-              </div>
+          <!-- Card column: rises up through the slot, one card per scroll step -->
+          <div class="process-card-track" id="process-card-track">
+            <div class="process-card" data-step="1">
+              <img src="/src/assets/Components/Process Card1.svg" alt="Step 1 - Discovery &amp; Feasibility: we start with a deep discovery session to evaluate feasibility, align on product goals, and outline technical architecture.">
             </div>
-
-            <!-- Step 2 -->
-            <div class="process-step-item is-next" data-step="2">
-              <div class="process-step-num">2</div>
-              <div class="process-step-content">
-                <div class="process-step-inner">
-                  <div class="process-step-header">
-                    <h3>Proposal & Kickoff</h3>
-                    <a href="/contact.html" class="process-step-arrow-btn" aria-label="Learn more about Kickoff">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                        <polyline points="12 5 19 12 12 19"></polyline>
-                      </svg>
-                    </a>
-                  </div>
-                  <p>We deliver a comprehensive roadmap, wireframes, and project proposal. Once approved, engineering begins immediately.</p>
-                </div>
-              </div>
+            <div class="process-card" data-step="2">
+              <img src="/src/assets/Components/Process Card2.svg" alt="Step 2 - Proposal &amp; Kickoff: we deliver a comprehensive roadmap, wireframes, and project proposal. Once approved, engineering begins immediately.">
             </div>
-
-            <!-- Step 3 -->
-            <div class="process-step-item is-muted" data-step="3">
-              <div class="process-step-num">3</div>
-              <div class="process-step-content">
-                <div class="process-step-inner">
-                  <div class="process-step-header">
-                    <h3>Research & Execution</h3>
-                    <a href="/contact.html" class="process-step-arrow-btn" aria-label="Learn more about Execution">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                        <polyline points="12 5 19 12 12 19"></polyline>
-                      </svg>
-                    </a>
-                  </div>
-                  <p>Our engineering team builds pixel-perfect UI with micro-interactions, high performance code, and continuous updates.</p>
-                </div>
-              </div>
+            <div class="process-card" data-step="3">
+              <img src="/src/assets/Components/Process Card3.svg" alt="Step 3 - Research &amp; Execution: our engineering team builds pixel-perfect UI with micro-interactions, high performance code, and continuous updates.">
             </div>
-
-            <!-- Step 4 -->
-            <div class="process-step-item is-muted" data-step="4">
-              <div class="process-step-num">4</div>
-              <div class="process-step-content">
-                <div class="process-step-inner">
-                  <div class="process-step-header">
-                    <h3>Launch & Scaling</h3>
-                    <a href="/contact.html" class="process-step-arrow-btn" aria-label="Learn more about Launch">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                        <polyline points="12 5 19 12 12 19"></polyline>
-                      </svg>
-                    </a>
-                  </div>
-                  <p>We deploy your product to production, run optimization audits, and support seamless scaling for long-term success.</p>
-                </div>
-              </div>
+            <div class="process-card" data-step="4">
+              <img src="/src/assets/Components/Process Card4.svg" alt="Step 4 - Launch &amp; Scaling: we deploy your product to production, run optimization audits, and support seamless scaling for long-term success.">
             </div>
-
-          </div>
-
-          <!-- Bottom Nav Controls -->
-          <div class="process-nav-controls">
-            <button class="process-nav-btn prev-btn" aria-label="Previous step">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
-                <polyline points="15 18 9 12 15 6"></polyline>
-              </svg>
-            </button>
-            <button class="process-nav-btn next-btn" aria-label="Next step">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
-                <polyline points="9 18 15 12 9 6"></polyline>
-              </svg>
-            </button>
           </div>
 
         </div>
-      </div>
-    </section>
-
       </div>
     </section>
 
@@ -457,7 +388,12 @@
       <!-- Top Links Bar -->
       <div class="footer-top-bar">
         <a href="/privacy-policy.html" class="footer-top-link" data-hover-expand>PRIVACY POLICY</a>
-        <a href="/client-portal.html" class="footer-top-link" data-hover-expand>CLIENT PORTAL</a>
+        <div class="footer-top-links">
+          <a href="/client-portal.html" class="footer-top-link" data-hover-expand>CLIENT PORTAL</a>
+          <a href="/solutions.html" class="footer-top-link" data-hover-expand>SOLUTIONS</a>
+          <a href="#process" class="footer-top-link" data-hover-expand>OUR PROCESS</a>
+          <a href="/blogs.html" class="footer-top-link" data-hover-expand>BLOGS</a>
+        </div>
       </div>
 
       <!-- Center Big Hero Logo / Typography -->

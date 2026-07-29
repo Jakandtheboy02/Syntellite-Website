@@ -4,9 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Client Portal | Syntellite Agency</title>
+  <title>Blogs | Syntellite Agency</title>
   <meta name="description"
-    content="The Syntellite Client Portal is coming soon.">
+    content="Ideas, engineering notes and product thinking from the Syntellite team.">
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -33,9 +33,9 @@
     </a>
   </div>
 
-  <!-- Bottom Navigation Bar (the portal is not a nav destination - it is
-       reached from the footer and the logo tooltip, so Home stays the selected
-       item, including when the card collapses on scroll) -->
+  <!-- Bottom Navigation Bar (Blogs is intentionally not listed here - it is
+       reached from the footer, so Home stays the selected item, including when
+       the card collapses on scroll) -->
   <nav id="bottom-nav" class="bottom-nav-bar">
     <!-- Left Logo Card -->
     <div class="nav-logo-wrapper">
@@ -67,9 +67,70 @@
 
   <!-- Main Content -->
   <main id="main-content">
-    <!-- Placeholder: fills the first viewport so the footer sits below the fold -->
-    <section id="portal-soon" class="portal-soon-section light-section" data-bg="light">
-      <h1 class="portal-soon-title">Coming soon</h1>
+    <!-- Blogs Hero -->
+    <section id="blogs-hero" class="solutions-hero-section light-section" data-bg="light">
+      <div class="solutions-hero-container">
+        <h1 class="solutions-hero-title scroll-reveal">Ideas worth building on.</h1>
+        <p class="solutions-hero-desc scroll-reveal">
+          Notes on design, engineering and product from the team shipping Syntellite work.
+        </p>
+      </div>
+    </section>
+
+    <!-- Blog Grid -->
+    <section id="blogs-list" class="blogs-list-section light-section" data-bg="light">
+      <div class="blogs-list-container">
+        <article class="blog-card scroll-reveal">
+          <a href="#" class="blog-card-link" data-hover-expand>
+            <div class="blog-card-media">
+              <img src="/src/assets/images/Blog Card 1.png" alt="" loading="lazy">
+            </div>
+            <div class="blog-card-body">
+              <div class="blog-card-meta">
+                <span class="blog-card-cat">Design Systems</span>
+                <span class="blog-card-read">6 min read</span>
+              </div>
+              <h2 class="blog-card-title">Designing for scale: systems over screens</h2>
+              <p class="blog-card-excerpt">How a shared design language cuts hand-off friction and keeps a product coherent as the team grows.</p>
+              <span class="blog-card-cta">Read article &rarr;</span>
+            </div>
+          </a>
+        </article>
+
+        <article class="blog-card scroll-reveal">
+          <a href="#" class="blog-card-link" data-hover-expand>
+            <div class="blog-card-media">
+              <img src="/src/assets/images/Blog Card 2.png" alt="" loading="lazy">
+            </div>
+            <div class="blog-card-body">
+              <div class="blog-card-meta">
+                <span class="blog-card-cat">Engineering</span>
+                <span class="blog-card-read">8 min read</span>
+              </div>
+              <h2 class="blog-card-title">The performance budget that actually holds</h2>
+              <p class="blog-card-excerpt">Setting limits your team can defend, and the measurements that stop a fast site from quietly getting slow.</p>
+              <span class="blog-card-cta">Read article &rarr;</span>
+            </div>
+          </a>
+        </article>
+
+        <article class="blog-card scroll-reveal">
+          <a href="#" class="blog-card-link" data-hover-expand>
+            <div class="blog-card-media">
+              <img src="/src/assets/images/Blog Card 3.png" alt="" loading="lazy">
+            </div>
+            <div class="blog-card-body">
+              <div class="blog-card-meta">
+                <span class="blog-card-cat">AI & Product</span>
+                <span class="blog-card-read">7 min read</span>
+              </div>
+              <h2 class="blog-card-title">Shipping AI features without the guesswork</h2>
+              <p class="blog-card-excerpt">Evaluations, guardrails and rollout patterns we use to put language models in front of real users.</p>
+              <span class="blog-card-cta">Read article &rarr;</span>
+            </div>
+          </a>
+        </article>
+      </div>
     </section>
   </main>
 

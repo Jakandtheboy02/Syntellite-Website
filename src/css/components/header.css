@@ -18,7 +18,7 @@
   --nav-gap: 16px;
   --nav-item-gap: 28px;
   --nav-font-size: 0.95rem;
-  
+
   /* CSS Variables for Dynamic Contrast Switching */
   /* Default: Dark/Image background layout (white capsule tint) */
   --nav-bg: rgba(255, 255, 255, 0.12);
@@ -36,33 +36,33 @@
 }
 
 /* Navigation Cards Base */
-.nav-logo-card, 
-.nav-links-card, 
+.nav-logo-card,
+.nav-links-card,
 .nav-menu-card {
   background: var(--nav-bg);
   color: var(--nav-text);
   border: 1px solid var(--nav-border);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.15);
   /* Contrast switch is kept short so it tracks fast scrolling; transform/shadow
      stay slower for the hover feel */
   transition: background-color 0.18s linear,
-              border-color 0.18s linear,
-              transform 0.4s var(--ease-out-expo),
-              box-shadow 0.4s var(--ease-out-expo);
+    border-color 0.18s linear,
+    transform 0.4s var(--ease-out-expo),
+    box-shadow 0.4s var(--ease-out-expo);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 /* Hover States */
-.nav-logo-card:hover, 
-.nav-links-card:hover, 
+.nav-logo-card:hover,
+.nav-links-card:hover,
 .nav-menu-card:hover {
   border-color: rgba(255, 255, 255, 0.2);
   transform: translate3d(0, -3px, 0);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
 }
 
 /* Left Logo Card & Container */
@@ -87,7 +87,7 @@
   -webkit-backdrop-filter: blur(20px);
   padding: 8px 16px;
   border-radius: 9999px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22), 0 0 22px rgba(120, 80, 255, 0.22);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.13), 0 0 18px rgba(120, 80, 255, 0.16);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -95,10 +95,10 @@
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.4s var(--ease-out-expo), 
-              transform 0.4s var(--ease-out-expo), 
-              visibility 0.4s var(--ease-out-expo),
-              box-shadow 0.4s var(--ease-out-expo);
+  transition: opacity 0.4s var(--ease-out-expo),
+    transform 0.4s var(--ease-out-expo),
+    visibility 0.4s var(--ease-out-expo),
+    box-shadow 0.4s var(--ease-out-expo);
   z-index: 1010;
   cursor: pointer;
 }
@@ -114,7 +114,7 @@
 .logo-portal-popup:hover {
   transform: translate3d(-50%, -2px, 0) scale(1.04) !important;
   border-color: rgba(168, 85, 247, 0.4);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.28), 0 0 30px rgba(168, 85, 247, 0.4);
+  box-shadow: 0 11px 26px rgba(0, 0, 0, 0.18), 0 0 26px rgba(168, 85, 247, 0.32);
 }
 
 .logo-portal-popup .portal-popup-arrow {
@@ -152,7 +152,7 @@
 /* Portal Mode Glow on Logo Card */
 .nav-logo-card.portal-mode {
   border-color: rgba(168, 85, 247, 0.7);
-  box-shadow: 0 0 25px rgba(168, 85, 247, 0.5), 0 10px 30px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 0 25px rgba(168, 85, 247, 0.5), 0 8px 22px rgba(0, 0, 0, 0.2);
   animation: logoPulseGlow 2s ease-in-out infinite alternate;
 }
 
@@ -160,6 +160,7 @@
   0% {
     transform: translate3d(-50%, 0, 0) scale(1);
   }
+
   100% {
     transform: translate3d(-50%, -4px, 0) scale(1.03);
   }
@@ -170,6 +171,7 @@
     border-color: rgba(99, 102, 241, 0.6);
     box-shadow: 0 0 18px rgba(99, 102, 241, 0.4), 0 10px 30px rgba(0, 0, 0, 0.3);
   }
+
   100% {
     border-color: rgba(236, 72, 153, 0.85);
     box-shadow: 0 0 30px rgba(236, 72, 153, 0.6), 0 12px 35px rgba(0, 0, 0, 0.4);
@@ -181,12 +183,14 @@
   height: var(--nav-size);
   border-radius: 50%;
   flex-shrink: 0;
-  position: relative; /* Setup absolute overlap containment */
+  position: relative;
+  /* Setup absolute overlap containment */
   overflow: hidden;
 }
 
 .nav-logo-img {
-  width: calc(var(--nav-size) * 0.4375); /* matches 28px for 64px size */
+  width: calc(var(--nav-size) * 0.4375);
+  /* matches 28px for 64px size */
   height: calc(var(--nav-size) * 0.4375);
   transition: opacity 0.4s var(--ease-out-expo), transform 0.4s var(--ease-out-expo);
   pointer-events: none;
@@ -215,12 +219,12 @@
   padding: 0 calc(var(--nav-size) * 0.5);
   gap: var(--nav-item-gap);
   display: flex;
-  transition: background-color 0.4s var(--ease-out-expo), 
-              border-color 0.4s var(--ease-out-expo), 
-              transform 0.4s var(--ease-out-expo), 
-              box-shadow 0.4s var(--ease-out-expo),
-              gap 0.4s var(--ease-out-expo),
-              padding 0.4s var(--ease-out-expo);
+  transition: background-color 0.4s var(--ease-out-expo),
+    border-color 0.4s var(--ease-out-expo),
+    transform 0.4s var(--ease-out-expo),
+    box-shadow 0.4s var(--ease-out-expo),
+    gap 0.4s var(--ease-out-expo),
+    padding 0.4s var(--ease-out-expo);
 }
 
 .nav-links-card.nav-collapsed {
@@ -239,11 +243,12 @@
   display: inline-block;
   white-space: nowrap;
   overflow: hidden;
-  max-width: 150px; /* Safe upper bound for text width */
+  max-width: 150px;
+  /* Safe upper bound for text width */
   transition: opacity 0.4s var(--ease-out-expo),
-              max-width 0.4s var(--ease-out-expo),
-              padding 0.4s var(--ease-out-expo),
-              margin 0.4s var(--ease-out-expo);
+    max-width 0.4s var(--ease-out-expo),
+    padding 0.4s var(--ease-out-expo),
+    margin 0.4s var(--ease-out-expo);
 }
 
 .nav-links-card.nav-collapsed .nav-item:not(.active) {
@@ -256,7 +261,7 @@
   pointer-events: none;
 }
 
-.nav-item:hover, 
+.nav-item:hover,
 .nav-item.active {
   opacity: 1;
 }
@@ -332,7 +337,7 @@
   .nav-links-card {
     display: none;
   }
-  
+
   /* Render active links drawer popup perfectly aligned above the smaller nav bar */
   .nav-links-card.nav-open {
     display: flex;
@@ -353,7 +358,7 @@
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
     animation: navDrawerFadeIn 0.4s var(--ease-out-expo) forwards;
   }
-  
+
   .nav-item {
     font-size: 1.1rem;
     padding: 4px 0;
@@ -381,6 +386,7 @@
     opacity: 0;
     transform: translate3d(-50%, 15px, 0);
   }
+
   to {
     opacity: 1;
     transform: translate3d(-50%, 0, 0);

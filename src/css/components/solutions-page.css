@@ -1,0 +1,369 @@
+/* ==========================================
+   SOLUTIONS PAGE
+   Standalone page reached from the Solutions
+   section CTA on the landing page.
+   ========================================== */
+
+.solutions-hero-section,
+.solutions-list-section {
+  background: #ffffff;
+  color: #000000;
+  position: relative;
+  z-index: 10;
+}
+
+.solutions-hero-section {
+  padding: clamp(110px, 12vh, 170px) 0 clamp(50px, 7vw, 100px) 0;
+}
+
+/* The shared back pill (project-detail.css) relies on its near-white fill for
+   contrast against a dark hero image. On these all-white pages it needs a
+   visible outline instead. */
+body:has(.solutions-hero-section) .back-pill-btn,
+body:has(.portal-soon-section) .back-pill-btn {
+  border-color: rgba(0, 0, 0, 0.25);
+}
+
+.solutions-hero-container,
+.solutions-list-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 56px);
+}
+
+/* Title left, description bottom-aligned on the right half */
+.solutions-hero-container {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr);
+  column-gap: clamp(32px, 6vw, 110px);
+  align-items: end;
+}
+
+.solutions-hero-title {
+  color: #000;
+  font-family: 'Outfit', sans-serif;
+  /* Spec: 96px / weight 400 / line-height 99px (103.125%) / letter-spacing -3.84px (-0.04em) */
+  font-size: clamp(38px, 7vw, 96px);
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.03125;
+  letter-spacing: -0.04em;
+  margin: 0;
+  max-width: 12ch;
+}
+
+.solutions-hero-desc {
+  color: #A0A0A0;
+  font-family: 'Outfit', sans-serif;
+  /* Spec: 32px / weight 400 */
+  font-size: clamp(17px, 2.4vw, 32px);
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin: 0 0 clamp(4px, 1.2vw, 18px) 0;
+  max-width: 26ch;
+}
+
+/* ==========================================
+   SOLUTION ROWS
+   ========================================== */
+.solutions-list-section {
+  padding: 0 0 clamp(60px, 8vw, 120px) 0;
+}
+
+.solution-item {
+  display: grid;
+  grid-template-columns:
+    auto
+    minmax(0, 1fr)
+    minmax(0, 0.55fr)
+    clamp(210px, 23vw, 330px);
+  grid-template-areas:
+    "num title title visual"
+    ".   text  tags  visual";
+  column-gap: clamp(20px, 3vw, 48px);
+  row-gap: clamp(18px, 2.4vw, 34px);
+  align-items: start;
+  padding: clamp(38px, 5vw, 66px) 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.solution-item:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.solution-item:last-child {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.solution-index {
+  grid-area: num;
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(11px, 1vw, 13px);
+  font-weight: 400;
+  color: #A0A0A0;
+  line-height: 1;
+  padding-top: 0.6em;
+  font-variant-numeric: tabular-nums;
+}
+
+.solution-title {
+  grid-area: title;
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(20px, 2.1vw, 30px);
+  font-weight: 500;
+  color: #000000;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.solution-text {
+  grid-area: text;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(14px, 1.6vw, 22px);
+  max-width: 46ch;
+}
+
+.solution-lead {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(14px, 1.15vw, 16px);
+  font-weight: 400;
+  color: #A0A0A0;
+  line-height: 1.5;
+  margin: 0;
+  max-width: 30ch;
+}
+
+.solution-desc {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(16px, 1.4vw, 20px);
+  font-weight: 400;
+  color: #000000;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.solution-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(11px, 0.9vw, 13px);
+  font-weight: 400;
+  color: #000000;
+  text-decoration: none;
+  padding: 0.75em 1.5em;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  border-radius: 9999px;
+  white-space: nowrap;
+  transition: background-color 0.35s var(--ease-out-expo),
+              color 0.35s var(--ease-out-expo),
+              border-color 0.35s var(--ease-out-expo),
+              transform 0.35s var(--ease-out-expo);
+}
+
+.solution-cta:hover {
+  background: #000000;
+  border-color: #000000;
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+.solution-tags {
+  grid-area: tags;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(6px, 0.7vw, 10px);
+}
+
+.solution-tags li {
+  position: relative;
+  padding-left: 1.1em;
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(14px, 1.15vw, 16px);
+  font-weight: 400;
+  color: #000000;
+  line-height: 1.35;
+}
+
+.solution-tags li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #000000;
+}
+
+.solution-visual {
+  grid-area: visual;
+  width: 100%;
+  aspect-ratio: 422 / 478;
+  justify-self: end;
+}
+
+.solution-visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+  transition: transform 0.6s var(--ease-out-expo);
+}
+
+.solution-item:hover .solution-visual img {
+  transform: translateY(-6px);
+}
+
+/* ==========================================
+   SCROLL RISE-IN
+   Each row rises as it enters the viewport; the
+   parts inside it stagger via --rise-delay.
+   ========================================== */
+.solution-rise {
+  opacity: 0;
+  transform: translate3d(0, 44px, 0);
+  transition: opacity 0.85s var(--ease-out-expo),
+              transform 0.85s var(--ease-out-expo);
+  /* Resting/exit state carries no delay so leaving the viewport is immediate */
+  transition-delay: 0s;
+  will-change: transform, opacity;
+}
+
+/* Row parked above the viewport: it comes back down instead of up, so the
+   motion always follows the scroll direction */
+.solution-item.is-above .solution-rise {
+  transform: translate3d(0, -44px, 0);
+}
+
+/* Must stay after .is-above - equal specificity, later rule wins */
+.solution-item.is-risen .solution-rise {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition-delay: var(--rise-delay, 0s);
+}
+
+/* Stagger within a row: number -> title -> visual -> copy -> tags */
+.solution-index.solution-rise  { --rise-delay: 0s; }
+.solution-title.solution-rise  { --rise-delay: 0.06s; }
+.solution-visual.solution-rise { --rise-delay: 0.1s; }
+.solution-text.solution-rise   { --rise-delay: 0.16s; }
+.solution-tags.solution-rise   { --rise-delay: 0.22s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .solution-rise {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
+/* Laptop / small desktop: fold the tag list under the copy */
+@media (max-width: 1080px) {
+  .solution-item {
+    grid-template-columns:
+      auto
+      minmax(0, 1fr)
+      clamp(190px, 27vw, 280px);
+    grid-template-areas:
+      "num title visual"
+      ".   text  visual"
+      ".   tags  visual";
+  }
+
+  .solution-text {
+    max-width: none;
+  }
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+  .solutions-hero-container {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: clamp(18px, 3vw, 28px);
+    align-items: start;
+  }
+
+  .solutions-hero-title,
+  .solutions-hero-desc {
+    max-width: none;
+  }
+
+  .solutions-hero-desc {
+    margin-bottom: 0;
+    max-width: 46ch;
+  }
+}
+
+/* Mobile: full stack, visual spans the full content width */
+@media (max-width: 680px) {
+  .solutions-hero-section {
+    padding: clamp(90px, 14vh, 130px) 0 clamp(34px, 8vw, 56px) 0;
+  }
+
+  .solution-item {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      "num    title"
+      ".      text"
+      ".      tags"
+      "visual visual";
+    column-gap: 14px;
+    row-gap: 20px;
+    padding: 34px 0;
+  }
+
+  .solution-title {
+    font-size: clamp(21px, 6vw, 27px);
+  }
+
+  .solution-lead,
+  .solution-desc {
+    max-width: none;
+  }
+
+  .solution-desc {
+    font-size: clamp(16px, 4.4vw, 19px);
+  }
+
+  .solution-tags li {
+    font-size: clamp(14px, 4vw, 16px);
+  }
+
+  .solution-visual {
+    justify-self: stretch;
+    max-width: 460px;
+    margin: 6px auto 0 auto;
+  }
+
+  /* The bottom nav floats over the end of the page */
+  .solutions-list-section {
+    padding-bottom: clamp(70px, 16vw, 110px);
+  }
+}
+
+@media (max-width: 420px) {
+  .solution-item {
+    column-gap: 10px;
+    padding: 28px 0;
+  }
+
+  .solution-index {
+    font-size: 10px;
+  }
+}

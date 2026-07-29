@@ -6,6 +6,9 @@
 @import "./components/project-detail.css";
 @import "./components/about-page.css";
 @import "./components/contact-page.css";
+@import "./components/solutions-page.css";
+@import "./components/blogs-page.css";
+@import "./components/client-portal.css";
 
 /* ==========================================
    DESIGN TOKENS & SYSTEM VARIABLES
@@ -1932,6 +1935,42 @@ main {
   }
 }
 
+/* Tablet only: the stacked lines cascade from flush-right down to flush-left
+   under the image, instead of the right/left/right zigzag used on phones.
+   Lower bound keeps the existing phone layout untouched. */
+@media (min-width: 600px) and (max-width: 992px) {
+  .trust-grid {
+    gap: 2px;
+  }
+
+  .trust-image-wrapper {
+    margin-bottom: clamp(26px, 4.5vw, 46px);
+  }
+
+  .trust-line.line-1 {
+    text-align: right;
+  }
+
+  .trust-line.line-2 {
+    text-align: right;
+    /* The step must come from MARGIN, not padding: the black ::after overlay is
+       absolutely positioned against this element's padding box, so padding
+       moves the grey base text while leaving the overlay where it was, and the
+       two copies visibly split apart. Narrowing the box with a margin keeps
+       them locked together.
+       width:auto lets the stretch alignment compute 100% - margin; with the
+       inherited width:100% the box would instead overhang the container.
+       Percentage keeps the step proportional to the container, since the font
+       size is clamped across most of this range. */
+    width: auto;
+    margin-right: 8%;
+  }
+
+  .trust-line.line-3 {
+    text-align: left;
+  }
+}
+
 /* ==========================================
    SERVICES (SOLUTIONS) SECTION STYLES
    ========================================== */
@@ -2125,11 +2164,24 @@ main {
 
 
 /* ==========================================
-   OUR PROCESS SCROLL REVEAL STYLES
+   OUR PROCESS - SPLIT HEADLINE + RISING CARDS
+
+   Pinned scroll sequence:
+     1. centred headline "Your ideas transform into Brand stories"
+     2. the headline splits left/right, opening a slot in the middle
+     3. the four cards rise up through that slot, one per scroll step
+
+   JS (initProcessSection) only writes three custom properties:
+     --split      0 -> 1   how far the headline has opened
+     --slot-max   px       width the middle slot opens to
+     --track-y    px       how far the card column has travelled up
+   Everything else is derived here, so the media queries below can opt out of
+   the split (by pinning --slot) without the JS needing to know.
    ========================================== */
 .process-pin-section {
   position: relative;
-  height: 320vh;
+  /* ~6 scroll steps: hold, split, then one per card */
+  height: 520vh;
   background: #ffffff;
   width: 100%;
 }
@@ -2138,6 +2190,7 @@ main {
   position: sticky;
   top: 0;
   height: 100vh;
+  height: 100dvh;
   width: 100%;
   overflow: hidden;
   display: flex;
@@ -2151,293 +2204,134 @@ main {
   position: relative;
   width: 100%;
   max-width: 1320px;
-  margin: 0 auto;
-  padding-left: clamp(24px, 5vw, 64px);
-  padding-right: clamp(24px, 5vw, 64px);
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   height: 100%;
-}
-
-/* Header Group */
-.process-header-block {
-  margin-bottom: clamp(16px, 3vw, 40px);
-  text-align: left;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  width: 100%;
-  padding: 0;
-  margin-left: 0;
-}
-
-.process-title {
-  color: #000000;
-  font-family: 'Outfit', sans-serif;
-  font-size: clamp(2.8rem, 6.5vw, 96px);
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-  letter-spacing: -3.84px;
-  margin: 0 0 12px 0;
-  text-align: left;
-}
-
-.process-subtitle {
-  color: #A0A0A0;
-  font-family: 'Outfit', sans-serif;
-  font-size: clamp(1rem, 1.6vw, 24px);
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-  max-width: 640px;
-  margin: 0;
-  text-align: left;
-}
-
-/* Sequence Container & Step Items (Responsive sizing ensures 4 steps never overflow widescreen bounds) */
-.process-sequence-container {
-  display: flex;
-  align-items: center;
-  gap: clamp(16px, 3.5vw, 64px);
-  width: 100%;
-  margin-top: clamp(20px, 4vw, 56px);
-  margin-bottom: clamp(20px, 4vw, 56px);
-  position: relative;
-  min-height: 240px;
-  justify-content: flex-start;
-}
-
-.process-step-item {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  flex-shrink: 0;
-  transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* Large Process Number */
-.process-step-num {
-  color: #E5E5E5;
-  leading-trim: both;
-  text-edge: cap;
-  font-family: 'Outfit', sans-serif;
-  font-size: clamp(4.5rem, 11vw, 210px);
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-  letter-spacing: -0.04em;
-  transition: color 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: color, transform;
-  user-select: none;
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
-/* Dynamic Content Box Expander */
-.process-step-content {
-  max-width: 0px;
-  margin-left: 0px;
-  opacity: 0;
-  overflow: hidden;
-  visibility: hidden;
-  pointer-events: none;
-  transform: translate3d(15px, 0, 0) scale(0.96);
-  will-change: max-width, margin-left, opacity, transform;
-  transition: max-width 0.85s cubic-bezier(0.16, 1, 0.3, 1),
-    margin-left 0.85s cubic-bezier(0.16, 1, 0.3, 1),
-    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
-    visibility 0.7s ease;
-}
-
-/* Inner Fixed Width Content Wrapper - keeps text layout rock solid without distortion */
-.process-step-inner {
-  width: clamp(260px, 24vw, 375px);
-  padding: 4px 6px 4px 0;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  margin: 0 auto;
+  padding: 0 clamp(24px, 5vw, 64px);
   box-sizing: border-box;
-}
-
-.process-step-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  gap: 14px;
+  justify-content: center;
+
+  /* Card geometry. The second term caps the card by viewport height so it
+     never outgrows a short/landscape screen. */
+  --card-w: min(clamp(190px, 22vw, 314px), calc((100vh - 140px) * 314 / 385));
+  --card-h: calc(var(--card-w) * 385 / 314);
+  /* Tuned so exactly one card is on screen at a time, with the previous one
+     just clearing the top edge as the next settles */
+  --card-gap: calc(var(--card-h) * 0.42);
 }
 
-.process-step-header h3 {
-  color: #000000;
+/* ---------- Splitting headline ---------- */
+.process-headline {
+  --slot-min: 0.32em;
+  --slot: calc(var(--slot-min) + var(--split, 0) * (var(--slot-max, 0px) - var(--slot-min)));
+
+  display: grid;
+  grid-template-columns: auto var(--slot) auto;
+  justify-content: center;
+  align-items: start;
+  width: 100%;
+  margin: 0;
+  position: relative;
+  z-index: 2;
+  pointer-events: none;
+
   font-family: 'Outfit', sans-serif;
-  font-size: clamp(1.2rem, 2vw, 32px);
+  font-size: clamp(27px, 4.6vw, 66px);
   font-style: normal;
   font-weight: 400;
-  line-height: normal;
-  margin: 0;
+  line-height: 1.16;
+  letter-spacing: -0.03em;
+  color: #000000;
+}
+
+.process-headline-inner {
+  display: contents;
+}
+
+.ph-side {
+  display: flex;
+  flex-direction: column;
+}
+
+.ph-line {
+  display: block;
   white-space: nowrap;
 }
 
-.process-step-arrow-btn {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #111111;
-  text-decoration: none;
-  flex-shrink: 0;
-  margin-left: auto;
-  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+/* Empty middle column - it only reserves the space the cards travel through */
+.ph-slot {
+  display: block;
 }
 
-.process-step-arrow-btn:hover {
-  background-color: #000000;
-  border-color: #000000;
-  color: #ffffff;
-  transform: scale(1.08);
-}
-
-.process-step-content p {
-  color: #A0A0A0;
-  font-family: 'Outfit', sans-serif;
-  font-size: clamp(0.9rem, 1.25vw, 20px);
-  font-style: normal;
+.process-headline em {
+  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  font-style: italic;
   font-weight: 400;
-  line-height: normal;
-  margin: 0;
-  width: 100%;
+  letter-spacing: -0.01em;
 }
 
-/* State 1: Active Step (Solid Black Number + Expanded Content Box) */
-.process-step-item.is-active .process-step-num {
-  color: #000000;
-  transform: scale(1.02);
-}
-
-.process-step-item.is-active .process-step-content {
-  max-width: 410px;
-  margin-left: clamp(12px, 2vw, 24px);
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-  transform: translate3d(0, 0, 0) scale(1);
-}
-
-/* State 2: Immediate Next Step (Vibrant Purple Number) */
-.process-step-item.is-next .process-step-num {
-  color: #8B5CF6;
-}
-
-/* State 3: Inactive / Muted Steps (Light Gray Number) */
-.process-step-item.is-muted .process-step-num {
-  color: #E5E5E5;
-}
-
-/* Bottom Nav Arrows Controls - Positioned at bottom right corner */
-.process-nav-controls {
+/* ---------- Rising card column ---------- */
+.process-card-track {
   position: absolute;
-  bottom: clamp(24px, 4vw, 48px);
-  right: clamp(24px, 5vw, 64px);
+  left: 50%;
+  top: 50%;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 12px;
-  z-index: 20;
+  gap: var(--card-gap);
+  /* -50% centres the column horizontally; the block axis centres card 1 and
+     then subtracts however far the column has travelled */
+  transform: translate3d(-50%, calc(-0.5 * var(--card-h) - var(--track-y, 0px)), 0);
+  will-change: transform;
+  z-index: 1;
+  pointer-events: none;
 }
 
-.process-nav-btn {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  border: 1px solid rgba(0, 0, 0, 0.18);
-  background: transparent;
-  color: #111111;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+.process-card {
+  width: var(--card-w);
+  aspect-ratio: 314 / 385;
+  flex: 0 0 auto;
 }
 
-.process-nav-btn:hover {
-  background-color: #000000;
-  border-color: #000000;
-  color: #ffffff;
-  transform: scale(1.05);
+.process-card img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
-/* Responsive adjustments */
-@media (max-width: 1200px) {
-  .process-title {
-    letter-spacing: -2px;
-  }
+/* ---------- Responsive ---------- */
 
-  .process-step-num {
-    letter-spacing: -6px;
-  }
-
-  .process-step-content p {
-    width: 320px;
-  }
-}
-
-@media (max-width: 992px) {
-  .process-sequence-container {
-    flex-wrap: wrap;
-    gap: 32px;
-    margin-top: 40px;
-    margin-bottom: 40px;
-  }
-}
-
-@media (max-width: 768px) {
+/* Below this width the headline halves plus a card no longer fit on one line,
+   so the split is switched off (--slot pinned to a word space) and the layout
+   stacks: headline near the top, cards rising through the space beneath it. */
+@media (max-width: 760px) {
   .process-pin-section {
-    height: 240vh;
+    height: 420vh;
   }
 
-  .process-header-block {
-    margin-bottom: 20px;
-  }
-
-  .process-title {
-    letter-spacing: -1px;
-  }
-
-  .process-sequence-container {
-    flex-direction: column;
+  .process-wrapper {
+    --card-w: min(clamp(180px, 54vw, 280px), calc((100vh - 260px) * 314 / 385));
     align-items: flex-start;
-    gap: 20px;
-    margin-top: 24px;
-    margin-bottom: 24px;
+    padding-top: clamp(70px, 12vh, 110px);
   }
 
-  .process-step-item {
-    width: 100%;
-    flex-wrap: wrap;
+  .process-headline {
+    /* Pins the slot, which makes the JS-written --split/--slot-max inert */
+    --slot: var(--slot-min);
+    font-size: clamp(26px, 7.4vw, 40px);
+  }
+}
+
+@media (max-width: 420px) {
+  .process-headline {
+    font-size: clamp(23px, 7.6vw, 32px);
   }
 
-  .process-step-num {
-    font-size: clamp(4rem, 15vw, 7rem);
-    letter-spacing: -3px;
-  }
-
-  .process-step-header h3 {
-    white-space: normal;
-  }
-
-  .process-step-content p {
-    width: 100%;
-  }
-
-  .process-nav-controls {
-    margin-top: 16px;
-    align-self: flex-end;
+  .process-wrapper {
+    --card-w: min(clamp(170px, 62vw, 240px), calc((100vh - 240px) * 314 / 385));
   }
 }
 
@@ -2706,4 +2600,73 @@ main {
     grid-template-columns: 1fr;
     gap: 20px;
   }
+}
+/* ==========================================
+   GRADIENT-TEXT CLIPPING FIX (descenders & end letters)
+
+   The scroll-reveal headings paint their gradient with
+   `background-clip: text`. That gradient only exists inside the element's
+   background box (the padding box), so any part of a glyph that falls
+   outside that box simply has nothing to show and reads as "cut off":
+
+     - vertically: a tight `line-height` (1.05 - 1.1) makes the box shorter
+       than the font's full em box, so descenders (g, j, p, q, y) hang below
+       it - e.g. the "g" in "Engineered", the "j" in "Projects";
+     - horizontally: `letter-spacing` is added after the *last* character too,
+       so a negative value shrinks the `width: fit-content` box below the ink
+       and shaves the final letter.
+
+   Padding grows the background box; the matching negative margin cancels the
+   layout effect, so nothing on the page moves. Symmetric inline padding keeps
+   the `margin-inline: auto` centring exact.
+
+   Note: .text-gradient, .service-icon, .metric-num and .interactive-link use
+   the same technique and have the same latent bug, but are not currently used
+   in any page, so they are left alone rather than given layout-shifting
+   padding on spec.
+   ========================================== */
+/* Negative letter-spacing: needs the inline axis corrected as well */
+.showcase-title,
+.projects-title,
+.projects-hero-line {
+  padding-inline: 0.08em;
+  padding-bottom: 0.22em;
+  margin-bottom: -0.22em;
+}
+
+/* No negative letter-spacing, and both set their own inline padding at small
+   breakpoints, so only the block axis is corrected here */
+.showcase-subtitle,
+.projects-hero-subtitle {
+  padding-bottom: 0.22em;
+  margin-bottom: -0.22em;
+}
+
+/* ------------------------------------------
+   Same symptom, different mechanism: the trust / services / testimonials
+   headings reveal via a `::after` copy of the text carrying a `mask-image`.
+   Applying a mask makes the element paint only inside its mask painting area,
+   which defaults to `mask-clip: border-box` - so this absolutely positioned
+   `height: 100%` box cuts off every descender that hangs below the line box
+   (the two "g"s in "Engineering"), and the negative letter-spacing on these
+   headings pulls the box in past the final letter on the right.
+
+   The box has to grow to move that clip out of the way, but it must grow
+   WITHOUT moving the text, or the black overlay drifts off the grey base copy
+   underneath it. Growing `width`/`height` does move the text: these headings
+   inherit `text-align: center`, so a wider box re-centres the glyphs inside it.
+
+   Switching the pseudo-element to `content-box` (the global reset makes it
+   border-box) is what makes this safe: `width/height: 100%` from the rules
+   above then size the *content* box exactly as before, so the text lays out
+   identically, while the padding extends only the border box - which is the
+   mask painting area. Result: bigger paintable area, zero movement.
+   ------------------------------------------ */
+.trust-line::after,
+.services-title::after,
+.services-subtitle::after,
+.testimonials-title::after {
+  box-sizing: content-box;
+  padding-right: 0.14em;
+  padding-bottom: 0.3em;
 }
