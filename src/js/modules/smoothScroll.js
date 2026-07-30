@@ -19,11 +19,14 @@ let lenis = null;
  */
 export function initSmoothScroll() {
   lenis = new Lenis({
-    duration: 1.2,
+    // Slightly quicker than the original 1.2s / 0.7x. That pairing made the
+    // long unanimated stretch between the hero and the portfolio section feel
+    // sluggish, since covering one viewport height took a lot of wheel input.
+    duration: 1.0,
     easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     smoothWheel: true,
-    wheelMultiplier: 0.7,
-    touchMultiplier: 1.0,
+    wheelMultiplier: 0.9,
+    touchMultiplier: 1.1,
     infinite: false,
   });
 

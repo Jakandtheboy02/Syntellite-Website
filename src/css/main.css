@@ -1040,7 +1040,9 @@ main {
 .portfolio-wrapper {
   position: relative;
   width: 100%;
-  height: 380vh;
+  /* Scroll distance the pinned morph is spread over. Taller = less animation
+     progress per unit of scroll, i.e. the layout moves more gently. */
+  height: 500vh;
   background: #ffffff;
 }
 
@@ -1418,7 +1420,7 @@ main {
 /* Responsive adjustments */
 @media (max-width: 992px) {
   .portfolio-wrapper {
-    height: 340vh;
+    height: 450vh;
   }
 
   .showcase-title-block {
@@ -1498,7 +1500,7 @@ main {
 
 @media (max-width: 768px) {
   .portfolio-wrapper {
-    height: 320vh;
+    height: 420vh;
   }
 
   .showcase-title-block {
@@ -2403,20 +2405,17 @@ main {
   display: flex;
   align-items: center;
   gap: clamp(40px, 6vw, 80px);
-  overflow-x: auto;
-  scrollbar-width: none;
-  /* Hide standard Firefox scrollbars */
-  -ms-overflow-style: none;
-  /* Hide IE scrollbars */
+  /* Wider than the wrapper, which clips it - the run is moved by transform
+     rather than by scrollLeft, which mobile engines round to whole pixels and
+     hand to the compositor. The wrapper's overflow: hidden does the clipping. */
+  width: max-content;
+  transform: translate3d(calc(-1 * var(--marquee-x, 0px)), 0, 0);
+  will-change: transform;
+  /* Vertical page scrolling stays with the browser, horizontal drag is ours */
+  touch-action: pan-y;
+  -webkit-user-select: none;
   user-select: none;
   cursor: grab;
-  will-change: scroll-left;
-  -webkit-overflow-scrolling: touch;
-}
-
-.clients-marquee::-webkit-scrollbar {
-  display: none;
-  /* Hide standard Chrome scrollbars */
 }
 
 .clients-marquee.grabbing {

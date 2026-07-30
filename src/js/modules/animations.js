@@ -1048,7 +1048,14 @@ export function initProcessSection() {
 }
 
 /**
- * Infinite Autoplay Marquee with Drag-to-Scroll & Touch Support for Clients Section
+ * Infinite auto-scrolling logo marquee with drag support for the Clients section.
+ *
+ * Driven by a CSS transform rather than `scrollLeft`. Several mobile engines
+ * round `scrollLeft` to whole pixels, so the old `scrollLeft += 0.65` read back
+ * as unchanged every frame and the marquee never moved; `-webkit-overflow-
+ * scrolling: touch` also hands the scroll position to the compositor on iOS,
+ * where programmatic writes get overridden. A transform has neither problem and
+ * stays on the GPU.
  */
 export function initClientsMarquee() {
   const marquee = document.getElementById('clients-marquee');
@@ -1057,57 +1064,68 @@ export function initClientsMarquee() {
   const originalLogos = Array.from(marquee.children);
   if (!originalLogos.length) return;
 
-  // Clone twice to make sure we always have enough overflow width on all resolutions
-  originalLogos.forEach(logo => marquee.appendChild(logo.cloneNode(true)));
-  originalLogos.forEach(logo => marquee.appendChild(logo.cloneNode(true)));
+  // Clone twice so there is always enough width to scroll through at any size
+  originalLogos.forEach((logo) => marquee.appendChild(logo.cloneNode(true)));
+  originalLogos.forEach((logo) => marquee.appendChild(logo.cloneNode(true)));
 
   const allLogos = Array.from(marquee.children);
 
-  let isDown = false;
-  let startX;
-  let scrollLeft;
-  const speed = 0.65; // Pixels per frame (slow, smooth, premium!)
+  const SPEED = 0.65; // px per frame - slow and steady
+  let offset = 0;     // current translation in px
+  let loopWidth = 0;
+  let isDragging = false;
+  let dragStartX = 0;
+  let dragStartOffset = 0;
 
-  // Drag and drop event listeners
-  marquee.addEventListener('pointerdown', (e) => {
-    isDown = true;
+  // Distance from the first logo to its first clone: one exact run, gaps
+  // included. Deriving it from scrollWidth / 3 would be off by a fraction of
+  // the gap and show as a small jump on every wrap.
+  const measure = () => {
+    loopWidth = allLogos[originalLogos.length].offsetLeft - allLogos[0].offsetLeft;
+  };
+
+  const wrap = () => {
+    if (loopWidth <= 0) return;
+    offset %= loopWidth;
+    if (offset < 0) offset += loopWidth;
+  };
+
+  const onPointerDown = (e) => {
+    isDragging = true;
+    dragStartX = e.clientX;
+    dragStartOffset = offset;
     marquee.classList.add('grabbing');
-    startX = e.pageX - marquee.offsetLeft;
-    scrollLeft = marquee.scrollLeft;
-  });
+    if (marquee.setPointerCapture) marquee.setPointerCapture(e.pointerId);
+  };
 
-  marquee.addEventListener('pointerleave', () => {
-    isDown = false;
+  const onPointerMove = (e) => {
+    if (!isDragging) return;
+    offset = dragStartOffset - (e.clientX - dragStartX) * 1.5;
+    wrap();
+  };
+
+  const onPointerUp = () => {
+    if (!isDragging) return;
+    isDragging = false;
     marquee.classList.remove('grabbing');
-  });
+  };
 
-  marquee.addEventListener('pointerup', () => {
-    isDown = false;
-    marquee.classList.remove('grabbing');
-  });
+  marquee.addEventListener('pointerdown', onPointerDown);
+  marquee.addEventListener('pointermove', onPointerMove);
+  marquee.addEventListener('pointerup', onPointerUp);
+  marquee.addEventListener('pointercancel', onPointerUp);
+  marquee.addEventListener('pointerleave', onPointerUp);
 
-  marquee.addEventListener('pointermove', (e) => {
-    if (!isDown) return;
-    e.preventDefault();
-    const x = e.pageX - marquee.offsetLeft;
-    const walk = (x - startX) * 1.5;
-    marquee.scrollLeft = scrollLeft - walk;
-  });
-
-  marquee.addEventListener('touchend', () => {
-    isDown = false;
-  }, { passive: true });
-
-  // Function to detect center-most logo and activate its full color state
+  // Highlights whichever logo is closest to the centre of the viewport window
   const updateCenterHighlight = () => {
-    const marqueeRect = marquee.getBoundingClientRect();
+    const marqueeRect = marquee.parentElement.getBoundingClientRect();
     const centerPoint = marqueeRect.left + marqueeRect.width / 2;
     const threshold = Math.min(100, marqueeRect.width * 0.3);
 
     let closestLogo = null;
     let minDistance = Infinity;
 
-    allLogos.forEach(logo => {
+    allLogos.forEach((logo) => {
       const logoRect = logo.getBoundingClientRect();
       const logoCenter = logoRect.left + logoRect.width / 2;
       const dist = Math.abs(logoCenter - centerPoint);
@@ -1118,7 +1136,7 @@ export function initClientsMarquee() {
       }
     });
 
-    allLogos.forEach(logo => {
+    allLogos.forEach((logo) => {
       if (logo === closestLogo && minDistance < threshold) {
         logo.classList.add('is-centered');
       } else {
@@ -1127,25 +1145,28 @@ export function initClientsMarquee() {
     });
   };
 
-  // Continuous auto-scroll & center-spotlight loop
   const step = () => {
-    // Auto scroll ALWAYS unless user is actively holding/dragging with mouse/finger
-    if (!isDown) {
-      marquee.scrollLeft += speed;
+    if (!loopWidth) measure();
 
-      // Infinite loop wrap calculation:
-      // Since we duplicated the logos twice, loop width is scrollWidth / 3.
-      const loopWidth = marquee.scrollWidth / 3;
-      if (marquee.scrollLeft >= loopWidth) {
-        marquee.scrollLeft -= loopWidth;
-      }
+    if (!isDragging) {
+      offset += SPEED;
+      wrap();
     }
 
-    // Continuously update center spotlight highlight as the marquee streams past
+    marquee.style.setProperty('--marquee-x', `${offset.toFixed(2)}px`);
     updateCenterHighlight();
 
     requestAnimationFrame(step);
   };
+
+  measure();
+  window.addEventListener('resize', measure, { passive: true });
+
+  // Logo images change the run width once they decode
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(measure);
+  }
+  window.addEventListener('load', measure);
 
   requestAnimationFrame(step);
 }
