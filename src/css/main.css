@@ -2180,8 +2180,9 @@ main {
    ========================================== */
 .process-pin-section {
   position: relative;
-  /* ~6 scroll steps: hold, split, then one per card */
-  height: 520vh;
+  /* 100vh pinned + one short scroll step per card. Keeping the step down to
+     ~35vh is what makes a single scroll gesture settle one card. */
+  height: 240vh;
   background: #ffffff;
   width: 100%;
 }
@@ -2280,9 +2281,10 @@ main {
   flex-direction: column;
   align-items: center;
   gap: var(--card-gap);
-  /* -50% centres the column horizontally; the block axis centres card 1 and
-     then subtracts however far the column has travelled */
-  transform: translate3d(-50%, calc(-0.5 * var(--card-h) - var(--track-y, 0px)), 0);
+  /* -50% centres the column horizontally; the block axis centres card 1, nudges
+     the whole column by --track-offset, then subtracts how far it has travelled */
+  transform: translate3d(-50%,
+      calc(-0.5 * var(--card-h) + var(--track-offset, 0px) - var(--track-y, 0px)), 0);
   will-change: transform;
   z-index: 1;
   pointer-events: none;
@@ -2306,14 +2308,21 @@ main {
 
 /* Below this width the headline halves plus a card no longer fit on one line,
    so the split is switched off (--slot pinned to a word space) and the layout
-   stacks: headline near the top, cards rising through the space beneath it. */
+   stacks: the headline holds the top of the screen while the cards scroll up
+   underneath it, fading out into the white behind the text. */
 @media (max-width: 760px) {
   .process-pin-section {
-    height: 420vh;
+    height: 240vh;
   }
 
   .process-wrapper {
-    --card-w: min(clamp(180px, 54vw, 280px), calc((100vh - 260px) * 314 / 385));
+    /* Near-full-bleed card, capped so it still fits a short screen */
+    --card-w: min(86vw, 340px, calc((100vh - 200px) * 314 / 385));
+    /* Cards nearly touch, so the next one is already rising into view as the
+       current one leaves - a continuous stack rather than one card at a time */
+    --card-gap: calc(var(--card-h) * 0.06);
+    /* Sits the column just below the headline instead of dead centre */
+    --track-offset: 4vh;
     align-items: flex-start;
     padding-top: clamp(70px, 12vh, 110px);
   }
@@ -2322,6 +2331,26 @@ main {
     /* Pins the slot, which makes the JS-written --split/--slot-max inert */
     --slot: var(--slot-min);
     font-size: clamp(26px, 7.4vw, 40px);
+    /* Above the fade, which is above the cards */
+    z-index: 3;
+  }
+
+  /* Fade layer: solid white behind the headline, dissolving to transparent just
+     below it, so cards travelling up disappear into the background instead of
+     colliding with the text. */
+  .process-sticky-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: clamp(215px, 33vh, 310px);
+    background: linear-gradient(180deg,
+        #ffffff 0%,
+        #ffffff 66%,
+        rgba(255, 255, 255, 0) 100%);
+    pointer-events: none;
+    z-index: 2;
   }
 }
 
@@ -2330,8 +2359,8 @@ main {
     font-size: clamp(23px, 7.6vw, 32px);
   }
 
-  .process-wrapper {
-    --card-w: min(clamp(170px, 62vw, 240px), calc((100vh - 240px) * 314 / 385));
+  .process-sticky-container::before {
+    height: clamp(190px, 30vh, 260px);
   }
 }
 

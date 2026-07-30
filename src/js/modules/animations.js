@@ -920,9 +920,9 @@ export function initServicesSection() {
 /**
  * Our Process: pinned scroll sequence.
  *
- *   1. the headline sits centred
- *   2. it splits left/right, opening a slot in the middle
- *   3. the four cards rise up through that slot, one per scroll step
+ *   - at rest the headline sits centred
+ *   - scroll step 1 splits it left/right AND rises card 1 into the middle
+ *   - each following step rises the next card into the middle
  *
  * This writes only three custom properties and lets CSS derive the rest, so a
  * media query can switch the split off (by pinning --slot) without this code
@@ -944,14 +944,17 @@ export function initProcessSection() {
 
   if (!wrapper || !headline || !track || !cards.length || !left || !right) return;
 
-  // Scroll phase boundaries as a fraction of the pinned scroll distance
-  const SPLIT_START = 0.05;
-  const SPLIT_END = 0.22;
-  const CARDS_START = 0.24;
-  const CARDS_END = 0.95;
+  // One scroll step per card. Step 1 does double duty: the headline splits AND
+  // card 1 rises to the centre. Steps 2..n each bring the next card in.
+  const STEPS = cards.length;
+  // Fraction of step 1 spent opening the headline. Finishing early means the
+  // split is done by the time the card reaches the text, rather than the card
+  // sliding up through a headline that has not moved apart yet.
+  const SPLIT_PORTION = 0.62;
 
   let slotMax = 0;
   let pitch = 0; // vertical distance between consecutive cards, in px
+  let entry = 1; // how many pitches below centre card 1 starts, in slot units
 
   const clamp01 = (v) => Math.min(1, Math.max(0, v));
   const smoothstep = (v) => v * v * (3 - 2 * v);
@@ -970,6 +973,13 @@ export function initProcessSection() {
     // Read the real gap rather than recomputing it from the CSS variable
     pitch = cards.length > 1 ? cards[1].offsetTop - cards[0].offsetTop : 0;
     if (!pitch) pitch = cards[0].offsetHeight;
+
+    // Start card 1 far enough below centre to be off screen. Derived from the
+    // real geometry rather than hardcoded, because the mobile layout uses a
+    // much tighter gap - one pitch there would leave the card already peeking.
+    const cardH = cards[0].offsetHeight;
+    const containerH = pinSection.querySelector('.process-sticky-container').offsetHeight;
+    entry = Math.max(1, (containerH / 2 + cardH / 2 + 24) / pitch);
   };
 
   let targetP = 0;
@@ -985,14 +995,25 @@ export function initProcessSection() {
   let appliedTrackY = null;
 
   const render = () => {
-    currentP += (targetP - currentP) * 0.09;
+    currentP += (targetP - currentP) * 0.1;
 
-    const split = smoothstep(clamp01((currentP - SPLIT_START) / (SPLIT_END - SPLIT_START)));
+    // Split the pinned scroll into STEPS equal stretches: `step` is which one
+    // we are in, `f` is how far through it we are.
+    const t = clamp01(currentP) * STEPS;
+    const step = Math.min(STEPS - 1, Math.floor(t));
+    const f = t - step;
 
-    // Card column position, in card slots: -1 parks card 1 fully below the
-    // viewport, 0 centres it, cards.length - 1 centres the last one
-    const cardsP = clamp01((currentP - CARDS_START) / (CARDS_END - CARDS_START));
-    const slot = -1 + smoothstep(cardsP) * cards.length;
+    // Headline opens during step 1 only, and finishes ahead of the card
+    const split = step > 0 ? 1 : smoothstep(clamp01(f / SPLIT_PORTION));
+
+    // Card column position in slot units: -entry parks card 1 off screen below,
+    // 0 centres it, STEPS - 1 centres the last one. Easing per step (rather
+    // than across the whole sequence) is what makes one scroll settle exactly
+    // one card into the centre, decelerating as it arrives. Step 1 covers the
+    // longer entry travel; every later step covers exactly one slot.
+    const slot = step === 0
+      ? -entry * (1 - smoothstep(f))
+      : (step - 1) + smoothstep(f);
     const trackY = (slot * pitch).toFixed(2);
 
     if (split.toFixed(4) !== appliedSplit) {
